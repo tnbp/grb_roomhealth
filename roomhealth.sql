@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 11. Jul 2020 um 22:48
+-- Erstellungszeit: 12. Jul 2020 um 12:48
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -34,7 +34,8 @@ CREATE TABLE `issues` (
   `time_reported` bigint(20) NOT NULL,
   `reporter_id` int(11) NOT NULL,
   `comment` text NOT NULL,
-  `item_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL DEFAULT -1,
+  `room_id` int(11) NOT NULL DEFAULT -1,
   `severity` enum('critical','high','normal','low') NOT NULL,
   `assignee_id` int(11) NOT NULL,
   `status` enum('OPEN','CLOSED') NOT NULL,
@@ -45,9 +46,10 @@ CREATE TABLE `issues` (
 -- Daten für Tabelle `issues`
 --
 
-INSERT INTO `issues` (`id`, `time_reported`, `reporter_id`, `comment`, `item_id`, `severity`, `assignee_id`, `status`, `resolution`) VALUES
-(1, 0, 4, 'In Raum A001 ist der ELMO defekt. Auf dem Beamer bekommt man kein Bild vom Elmo. Das Bild vom Computer funktioniert.', 7, 'high', 1, 'OPEN', 'REPORTED'),
-(2, 1594500083, 1, 'Deine Mudder hat aufm Elmo gesessen.', 7, 'high', -1, 'OPEN', 'REPORTED');
+INSERT INTO `issues` (`id`, `time_reported`, `reporter_id`, `comment`, `item_id`, `room_id`, `severity`, `assignee_id`, `status`, `resolution`) VALUES
+(1, 0, 4, 'In Raum A001 ist der ELMO defekt. Auf dem Beamer bekommt man kein Bild vom Elmo. Das Bild vom Computer funktioniert.', 7, -1, 'high', 1, 'OPEN', 'REPORTED'),
+(2, 1594500083, 1, 'Deine Mudder hat aufm Elmo gesessen.', 7, -1, 'high', -1, 'OPEN', 'REPORTED'),
+(3, 1594500835, 1, 'Deine Mudda hat aufm Elmo gesessen.', 7, -1, 'critical', -1, 'OPEN', 'REPORTED');
 
 -- --------------------------------------------------------
 
@@ -131,6 +133,13 @@ CREATE TABLE `sessions` (
   `expires` bigint(20) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Daten für Tabelle `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `session_id`, `expires`) VALUES
+(11, 1, '443e99328b3bf6eb7abdaf7668423264', 1594504435);
+
 -- --------------------------------------------------------
 
 --
@@ -198,7 +207,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT für Tabelle `issues`
 --
 ALTER TABLE `issues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `items`
@@ -216,7 +225,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT für Tabelle `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT für Tabelle `users`

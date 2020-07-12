@@ -7,7 +7,7 @@ define("PERMISSION_ISSUE_ASSIGN",         12);    // actual value: 8; but implie
 define("PERMISSION_ISSUE_SET_SEVERITY",   16);
 // to be defined
 
-function require_permission_or_redirect($permission, $target = "") {
+function require_permission_or_redirect($permission, $target = "index.php") {
     global $session;
     if ($session['permissions'] & $permission) return;
     header("Location: " . $target);

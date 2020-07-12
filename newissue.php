@@ -88,7 +88,6 @@ function print_room_selector($room) {
         echo "<span style=\"font-weight: bold;\">" . $room['name'] . "</span>";
         if ($room['class'] != "") echo " (Klassenraum " . $room['class'] . ")";
         echo " <input type=\"submit\" value=\"&Auml;ndern\">";
-        echo "<input type=\"hidden\" name=\"roomid\" value=\"".$room['id']."\">";
     }
 }
 

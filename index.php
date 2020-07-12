@@ -33,7 +33,8 @@ if ($session['loggedin'] === true) {
     echo "</select> <input type=\"submit\" value=\"melden\"></form></li></ul></div>\n";
 }
 
-$res = mysqli_query($mysql, "SELECT issues.*, items.name as iname, rooms.name as rname, users.name as uname FROM issues LEFT JOIN users ON users.id = issues.reporter_id, items LEFT JOIN rooms ON items.room_id = rooms.id WHERE issues.item_id = items.id ORDER BY issues.time_reported DESC LIMIT 20");
+$res = mysqli_query($mysql, "SELECT issues.*, items.name AS iname, r2.name AS rname, r2.id AS rid, r1.name AS rname_alt, r1.id AS rid_alt, users.name AS uname FROM issues LEFT JOIN users ON users.id = issues.reporter_id LEFT JOIN rooms AS r1 ON issues.room_id = r1.id, items LEFT JOIN rooms AS r2 ON items.room_id = r2.id WHERE issues.item_id = items.id OR (issues.item_id = -1 AND issues.room_id = r1.id) GROUP BY issues.id ORDER BY issues.time_reported DESC LIMIT 20");   // JESUS CHRIST!
+
 $rn = mysqli_num_rows($res);
 
 echo "<h2>Momentan bestehende Defekte:</h2>";
@@ -43,8 +44,10 @@ for ($i = 0; $i < $rn; $i++) {
     $row = mysqli_fetch_assoc($res);
     echo "<tr class=\"" . (($i % 2) ? "tr-even" : "tr-odd"). "\">";
     echo "<td>" . $row['id'] . "</td>";
-    echo "<td>" . $row['rname'] . "</td>";
-    echo "<td>" . $row['iname'] . "</td>";
+    if ($row['item_id'] != -1) echo "<td>" . $row['rname'] . "</td>";
+    else echo "<td>" . $row['rname_alt'] . "</td>";
+    if ($row['item_id'] != -1) echo "<td>" . $row['iname'] . "</td>";
+    else echo "<td>Sonstiges</td>";
     echo "<td>" . date("Y-m-d H:i:s", $row['time_reported']) . "</td>";
     echo "<td>" . $row['uname'] . "</td>";
     echo "<td>" . $row['severity'] . "</td>";

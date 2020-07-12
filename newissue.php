@@ -41,7 +41,7 @@ if ($rc == 0) print_room_selector(false);
 else {
     $row = mysqli_fetch_assoc($res);
     print_room_selector($row);
-    
+    echo "<input type=\"hidden\" name=\"roomid\" value=\"" . (int)$row['id'] . "\">";
     echo "<p>Defekter Gegenstand: <select name=\"itemid\">";
     $res = mysqli_query($mysql, "SELECT * FROM items WHERE room_id = " . (int) $row['id']);
     $rc = mysqli_num_rows($res);

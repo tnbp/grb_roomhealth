@@ -44,11 +44,13 @@ for ($i = 0; $i < $rn; $i++) {
     $issue = mysqli_fetch_assoc($res);
     $temp = mysqli_query($mysql,"SELECT * FROM rooms WHERE id = " . $issue['room_id']);
     $room = mysqli_fetch_assoc($temp);
+    $temp = mysqli_query($mysql, "SELECT * FROM items WHERE id = " . $issue['item_id']);
+    $item = mysqli_fetch_assoc($temp);
     echo "<tr class=\"" . (($i % 2) ? "tr-even" : "tr-odd"). "\">";
     echo "<td>" . $issue['id'] . "</td>";
-    if ($row['item_id'] != -1) echo "<td>" . $room['name'] . "</td>";
+    if ($issue['item_id'] != -1) echo "<td>" . $room['name'] . "</td>";
     else echo "<td>" . $row['rname_alt'] . "</td>";
-    if ($row['item_id'] != -1) echo "<td>" . $row['iname'] . "</td>";
+    if ($issue['item_id'] != -1) echo "<td>" . $item['name'] . "</td>";
     else echo "<td>Sonstiges</td>";
     echo "<td>" . date("Y-m-d H:i:s", $issue['time_reported']) . "</td>";
     echo "<td>" . $row['uname'] . "</td>";

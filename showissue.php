@@ -25,9 +25,9 @@ if ($issue !== NULL) {
         echo "Zugewiesen: " . $assignee['name'] . "<br>";
     }
     else {
-    echo "Es wurde noch niemand zugewiesen <br>";  
-    echo "<a href=\"edit.php?id=$id\">Problem bearbeiten</a>"; 
+    echo "Es wurde noch niemand zugewiesen <br>";      
     }
+    //echo $issue[]
 }
 else {
     echo "Es wurde kein Problem mit der ID $id gefunden. Das ist ein Problem";

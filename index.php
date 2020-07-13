@@ -33,15 +33,16 @@ if ($session['loggedin'] === true) {
     echo "</select> <input type=\"submit\" value=\"melden\"></form></li></ul></div>\n";
 }
 
-$res = mysqli_query($mysql, "SELECT issues.*, items.name AS iname, r2.name AS rname, r2.id AS rid, r1.name AS rname_alt, r1.id AS rid_alt, users.name AS uname FROM issues LEFT JOIN users ON users.id = issues.reporter_id LEFT JOIN rooms AS r1 ON issues.room_id = r1.id, items LEFT JOIN rooms AS r2 ON items.room_id = r2.id WHERE issues.item_id = items.id OR (issues.item_id = -1 AND issues.room_id = r1.id) GROUP BY issues.id ORDER BY issues.time_reported DESC LIMIT 20");   // JESUS CHRIST!
-
+//$res = mysqli_query($mysql, "SELECT issues.*, items.name AS iname, r2.name AS rname, r2.id AS rid, r1.name AS rname_alt, r1.id AS rid_alt, users.name AS uname FROM issues LEFT JOIN users ON users.id = issues.reporter_id LEFT JOIN rooms AS r1 ON issues.room_id = r1.id, items LEFT JOIN rooms AS r2 ON items.room_id = r2.id WHERE issues.item_id = items.id OR (issues.item_id = -1 AND issues.room_id = r1.id) GROUP BY issues.id ORDER BY issues.time_reported DESC LIMIT 20");   // JESUS CHRIST!
+$res = mysqli_query($mysql, "SELECT * issues");
 $rn = mysqli_num_rows($res);
 
 echo "<h2>Momentan bestehende Defekte:</h2>";
 if ($rn == 20) echo "<p style=\"font-style: italic;\">Zu viele Defekte... zeige nur die neuesten 20!</p>";
 echo "<div><table><tr><th>ID</th><th>Raum</th><th>Defektes Gerät</th><th>gemeldet:</th><th>von:</th><th>Schweregrad:</th><th></th></tr>";
 for ($i = 0; $i < $rn; $i++) {
-    $row = mysqli_fetch_assoc($res);
+    $issue = mysqli_fetch_assoc($res);
+    $res = mysqli_query($mysql,"SELECT * FROM rooms WHERE id = " . $row['id'] .")
     echo "<tr class=\"" . (($i % 2) ? "tr-even" : "tr-odd"). "\">";
     echo "<td>" . $row['id'] . "</td>";
     if ($row['item_id'] != -1) echo "<td>" . $row['rname'] . "</td>";

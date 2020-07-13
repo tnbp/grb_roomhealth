@@ -41,21 +41,31 @@ echo "<h2>Momentan bestehende Defekte:</h2>";
 if ($rn == 20) echo "<p style=\"font-style: italic;\">Zu viele Defekte... zeige nur die neuesten 20!</p>";
 echo "<div><table><tr><th>ID</th><th>Raum</th><th>Defektes Gerät</th><th>gemeldet:</th><th>von:</th><th>Schweregrad:</th><th></th></tr>";
 for ($i = 0; $i < $rn; $i++) {
-    $issue = mysqli_fetch_assoc($res);
-    $temp = mysqli_query($mysql,"SELECT * FROM rooms WHERE id = " . $issue['room_id']);
-    $room = mysqli_fetch_assoc($temp);
+    $issue = mysqli_fetch_assoc($res); 
+    $item = NULL;
     $temp = mysqli_query($mysql, "SELECT * FROM items WHERE id = " . $issue['item_id']);
     $item = mysqli_fetch_assoc($temp);
+    $room_id = -1;
+    $user_id = $issue['reporter_id'];
+    $temp = mysqli_query($mysql, "SELECT * FROM users WHERE id =" . $user_id);
+    $user = mysqli_fetch_assoc($temp);
+    if ($issue['item_id'] != -1) {
+       $room_id = $item['room_id'];
+    }
+    else {
+        $room_id = $issue['room_id'];
+    }
+    $temp = mysqli_query($mysql,"SELECT * FROM rooms WHERE id = " . $room_id);
+    $room = mysqli_fetch_assoc($temp);
     echo "<tr class=\"" . (($i % 2) ? "tr-even" : "tr-odd"). "\">";
     echo "<td>" . $issue['id'] . "</td>";
-    if ($issue['item_id'] != -1) echo "<td>" . $room['name'] . "</td>";
-    else echo "<td>" . $row['rname_alt'] . "</td>";
+    echo "<td>" . $room['name'] . "</td>";
     if ($issue['item_id'] != -1) echo "<td>" . $item['name'] . "</td>";
     else echo "<td>Sonstiges</td>";
     echo "<td>" . date("Y-m-d H:i:s", $issue['time_reported']) . "</td>";
-    echo "<td>" . $row['uname'] . "</td>";
-    echo "<td>" . $row['severity'] . "</td>";
-    echo "<td><a href=\"showissue.php?id=" . $row['id'] . "\">[ mehr ]</a></td>";
+    echo "<td>" . $user['name'] . "</td>";
+    echo "<td>" . $issue['severity'] . "</td>";
+    echo "<td><a href=\"showissue.php?id=" . $issue['id'] . "\">[ mehr ]</a></td>";
     echo "</tr>";
 }
 echo "</table>";

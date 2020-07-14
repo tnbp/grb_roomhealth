@@ -45,7 +45,7 @@ else {
     echo "<p>Defekter Gegenstand: <select name=\"itemid\">";
     $res = mysqli_query($mysql, "SELECT * FROM items WHERE room_id = " . (int) $row['id']);
     $rc = mysqli_num_rows($res);
-    for ($i = 0; $i < $rc; $i++) {
+    for ($i = 0; $i < $rc; $i++) { // Output every device in the room;
         $row = mysqli_fetch_assoc($res);
         // echo "<option value=\"" . $row['id'] . "\"" . ($_POST['item_id'] == $row['id'] ? " selected" : "") .">" . $row['name'] . "</option>"; // too complicated (see below)
         echo "<option value=\"" . $row['id'] . "\">" . $row['name'] . "</option>";
@@ -87,7 +87,7 @@ function print_room_selector($room) {
     else {
         echo "<span style=\"font-weight: bold;\">" . $room['name'] . "</span>";
         if ($room['class'] != "") echo " (Klassenraum " . $room['class'] . ")";
-        echo " <input type=\"submit\" value=\"&Auml;ndern\">";
+        echo " <input type=\"submit\" value=\"&Auml;ndern\">"; # Ändern bewirkt nichts
     }
 }
 

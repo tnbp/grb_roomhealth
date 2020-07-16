@@ -12,7 +12,18 @@ global $session;
 require_loggedin_or_redirect();
 $id = $_GET['id'];
 $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = $id");
-
+if (isset($_POST['has_changed'])) {
+    echo "Updating";
+    if (mysqli_query($mysql, "UPDATE issues SET comment " . htmlentities($_POST['comment'], ENT_QUOTES) . "WHERE id = $id")) {
+        echo "Everything should have worked";
+    }
+    else {
+        echo "Error with query";
+    }
+}
+else {
+    echo "Has not changed";
+}
 $issue = mysqli_fetch_assoc($res);
 if ($issue !== NULL) {
     $room_id = $issue['room_id'];
@@ -25,12 +36,13 @@ if ($issue !== NULL) {
     echo "Problem mit Gerät:  " . $item['name'] . " in Raum: " . $room['name'];
     echo "<hr>";
     echo "<form method=\"post\">";
-    echo "<input id=\"has_changed\" value=\"Yes\" type=\"hidden\">";
+    echo "<input type=\"hidden\" id=\"has_changed\" name=\"has_changed\" value=\"3487\">";
     if (!$session['userid'] == $issue['user_id']) {
-        echo "<textarea name=\"comment\">" . $issue['comment'] . "</textarea><br>";
+        echo "<textarea id=\"comment\" name=\"comment\">" . $issue['comment'] . "</textarea><br>";
     }
     else {
         echo "<p> Beschreibung: " . $issue['comment']. "</p>";    
+        echo "<input id=\"" . $issue['comment'] .  "/>";
     }
     echo "<select id=\"assignee\">";
     if ($issue['assignee_id' !== -1]) {
@@ -48,6 +60,10 @@ if ($issue !== NULL) {
         echo "<option value= \"" . $row['id'] . "\">" . $row['name'] . "</option>";
     }
     echo "</select>";
+    echo "<select id=\"status\">";
+    $res = mysqli_query();
+    echo "</select>";
+    echo "<input type=\"submit\" value=\"Bestätigen\"/>";
     echo "</form>";
 }
 else {

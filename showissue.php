@@ -3,7 +3,7 @@ require_once("lib/session.php");
 require_once("generic_html.php");
 rh_session();
 generic_header();
-$id = $_GET['id'];
+$id = intval($_GET['id']);
 
 $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = $id");
 

@@ -2,17 +2,16 @@
 
 function rh_html_init() {
     global $rh_html;
-    $rh_html = array("close_on_next" => false, "current_level" => 0);
+    $rh_html = array("close_on_next" => false, "indent_on_next" => true, "current_level" => 0);
 }
 
-function rh_html_add($element = "p", $needs_closing = false, $class = false, $style = false, $additional = false, $newline = true) {
+function rh_html_add($element = "p", $needs_closing = false, $attributes = array(), $newline = true) {
     global $rh_html;
     if ($rh_html['close_on_next'] !== false) rh_html_close_all($rh_html['current_level']);
-    echo str_repeat("\t", $rh_html['current_level']);
+    if ($rh_html['indent_on_next'] !== false) echo str_repeat("\t", $rh_html['current_level']);
+    else $rh_html['indent_on_next'] = false;
     echo "<" . $element;
-    if ($class !== false) echo " class=\"" . $class . "\"";
-    if ($style !== false) echo " style=\"" . $style . "\"";
-    if ($additional !== false) echo " " . $additional;
+    foreach ($attributes as $attr => $value) echo " ". $attr . "=\"" . $value . "\"";
     echo ">";
     if ($newline === true) echo "\n";
     if ($needs_closing !== false) $rh_html['open_elements'][$rh_html['current_level']][] = $element;
@@ -27,7 +26,8 @@ function rh_html_close($element = false, $level = false, $no_warning = false) {
     else if ($lastelement != $element && $no_warning === false) {
         trigger_error("rh_html: Closing " . $element . " tag, but " . $lastelement . " is still open--possible nesting error!", E_USER_WARNING);
     }
-    echo str_repeat("\t", $level);
+    if ($rh_html['indent_on_next'] !== false) echo str_repeat("\t", $level);
+    else $rh_html['indent_on_next'] = true;
     echo "</" . $element . ">\n";
     $rh_html['close_on_next'] = false;
 }
@@ -64,6 +64,12 @@ function rh_html_add_raw($content, $indent = false) {
     if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']+1);
     echo htmlentities($content, ENT_QUOTES | ENT_HTML5);
     if ($indent !== false) echo "\n";
+    else $rh_html['indent_on_next'] = false;
+}
+
+function rh_html_indent_on_next($toggle = true) {
+    global $rh_html;
+    $rh_html['indent_on_next'] = ($toggle ? true : false);
 }
 
 ?>

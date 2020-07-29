@@ -11,14 +11,18 @@ function rh_html_add($element = "p", $needs_closing = false, $attributes = array
     if ($rh_html['indent_on_next'] !== false) echo str_repeat("\t", $rh_html['current_level']);
     else $rh_html['indent_on_next'] = false;
     echo "<" . $element;
-    foreach ($attributes as $attr => $value) echo " ". $attr . "=\"" . $value . "\"";
+    foreach ($attributes as $attr => $value) {
+        if ($value !== true && $value !== false) echo " " . $attr . "=\"" . htmlentities($value, ENT_QUOTES | ENT_HTML5) . "\"";
+        else if ($value === true) echo " " . $attr;
+        // if false, do nothing
+    }
     echo ">";
     if ($newline === true) echo "\n";
     if ($needs_closing !== false) $rh_html['open_elements'][$rh_html['current_level']][] = $element;
     $rh_html['close_on_next'] = true;
 }
 
-function rh_html_close($element = false, $level = false, $no_warning = false) {
+function rh_html_close($element = false, $level = false, $no_warning = false, $newline = true) {
     global $rh_html;
     if ($level === false) $level = $rh_html['current_level'];
     $lastelement = end($rh_html['open_elements'][$level]);
@@ -28,7 +32,8 @@ function rh_html_close($element = false, $level = false, $no_warning = false) {
     }
     if ($rh_html['indent_on_next'] !== false) echo str_repeat("\t", $level);
     else $rh_html['indent_on_next'] = true;
-    echo "</" . $element . ">\n";
+    echo "</" . $element . ">";
+    if ($element != "html" && $newline === true) echo "\n";
     $rh_html['close_on_next'] = false;
 }
 
@@ -36,6 +41,7 @@ function rh_html_up($levels = 1) {
     global $rh_html;
     $rh_html['current_level'] -= $levels;
     if ($rh_html['current_level'] < 0) $rh_html['current_level'] = 0;
+    $rh_html['indent_on_next'] = true;
     rh_html_close_all($rh_html['current_level']);
 }
 
@@ -59,10 +65,18 @@ function rh_html_doctype($doctype) {
     echo "<!DOCTYPE " . $doctype . ">\n";
 }
 
+function rh_html_add_text($content, $indent = false, $newline = false) {
+    global $rh_html;
+    if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']);
+    echo htmlentities($content, ENT_QUOTES | ENT_HTML5);
+    if ($newline !== false) echo "\n";
+    else $rh_html['indent_on_next'] = false;
+}
+
 function rh_html_add_raw($content, $indent = false) {
     global $rh_html;
-    if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']+1);
-    echo htmlentities($content, ENT_QUOTES | ENT_HTML5);
+    if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']);
+    echo $content;
     if ($indent !== false) echo "\n";
     else $rh_html['indent_on_next'] = false;
 }

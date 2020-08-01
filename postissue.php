@@ -104,8 +104,16 @@ else if (isset($_GET['delete'])) {
     require_permission_or_redirect(PERMISSION_ISSUE_DELETE, "index.php?error=invalid_issue_del&part=permission");
     if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_del&part=issueid");
     $issueid = (int) $_GET['id'];
+    if ($_POST['del_ok'] != "ok") redirect("showissue.php?id=" . $issueid . "&error=checkbox");
     mysqli_query($mysql, "DELETE FROM issues WHERE id = " . $issueid);
     redirect("index.php");
+}
+else if (isset($_GET['assignself'])) {
+    require_permission_or_redirect(PERMISSION_ISSUE_ASSIGN_SELF, "index.php?error=invalid_issue_post&part=permissions");
+    if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_post&part=issueid");
+    $issueid = (int) $_GET['id'];
+    mysqli_query($mysql, "UPDATE issues SET assignee_id = " . $session['userid'] . " WHERE id = " . $issueid);
+    redirect("showissue.php?id=" . $issueid);
 }
 else {
     // if we're only posting a new issue, there's not much that can go wrong, right?

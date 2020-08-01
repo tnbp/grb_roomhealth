@@ -14,12 +14,6 @@ require_permission_or_redirect(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_AS
 $id = (int) $_GET['id'];
 $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $id);
 
-if (isset($_GET['assignself'])) {
-    require_permission_or_redirect(PERMISSION_ISSUE_ASSIGN_SELF, "index.php?error=invalid_issue_edit&part=permissions");
-    mysqli_query($mysql, "UPDATE issues SET assignee_id = " . $session['userid'] . " WHERE id = " . $id);
-    redirect("showissue.php?id=" . $id);
-}
-
 rh_html_head("Bearbeiten: Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
@@ -162,6 +156,11 @@ if ($issue !== NULL) {
     rh_html_add("p", true, array("style" => "text-align: right"));
     rh_html_down(); // in p
     rh_html_add("input", false, array("type" => "submit", "value" => "Ändern", "disabled" => $disableother));
+    rh_html_add("span", true, array("style" => "margin-left: 10em;"));
+    rh_html_down();
+    rh_html_add("input", false, array("type" => "checkbox", "value" => "ok", "name" => "del_ok"));
+    rh_html_add("input", false, array("type" => "submit", "formaction" => "postissue.php?id=" . $id . "&delete", "value" => "Defekt löschen"));
+    rh_html_up();
 }
 else {
     redirect("index.php?error=invalid_issue_edit&part=issueid");

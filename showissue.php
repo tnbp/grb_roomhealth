@@ -65,7 +65,7 @@ if ($issue !== NULL) {
     rh_html_close(false, false, false, false);
     rh_html_add_text($issue['resolution'] . " " . $issue['status'], false, true);
     rh_html_up();
-    rh_html_add("p", true, array(), true);
+    rh_html_add("div", true, array(), true);
     rh_html_down();
     if ($issue['assignee_id'] != -1) {
         $res = mysqli_query($mysql, "SELECT * FROM users WHERE id = " . $issue['assignee_id']);
@@ -75,30 +75,38 @@ if ($issue !== NULL) {
     else {
         rh_html_add("span", true, array("style" => "font-style: italic"), false);
         rh_html_add_text("noch niemand zugewiesen");
-        rh_html_close(false, false, false, false);
+        rh_html_close();
     }
+    rh_html_add("form", true, array("action" => "#", "method" => "POST"));
+    rh_html_down();
     if (has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT)) {
-        rh_html_add_text(" [ ");
+        /*rh_html_add_text(" [ ");
         rh_html_add("a", true, array("href" => "editissue.php?id=" . $id), false);
         rh_html_add_text("Problem bearbeiten");
         rh_html_close(false, false, false, false);
-        rh_html_add_text(" ]", false, false);
+        rh_html_add_text(" ]", false, false);*/
+        rh_html_add("input", false, array("value" => "Problem bearbeiten", "formaction" => "editissue.php?id=" . $id, "type" => "submit"));
     }
     if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $issue['assignee_id'] == -1) {
-        rh_html_add_text(" [ ");
+        /*rh_html_add_text(" [ ");
         rh_html_add("a", true, array("href" => "editissue.php?id=" . $id . "&assignself"), false);
         rh_html_add_text("mir selbst zuweisen");
         rh_html_close(false, false, false, false);
-        rh_html_add_text(" ]", false, false);
+        rh_html_add_text(" ]", false, false);*/
+        rh_html_add("input", false, array("value" => "mir selbst zuweisen", "formaction" => "postissue.php?id=" . $id . "&assignself", "type" => "submit"));
     }
     if (has_permission(PERMISSION_ISSUE_DELETE)) {
-        rh_html_add_text(" [ ");
+        /*rh_html_add_text(" [ ");
         rh_html_add("a", true, array("href" => "postissue.php?id=" . $id . "&delete"), false);
         rh_html_add_text("Problem löschen");
         rh_html_close(false, false, false, false);
-        rh_html_add_text(" ]", false, true);
+        rh_html_add_text(" ]", false, true);*/
+        rh_html_add("span", true, array("style" => "margin-left: 10em"));
+        rh_html_down();
+        rh_html_add("input", false, array("value" => "ok", "name" => "del_ok", "type" => "checkbox"));
+        rh_html_add("input", false, array("value" => "Problem löschen", "formaction" => "postissue.php?id=" . $id . "&delete", "type" => "submit"));
     }
-    rh_html_up();
+    rh_html_up(3);
     rh_comment_section($issue);
     rh_html_up(999);
 }

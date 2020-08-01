@@ -25,15 +25,27 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     rh_html_close();
     rh_html_up();
     
-    foreach ($data as $d) {
+    if (!count($data)) {
         rh_html_add("tr", true, $trattr);
         rh_html_down();
-        foreach ($d as $f) {
-            rh_html_add("td", true, $tdattr, false);
-            rh_html_add_raw($f, false);
-        }
+        $tdattr['colspan'] = "10";
+        $tdattr['style'] = "text-align: center; border: 1px solid black; padding: 2px 2px; font-style: italic";
+        rh_html_add("td", true, $tdattr, false);
+        rh_html_add_text("Es gibt keine anzuzeigenden Daten.");
         rh_html_close();
         rh_html_up();
+    }
+    else {
+        foreach ($data as $d) {
+            rh_html_add("tr", true, $trattr);
+            rh_html_down();
+            foreach ($d as $f) {
+                rh_html_add("td", true, $tdattr, false);
+                rh_html_add_raw($f, false);
+            }
+            rh_html_close();
+            rh_html_up();
+        }
     }
     rh_html_up();
 }

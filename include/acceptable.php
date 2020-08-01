@@ -59,4 +59,28 @@ $comvis_description = array(
                         "none" => "niemanden (ausgeblendet)"
                         );
 
+$order_acceptable = array(
+                        "id_a",     // issues.id, ASC
+                        "id_d",     // issues.id, DESC
+                        "tr_a",     // time_reported
+                        "tr_d",
+                        "sev_a",    // severity+0
+                        "sev_d",
+                        "asg_a",    // assignee_id
+                        "asg_d",
+                        "st_a",     // status+0
+                        "st_d",
+                        "up_a",     // last_updated
+                        "up_d"
+                        );
+
+$order_description = array(
+                        "id" => "issues.id",
+                        "tr" => "issues.time_reported",
+                        "sev" => "issues.severity+0",
+                        "asg" => "issues.assignee_id",
+                        "st" => "issues.status+0",
+                        "up" => "issues.last_updated"
+                        );
+
 ?>

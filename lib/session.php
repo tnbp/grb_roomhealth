@@ -23,19 +23,9 @@ function rh_session() {
 	}
 }
 
-function rh_loginform($nexturi = false) {
-	if ($nexturi === false) $nexturi = $_SERVER['REQUEST_URI'];
-	global $session, $mysql;
-	if ($session['loggedin'] === true) {
-		echo "<div>Eingeloggt als ";
-		echo "<span style=\"font-weight: bold;\">" . htmlentities($session['name'], ENT_QUOTES) . "</span>";
-		echo " (<a href=\"logout.php?next=" . urlencode($nexturi) . "\">Ausloggen</a>)</div>";
-	}
-	else {
-		if ($_GET['error'] == "login") echo "<p style=\"color: red; font-weight: bold;\">Login fehlgeschlagen!</p>";
-		echo "<form action=\"login.php\" method=\"POST\">";
-		echo "<p>Login: <input type=\"text\" name=\"login\"> Passwort: <input type=\"password\" name=\"pwd\"> <input type=\"submit\" value=\"Login\"><input type=\"hidden\" name=\"nexturi\" value=\"" . urlencode($nexturi) . "\"></p></form>";
-	}
+function redirect($target) {
+    header("Location: " . $target);
+    die();
 }
 
 ?>

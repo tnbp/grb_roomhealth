@@ -7,18 +7,17 @@ global $mysql, $session;
 
 $res = mysqli_query($mysql, "SELECT * FROM users WHERE login = '" . mysqli_real_escape_string($mysql, $_POST['login']) . "'");
 $rc = mysqli_num_rows($res);
-	
+
+$nexturi = urldecode($_POST['nexturi']);
+$nexturi = preg_replace("/[?&]error=[^&]*/", "", $nexturi);
+
 if (verify_login($_POST['login'], $_POST['pwd']) === true) {
-	header("Location: " . urldecode($_POST['nexturi']));
-	die();
+	redirect($nexturi);
 }
 else {
-	$nexturi = urldecode($_POST['nexturi']);
-	$nexturi = preg_replace("/[?&]error=[^&]*/", "", $nexturi);
 	if (strpos($nexturi, "?") === false) $nexturi .= "?error=login";
 	else $nexturi .= "&error=login";
-	header("Location: " . $nexturi);
-	die();
+	redirect($nexturi);
 }
 		
 function verify_login($login, $password) {

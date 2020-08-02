@@ -13,11 +13,13 @@ global $mysql, $session;
 rh_html_head("GRB Room Health", "GRB Room Health", "Fehlermeldung, IT-Defekte");
 rh_html_add("body", true);
 rh_html_down();
+rh_html_add("div", true, array("id" => "allcontainer"));
+rh_html_down();
 rh_html_add("h1", true, array(), false);
 rh_html_add_text("GRB Raumstatus - Alle Defekte");
 rh_html_close();
 
-rh_loginform();
+rh_header();
 
 if (isset($_GET['error'])) {
     $errorbox_style = array("style" => "border: 2px solid red; background-color: #ffa0a0");
@@ -103,20 +105,18 @@ $sql_query = "SELECT issues.*, items.name AS iname, r2.name AS rname, r2.id AS r
              LEFT JOIN rooms AS r2 ON items.room_id = r2.id 
              WHERE" . $sql_where . " 
              GROUP BY issues.id "
-             . $sql_order .
-             ($limit ? " LIMIT " . ($limit + 1) : "") .
-             ($page ? " OFFSET " . ($page * $limit) : ""); // I ACCEPT SATAN AS MY LORD AND SAVIOR
+             . $sql_order;                      // I ACCEPT SATAN AS MY LORD AND SAVIOR
+$res = mysqli_query($mysql, $sql_query);
+$total = mysqli_num_rows($res);
+$sql_query .= ($limit ? " LIMIT " . ($limit + 1) : "") .
+             ($page ? " OFFSET " . ($page * $limit) : ""); 
 
 $res = mysqli_query($mysql, $sql_query);
 $rn = mysqli_num_rows($res);
-/*rh_html_add("h1", true, array(), false);
-rh_html_add_text("DEBUG: " . $sql_query);*/
 
 rh_html_add("h2", true, array(), false);
 rh_html_add_text("Momentan bestehende Defekte:");
-if ($rn > $limit) {
-    // pagination!
-}
+
 rh_html_add("div", true, array("style" => "max-width: 50%"));
 rh_html_down();
 rh_html_add("form", true, array("action" => "listfilter.php", "method" => "POST"));
@@ -191,6 +191,30 @@ rh_html_down();
 rh_html_add("input", false, array("value" => "Filter anwenden", "type" => "submit"));
 rh_html_up(3);
 
+if ($rn > $limit && $limit !== false || $page > 0) {
+    // pagination
+    $query_str = $_SERVER['QUERY_STRING'];
+    $query_str = preg_replace('/&?page=[0-9]+/', '', $query_str);
+    rh_html_add("h3", true, array("style" => "text-align: center; max-width: 50%"));
+    rh_html_down();
+    rh_html_add_text("Seite ");
+    if ($page > 0) {
+        rh_html_add("a", true, array("href" => "listissues.php?" . $query_str . (strlen($query_str) ? "&" : "") . "page=" . ($page - 1)));
+        rh_html_add_text("↢");
+        rh_html_close();
+    }
+    rh_html_add_text($page + 1);
+    if ($rn > $limit) {
+        rh_html_add("a", true, array("href" => "listissues.php?" . $query_str . (strlen($query_str) ? "&" : "") . "page=" . ($page + 1)));
+        rh_html_add_text("↣");
+        rh_html_close();
+    }
+    rh_html_add("br");
+    $upper_limit = min($total, (($page + 1) * $limit));
+    rh_html_add_text("Ergebnisse " . ($page * $limit + 1) . " bis " . $upper_limit . " (insgesamt " . $total . ")");
+    rh_html_up();
+}
+
 if ($limit === false || $limit > $rn) $limit = $rn;
 
 $t_data = array();
@@ -203,8 +227,8 @@ for ($i = 0; $i < $limit; $i++) {
     $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['repname'], $severity_description[$row['severity']], $cur_asgname, date("Y-m-d H:i:s", $row['last_updated']), $row['status'] . ": " . $row['resolution'], $cur_actions);
     $t_data[] = $cur;
 }
-$t_header = array("ID:", "Raum:", "Defektes Ger&auml;t:", "gemeldet:", "von:", "Schweregrad:", "zugewiesen:", "letzte Änderung", "Status:", "Aktionen", "th_attr" => array("style" => "font-weight: bold; color: orange; border: 2px solid black; padding: 5px 5px"));
-$t_attr = array();
+$t_header = htmlentities_array(array("ID", "Raum", "Defektes Gerät", "gemeldet", "von", "Schweregrad", "zugewiesen", "letzte Änderung", "Status", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 5px 5px")));
+$t_attr = array("style" => "margin-left: auto; margin-right: auto");
 $t_tdattr = array("style" => "text-align: center; border: 1px solid black; padding: 2px 2px");
 
 rh_html_table($t_header, $t_data, $t_attr, $t_tdattr);

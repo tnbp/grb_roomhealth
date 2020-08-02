@@ -23,6 +23,12 @@ function rh_session() {
 	}
 }
 
+function get_session($info = false) {
+    global $session;
+    if ($info === false) return $session;
+    return (isset($session[$info]) ? $session[$info] : false);
+}
+
 function redirect($target) {
     header("Location: " . $target);
     die();

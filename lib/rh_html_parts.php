@@ -1,6 +1,7 @@
 <?php
 
 require_once("lib/rh_html.php");
+require_once("lib/permissions.php");
 
 function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), $trattr = array()) {
     if (isset($header['tr_attr'])) {
@@ -16,6 +17,7 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     
     rh_html_add("table", true, $tableattr);
     rh_html_down();
+    if (!isset($header_tr_attr['class'])) $header_tr_attr['class'] = "rh_head";
     rh_html_add("tr", true, $header_tr_attr);
     rh_html_down();
     foreach ($header as $h) {
@@ -26,6 +28,7 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     rh_html_up();
     
     if (!count($data)) {
+        if (!isset($trattr['class'])) $trattr['class'] = "rh_odd";
         rh_html_add("tr", true, $trattr);
         rh_html_down();
         $tdattr['colspan'] = "10";
@@ -36,8 +39,14 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
         rh_html_up();
     }
     else {
+        $i = 0;
         foreach ($data as $d) {
-            rh_html_add("tr", true, $trattr);
+            $i++;
+            if (!isset($trattr['class'])) $class = ($i % 2) ? "rh_odd" : "rh_even";
+            else $class = $trattr['class'];
+            $trattr_tmp = $trattr;      // EEEEWW!
+            $trattr_tmp['class'] = $class;
+            rh_html_add("tr", true, $trattr_tmp);
             rh_html_down();
             foreach ($d as $f) {
                 rh_html_add("td", true, $tdattr, false);
@@ -70,7 +79,7 @@ function rh_html_table_sql_prepare($query, $order = false) {
     return $ret;
 }
 
-function rh_loginform($nexturi = false) {
+function rh_loginform($nexturi) { // deprecated -> TODO: retire
 	if ($nexturi === false) $nexturi = $_SERVER['REQUEST_URI'];
 	global $session, $mysql;
 	if ($session['loggedin'] === true) {
@@ -126,41 +135,186 @@ function rh_html_head($title, $description = false, $keywords = false, $addition
     rh_html_add("title", true, array(), false);
     rh_html_add_text($title);
     rh_html_close();
+    rh_html_add("link", false, array("rel" => "stylesheet", "href" => "roomhealth.css"));
     rh_html_up();
 }
 
-function rh_html_room_selector($room, $formaction) {
+function rh_html_room_selector($room, $formaction, $newform = true) {
     global $mysql, $session;
-    
-    rh_html_add_text("Raum: ", true, true);
+
     if ($room === false) {
-        $res = mysqli_query($mysql, "SELECT * FROM rooms ORDER BY name ASC");
-        $rc = mysqli_num_rows($res);
+        // we are not displaying a room, but the actual selector;
+        // however, if we're changing a room, $_POST['roomid'] will be set!
+        rh_html_add("ul", true);
+        rh_html_down();
+        rh_html_add("li", true);
+        rh_html_down();
+        if ($newform) {
+            rh_html_add("form", true, array("action" => "newissue.php", "method" => "GET"), true);
+            rh_html_down();
+        }
+        rh_html_add_text("in Raum: ", true, true);
         rh_html_add("select", true, array("name" => "roomid"));
         rh_html_down();
+        $res = mysqli_query($mysql, "SELECT * FROM rooms ORDER BY name ASC");
+        $rc = mysqli_num_rows($res);
+        $classrooms = array();
         for ($i = 0; $i < $rc; $i++) {
             $row = mysqli_fetch_assoc($res);
-            rh_html_add("option", true, array("value" => (int)$row['id']), false);
+            rh_html_add("option", true, array("value" => (int)$row['id'], "selected" => ($_POST['roomid'] == $row['id'])), false);
             if ($row['class'] == "") rh_html_add_text($row['name'], false, false);
             else echo rh_html_add_text($row['name'] . " (Klassenraum " . $row['class']. ")", false, false);
+            if ($row['class'] != "" && !in_array($row['class'], $classrooms)) $classrooms[] = $row['class'];
         }
         rh_html_close();
         rh_html_up();
-        rh_html_add("input", false, array("type" => "submit", "value" => "Auswählen", "formaction" => $formaction));
+        rh_html_add("input", false, array("type" => "submit", "value" => "Auswählen", "formaction" => $formaction, "name" => "by_room"));
         if (isset($_POST['comment'])) rh_html_add("input", false, array("type" => "hidden", "name" => "comment", "value" => htmlentities($_POST['comment'], ENT_QUOTES)));
         if (isset($_POST['severity'])) rh_html_add("input", false, array("type" => "hidden", "name" => "severity", "value" => htmlentities($_POST['severity'], ENT_QUOTES)));
         if (isset($_POST['assignee_id'])) rh_html_add("input", false, array("type" => "hidden", "name" => "assignee_id", "value" => (int) $_POST['assignee_id'], ENT_QUOTES));
         if (isset($_POST['status'])) rh_html_add("input", false, array("type" => "hidden", "name" => "status", "value" => htmlentities($_POST['status'], ENT_QUOTES)));
         if (isset($_POST['resolution'])) rh_html_add("input", false, array("type" => "hidden", "name" => "resolution", "value" => htmlentities($_POST['resolution'], ENT_QUOTES)));
         if (isset($_POST['allow_comments'])) rh_html_add("input", false, array("type" => "hidden", "name" => "allow_comments", "value" => htmlentities($_POST['allow_comments'], ENT_QUOTES)));
+        rh_html_up();
+        if ($newform) rh_html_up();
+        rh_html_add("li", true, array(), true);
+        rh_html_down();
+        if ($newform) {
+            rh_html_add("form", true, array("action" => "newissue.php", "method" => "GET"), true);
+            rh_html_down();
+        }
+        
+        if (isset($_POST['roomid'])) {
+            $class = mysqli_query($mysql, "SELECT class FROM rooms WHERE id = " . (int)$_POST['roomid']);
+            $class = mysqli_fetch_assoc($class);
+            if ($class !== false) $class = $class['class'];
+        }
+        
+        rh_html_add_text("im Klassenraum der Klasse: ", true, true);
+        rh_html_add("select", true, array("name" => "classroom"), true);
+        rh_html_down(); // now in select
+        for ($i = 0; $i < sizeof($classrooms); $i++) {
+            rh_html_add("option", true, array("value" => $classrooms[$i], "selected" => ($class == $classrooms[$i])), false);
+            rh_html_add_text($classrooms[$i]);
+        }
+        rh_html_indent_on_next(false);
+        rh_html_close();
+        rh_html_up();
+        rh_html_add("input", false, array("type" => "submit", "value" => "Auswählen", "formaction" => $formaction, "name" => "by_classroom"));
+        if (isset($_POST['comment'])) rh_html_add("input", false, array("type" => "hidden", "name" => "comment", "value" => htmlentities($_POST['comment'], ENT_QUOTES)));
+        if (isset($_POST['severity'])) rh_html_add("input", false, array("type" => "hidden", "name" => "severity", "value" => htmlentities($_POST['severity'], ENT_QUOTES)));
+        if (isset($_POST['assignee_id'])) rh_html_add("input", false, array("type" => "hidden", "name" => "assignee_id", "value" => (int) $_POST['assignee_id'], ENT_QUOTES));
+        if (isset($_POST['status'])) rh_html_add("input", false, array("type" => "hidden", "name" => "status", "value" => htmlentities($_POST['status'], ENT_QUOTES)));
+        if (isset($_POST['resolution'])) rh_html_add("input", false, array("type" => "hidden", "name" => "resolution", "value" => htmlentities($_POST['resolution'], ENT_QUOTES)));
+        if (isset($_POST['allow_comments'])) rh_html_add("input", false, array("type" => "hidden", "name" => "allow_comments", "value" => htmlentities($_POST['allow_comments'], ENT_QUOTES)));
+        rh_html_up(2);
+        if ($newform) rh_html_up();
     }
     else {
+        rh_html_add_text("in Raum: ", true, true);
         rh_html_add("span", true, array("style" => "font-weight: bold"), false);
         rh_html_add_text($room['name']);
         if ($room['class'] != "") rh_html_add_text(" (Klassenraum " . $room['class'] . ")");
         rh_html_add("input", false, array("type" => "hidden", "name" => "roomid", "value" => (int)$room['id']));
         rh_html_add("input", false, array("type" => "submit", "formaction" => $formaction, "value" => "Ändern"));
     }
+}
+
+function rh_header($nexturi = false) {
+    rh_html_add("div", true, array("class" => "rh_header"));
+    rh_html_down();
+    rh_navigation($nexturi);
+    rh_html_up();
+}
+
+function rh_navigation($nexturi) {
+    rh_html_add("ul", true, array("class" => "rh_navigation"));
+    rh_html_down();
+    rh_html_add("li", true, array("class" => "rh_navigation"));
+    rh_html_down();
+    rh_html_add("a", true, array("href" => "."), false);
+    rh_html_add_text("Start");
+    rh_html_close();
+    rh_html_up();
+    if (is_loggedin()) {
+        rh_html_add("li", true, array("class" => "rh_navigation"));
+        rh_html_down();
+        rh_html_add("a", true, array("href" => "newissue.php"), false);
+        rh_html_add_text("Neuen Defekt melden");
+        rh_html_close();
+        rh_html_up();
+    }
+    rh_html_add("li", true, array("class" => "rh_navigation"));
+    rh_html_down();
+    rh_html_add("a", true, array("href" => "listissues.php"), false);
+    rh_html_add_text("Alle Defekte");
+    rh_html_close();
+    rh_html_up();
+    if (has_permission(PERMISSION_ISSUE_ASSIGNABLE)) {
+        rh_html_add("li", true, array("class" => "rh_navigation"));
+        rh_html_down();
+        rh_html_add("a", true, array("href" => "listissues.php?assignee=" . get_session("userid") . "&status=OPEN"), false);
+        rh_html_add_text("Mir zugewiesene Defekte");
+        rh_html_close();
+        rh_html_up();
+    }
+    if ($_GET['error'] == "login") {
+        rh_html_add("li", true, array("class" => "rh_loginerror_ul", "style" => "color: red; font-weight: bold; padding: 16px; vertical-align: bottom"), false);
+        rh_html_add_text("Login fehlgeschlagen!");
+        rh_html_close();
+        unset($_GET['error']); // do not display it twice
+    }
+    rh_loginform_ul($nexturi);
+    rh_html_up(2);
+}
+
+function rh_loginform_ul($nexturi) {
+	if ($nexturi === false) $nexturi = $_SERVER['REQUEST_URI'];
+	global $session, $mysql;
+	if (is_loggedin()) {
+        rh_html_add("li", true, array("class" => "rh_logininfo_ul"));
+        rh_html_down();
+        rh_html_add("span", true, array("class" => "rh_logininfo_ul", "style" => "padding: 16px"));
+        rh_html_down();
+        rh_html_add("span", true, array("class" => "rh_logininfo_ul", "style" => "padding-right: 2em"), false);
+		rh_html_add_text("Eingeloggt als: ");
+		rh_html_close();
+		rh_html_add("span", true, array("class" => "rh_logininfo_ul", "style" => "font-weight: bold"), false);
+		rh_html_add_text($session['name']);
+		rh_html_close();
+		rh_html_up();
+        rh_html_add("span", true, array("class" => "rh_logininfo_ul"));
+        rh_html_down();
+		rh_html_add("a", true, array("href" => "logout.php?next=" . urlencode($nexturi)), false);
+		rh_html_add_text("Ausloggen");
+		rh_html_close();
+		rh_html_up();
+    }
+	else {
+        rh_html_add("li", true, array("class" => "rh_loginform_ul"));
+        rh_html_down();
+		rh_html_add("form", true, array("action" => "login.php", "method" => "POST"));
+		rh_html_down();
+        rh_html_add("span", true, array("class" => "rh_loginform_ul", "style" => "padding: 16px"));
+		rh_html_down();
+		rh_html_add_text("Benutzer:", true, false);
+		rh_html_add("input", false, array("name" => "login", "style" => "margin-left: 4px; margin-right: 12px"));
+		rh_html_add_text("Passwort:", true, false);
+		rh_html_add("input", false, array("type" => "password", "name" => "pwd", "style" => "margin-left: 4px; margin-right: 12px"));
+		rh_html_add_text("", true); // this is stupid, why do I need this?
+		rh_html_add("input", false, array("type" => "submit", "value" => "Login"));
+		rh_html_up();
+		rh_html_add("input", false, array("type" => "hidden", "name" => "nexturi", "value" => urlencode($nexturi)));
+		rh_html_up();
+	}
+}
+
+function htmlentities_array($in, $mode = (ENT_QUOTES | ENT_HTML5)) {    // ugly!
+    if (!is_array($in)) return array();
+    foreach ($in as $key => $val) {
+        if (is_string($val)) $in[$key] = htmlentities($val, $mode);
+    }
+    return $in;
 }
 
 ?>

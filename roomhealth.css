@@ -1,0 +1,118 @@
+ul.rh_navigation {
+    list-style-type: none;
+    margin: 0;
+    margin-left: -1em;
+    margin-right: -1em;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+}
+
+li.rh_navigation {
+    float: left;
+    margin-top: 8px;
+}
+
+li.rh_loginform_ul {
+    float: right;
+}
+
+li.rh_logininfo_ul {
+    margin-top: 8px;
+    float: right;
+}
+
+li.rh_logininfo_ul span {
+    color: white;
+    float: left;
+}
+
+li.rh_loginerror_ul {
+    float: right;    
+    margin-top: 8px;
+}
+
+li.rh_loginform_ul span {
+    color: white;
+    float: left;
+}
+
+li.rh_logininfo_ul a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    background-color: #222222;
+}
+
+li.rh_logininfo_ul a:hover {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    background-color: red;
+}
+
+li.rh_loginform_ul a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    background-color: #222222;
+}
+
+li.rh_loginform_ul a:hover {
+    background-color: #111111;
+}
+
+
+li.rh_navigation a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    background-color: #222222;
+    margin-left: 5px;
+}
+
+li.rh_navigation:first-of-type {
+    margin-left: -5px;
+}
+
+li.rh_navigation a:hover {
+    background-color: #111111;
+}
+
+#allcontainer {
+    background-color: #eeeeff;
+    width: 50%;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em 1em 2em;
+}
+
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    text-align: center;
+}
+
+tr.rh_odd {
+    background-color: #f7f7ff;
+}
+
+tr.rh_even {
+    background-color: #ffffff;
+}
+
+tr.rh_head {
+    background-color: black;
+    color: white;
+}

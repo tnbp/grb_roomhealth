@@ -17,6 +17,7 @@ $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $id);
 rh_html_head("Bearbeiten: Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
+rh_header();
 
 $issue = mysqli_fetch_assoc($res);
 if ($issue !== NULL) {
@@ -28,7 +29,12 @@ if ($issue !== NULL) {
     $room_id = $issue['room_id'];
     if ($room_id == -1) $room_id = $item['room_id'];
     if (isset($_GET['newroom'])) {
-        $room_id = (int) $_POST['roomid'];
+        if (isset($_POST['by_room'])) $room_id = (int) $_POST['roomid'];
+        if (isset($_POST['by_classroom'])) {    // BLERGH!
+            $room = mysqli_query($mysql, "SELECT * FROM rooms WHERE class = '" . mysqli_real_escape_string($mysql, $_POST['classroom']) . "'");
+            $room = mysqli_fetch_assoc($room);
+            if ($room !== false) $room_id = $room['id'];
+        }
     }
     if (isset($_POST['comment'])) $issue['comment'] = htmlentities($_POST['comment']);
     if (isset($_POST['severity'])) $issue['severity'] = htmlentities($_POST['severity']);
@@ -77,13 +83,10 @@ if ($issue !== NULL) {
     rh_html_add_text($issue['comment'], false, false);
     rh_html_close();
     rh_html_up(); // leaving textarea, p
-    rh_html_add("p", true);
-    rh_html_down(); // in p
     if (isset($_GET['resetroom'])) {
-        rh_html_room_selector(false, "editissue.php?id=" . $id . "&newroom");
+        rh_html_room_selector(false, "editissue.php?id=" . $id . "&newroom", false);
     }
     else rh_html_room_selector($room, "editissue.php?id=" . $id . "&resetroom");
-    rh_html_up(); // leaving p
     rh_html_add("p", true);
     rh_html_down(); // in p
     rh_html_add_text("Gegenstand: ", true, true);

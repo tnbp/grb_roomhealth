@@ -11,25 +11,16 @@ require_loggedin_or_redirect();
 
 global $mysql, $session;
 
-rh_html_doctype("html", true);
-rh_html_add("html", true, array("lang" => "de"));
-rh_html_down();
-rh_html_add("head", true);
-rh_html_down();
-rh_html_add("meta", false, array("charset" => "utf-8"));
-rh_html_add("meta", false, array("name" => "description", "content" => "GRB Room Health"));
-rh_html_add("meta", false, array("name" => "keywords", "content" => "Fehlermeldung, IT-Defekte"));
-rh_html_add("title", true, array(), false);
-rh_html_add_text("GRB Room Health");
-rh_html_close();
-rh_html_up();
+rh_html_head("Neuen Defekt melden" . $id);
 rh_html_add("body", true);
+rh_html_down();
+rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);
 rh_html_add_text("GRB Raumstatus");
 rh_html_close();
 
-rh_loginform();
+rh_header();
 
 rh_html_add("h2", true, array(), false);
 rh_html_add_text("Neuen Defekt melden");
@@ -54,11 +45,10 @@ else if (isset($_GET['classroom'])) {
 }
 else $rc = 0;
 
-rh_html_add("form", true, array("action" => "newissue.php", "method" => "POST"));
-rh_html_down(); // in form
-
 if ($rc == 0) rh_html_room_selector(false, "newissue.php");
 else {
+    rh_html_add("form", true, array("action" => "newissue.php", "method" => "POST"));
+    rh_html_down(); // in form
     $row = mysqli_fetch_assoc($res);
     rh_html_room_selector($row, "newissue.php?resetroom");
     //rh_html_add("input", false, array("type" => "hidden", "name" => "roomid", "value" => (int)$row['id']));

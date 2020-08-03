@@ -154,7 +154,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         }
         rh_html_add("label", true, array("for" => "select_classroom", "style" => "min-width: 200px; display: inline-block;"), true);
         rh_html_add_text("... im Klassenraum: ", true, true);
-        rh_html_add("span", true, array("style" => "display: inline-block; min-width: 200px; text-align: right"));
+        rh_html_add("span", true, array("style" => "display: inline-block; min-width: 200px; text-align: right; margin-top: 0.5em"));
         rh_html_down();
         rh_html_add("select", true, array("id" => "select_classroom", "name" => "classroom"), true);
         rh_html_down(); // now in select

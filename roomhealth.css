@@ -35,6 +35,8 @@ li.rh_loginerror_ul {
 li.rh_loginform_ul span {
     color: white;
     float: left;
+    margin-top: -3px;
+    margin-bottom: -16px;
 }
 
 li.rh_logininfo_ul a {
@@ -132,4 +134,14 @@ ul.bare {
 fieldset.rh_disabled {
     color: gray;
     background-color: lightgray;
+}
+
+#listissues_filter {
+    max-width: 60%;
+    background-color: #f7f7ff;
+}
+
+#listissues_filter_legend {
+    background-color: #f7f7ff;
+    border-top: 1px solid gray;
 }

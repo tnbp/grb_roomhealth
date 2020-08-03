@@ -11,9 +11,8 @@ if ($_POST['c_min_time'] == "ok") {
 }
 if ($_POST['c_assignee'] == "ok") $filter_args[] = "assignee=" . (int) $_POST['assignee'];
 if ($_POST['c_status'] == "ok") $filter_args[] = "status=" . urlencode($_POST['status']);
-if ($_POST['c_limit'] == "ok") {
-    $limit = (int) $_POST['limit'];
-    if ($limit > 0) $filter_args[] = "limit=" . $limit;
+if (($limit = (int) $_POST['limit']) > 0) {
+    $filter_args[] = "limit=" . $limit;
 }
 
 redirect("listissues.php?" . implode("&", $filter_args));

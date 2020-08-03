@@ -62,11 +62,11 @@ for ($i = 0; $i < $rn; $i++) {
     $t_data[] = $cur;
 }
 $t_header = htmlentities_array(array("ID", "Raum", "Defektes Gerät", "gemeldet", "von", "Schweregrad", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));
-$t_attr = array("style" => "margin-left: auto; margin-right: auto");
+$t_attr = array("style" => "margin-left: auto; margin-right: auto; width: 100%");
 $t_tdattr = array("style" => "text-align: center; border: 1px solid black; padding: .5em .5em");
 
 rh_html_table($t_header, $t_data, $t_attr, $t_tdattr);
 
-rh_html_up(999);
+rh_html_end();
 
 ?>

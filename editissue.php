@@ -17,6 +17,8 @@ $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $id);
 rh_html_head("Bearbeiten: Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
+rh_html_add("div", true, array("id" => "allcontainer"));
+rh_html_down();
 rh_header();
 
 $issue = mysqli_fetch_assoc($res);
@@ -169,6 +171,6 @@ else {
     redirect("index.php?error=invalid_issue_edit&part=issueid");
 }
 
-rh_html_up(999);
+rh_html_end();
 
 ?>

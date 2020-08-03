@@ -48,11 +48,11 @@ li.rh_logininfo_ul a {
 
 li.rh_logininfo_ul a:hover {
     display: block;
-    color: black;
+    color: white;
     text-align: center;
     padding: 16px;
     text-decoration: none;
-    background-color: red;
+    background-color: #ff4a1d;
 }
 
 li.rh_loginform_ul a {
@@ -65,7 +65,9 @@ li.rh_loginform_ul a {
 }
 
 li.rh_loginform_ul a:hover {
-    background-color: #111111;
+    background-color: #a0a0a0;
+    color: black;
+    font-weight: bold;
 }
 
 
@@ -84,13 +86,14 @@ li.rh_navigation:first-of-type {
 }
 
 li.rh_navigation a:hover {
-    background-color: #111111;
+    background-color: #c0c0c0;
+    color: black;
 }
 
 #allcontainer {
     background-color: #eeeeff;
-    width: 50%;
-    max-width: 1000px;
+    width: 80%;
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     padding: 1em 1em 2em;
@@ -115,4 +118,18 @@ tr.rh_even {
 tr.rh_head {
     background-color: black;
     color: white;
+}
+
+li.bare {
+    list-style-type: none;
+}
+
+ul.bare {
+    padding-left: 1em;
+    margin-top: 6px;
+}
+
+fieldset.rh_disabled {
+    color: gray;
+    background-color: lightgray;
 }

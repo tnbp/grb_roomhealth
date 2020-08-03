@@ -6,6 +6,8 @@ require_once("lib/permissions.php");
 function rh_comment_section(&$issue) {
     global $mysql, $session;
     $res = mysqli_query($mysql, "SELECT comments.*,users.name FROM comments LEFT JOIN users ON comments.user_id = users.id WHERE issue_id = " . $issue['id'] . " ORDER BY id DESC");
+    rh_html_add("div", true, array("style" => "background-color: white; margin-left: 2em;"));
+    rh_html_down();
     rh_html_add("hr");
     rh_html_add("h3", true, array(), false);
     rh_html_add_text("Kommentare:");
@@ -18,9 +20,12 @@ function rh_comment_section(&$issue) {
             rh_display_comment($comment);
         }
     }
+    if (can_post_comment($issue)) {
+        rh_html_add("hr");
+        rh_comment_form($issue);
+    }
     rh_html_add("hr");
-    rh_comment_form($issue);
-    rh_html_add("hr");
+    rh_html_up();
 }
 
 function rh_display_comment($comment) {

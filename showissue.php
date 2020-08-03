@@ -15,6 +15,9 @@ rh_html_init();
 rh_html_head("Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
+rh_html_add("div", true, array("id" => "allcontainer"));
+rh_html_down();
+rh_header();
 
 $res = mysqli_query($mysql, "SELECT issues.*,users.name FROM issues LEFT JOIN users ON issues.reporter_id = users.id WHERE issues.id = " . $id);
 $issue = mysqli_fetch_assoc($res);
@@ -106,9 +109,9 @@ if ($issue !== NULL) {
         rh_html_add("input", false, array("value" => "ok", "name" => "del_ok", "type" => "checkbox"));
         rh_html_add("input", false, array("value" => "Problem löschen", "formaction" => "postissue.php?id=" . $id . "&delete", "type" => "submit"));
     }
-    rh_html_up(3);
+    rh_html_up(2);
     rh_comment_section($issue);
-    rh_html_up(999);
+    rh_html_end();
 }
 else {
     redirect("index.php?error=invalid_issue_show");

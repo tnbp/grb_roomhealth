@@ -1,5 +1,7 @@
 <?php
 
+define("RH_HTML_MAX_DEPTH", 100);
+
 function rh_html_init() {
     global $rh_html;
     $rh_html = array("close_on_next" => false, "indent_on_next" => true, "current_level" => 0);
@@ -47,7 +49,7 @@ function rh_html_up($levels = 1) {
 
 function rh_html_down() {
     global $rh_html;
-    $rh_html['current_level']++;
+    if (++$rh_html['current_level'] > RH_HTML_MAX_DEPTH) die("ERROR: RH_HTML_MAX_DEPTH exceeded, fix your code!");
     $rh_html['close_on_next'] = false;
 }
 

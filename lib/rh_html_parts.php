@@ -117,7 +117,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
             rh_html_add("form", true, array("action" => "newissue.php", "method" => "POST"), true);
             rh_html_down();
         }
-        rh_html_add("label", true, array("for" => "select_roomid", "style" => "min-width: 200px; display: inline-block;"));
+        rh_html_add("label", true, array("for" => "select_roomid", "style" => "min-width: 200px; display: inline-block"));
         rh_html_add_text("... in Raum: ", true, true);
         rh_html_add("select", true, array("name" => "roomid", "id" => "select_roomid", "style" => "min-width: 200px"));
         rh_html_down();
@@ -152,7 +152,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
             $class = mysqli_fetch_assoc($class);
             if ($class !== false) $class = $class['class'];
         }
-        rh_html_add("label", true, array("for" => "select_classroom", "style" => "min-width: 200px; display: inline-block;"), true);
+        rh_html_add("label", true, array("for" => "select_classroom", "style" => "min-width: 200px; display: inline-block"), true);
         rh_html_add_text("... im Klassenraum: ", true, true);
         rh_html_add("span", true, array("style" => "display: inline-block; min-width: 200px; text-align: right; margin-top: 0.5em"));
         rh_html_down();

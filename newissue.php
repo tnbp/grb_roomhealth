@@ -24,7 +24,7 @@ rh_header();
 
 rh_html_add("h2", true, array(), false);
 rh_html_add_text("Neuen Defekt melden");
-rh_html_add("div", true);
+rh_html_add("div", true, array("style" => "position: relative"));
 rh_html_down(); // in div
 
 if (isset($_GET['resetroom'])) $rc = 0;
@@ -57,8 +57,10 @@ else rh_html_room_selector(false, "newissue.php", false);
 rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
-rh_html_add_text("Defekter Gegenstand: ", true, true);
-rh_html_add("select", true, array("name" => "itemid", "style" => "min-width: 200px", "disabled" => ($rc == 0))); // ech!
+rh_html_add_text("Nähere Angaben", true, true);
+rh_html_add("label", true, array("for" => "itemid", "style" => "min-width: 200px; display: inline-block"), false);
+rh_html_add_text("Defekter Gegenstand:");
+rh_html_add("select", true, array("name" => "itemid", "style" => "min-width: 200px", "disabled" => ($rc == 0), "id" => "itemid")); // ech!
 rh_html_down(); // in select
 rh_html_add("option", true, array("value" => -1), false);
 rh_html_add_text("Sonstiges");
@@ -74,12 +76,12 @@ rh_html_up(3); // leaving select, p
 rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
-rh_html_add_text("Nähere Angaben: ", true, true);
+rh_html_add_text("Problembeschreibung", true, true);
 rh_html_add("textarea", true, array("name" => "comment", "style" => "width: 100%; min-height: 400px", "disabled" => ($rc == 0)), false);
 rh_html_add_text(isset($_POST['comment']) ? $_POST['comment'] : "");
 rh_html_close();
 rh_html_up(); // leaving p
-rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false));
+rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false, "style" => "width: max-content"));
 rh_html_down(); // in div
 rh_html_add("legend", true);
 rh_html_add_text("Schweregrad: ", true, true);
@@ -125,8 +127,12 @@ rh_html_add_text("niedrig");
 rh_html_close(false, false, false, false);
 rh_html_add_text(" - Unterricht wird kaum beeinflusst", false, true);
 rh_html_up(4); // leaving li, ul, div
+rh_html_add("fieldset", true, array("style" => "width: max-content; float: right; position: absolute; bottom: 0px; right: 0px", "class" => ($rc == 0) ? "rh_disabled" : false));
+rh_html_down();
+rh_html_add("legend", true, array(), false);
+rh_html_add_text("Abschicken");
 rh_html_add("input", false, array("type" => "submit", "formaction" => "postissue.php", "value" => "Defekt melden", "style" => "margin-left: 2px; margin-top: 1em", "disabled" => ($rc == 0)));
-
+rh_html_up();
 
 rh_html_end();
 

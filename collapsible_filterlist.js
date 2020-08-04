@@ -1,5 +1,6 @@
 var filter_form, fs_filterlist;
 var filter_legend;
+var filterlist_toggle_blocked;
 init_filterlist();
 
 filter_legend.onclick = toggle_filterlist;
@@ -7,9 +8,11 @@ var filter_msg_p;
 //var filter_form_status = false; // true == visible -> defined by PHP script
 
 function toggle_filterlist() {
+    if (filterlist_toggle_blocked == true) return;
     if (filter_form_status == true) {   // collapse
         filter_legend.textContent = "Filter [+]";
         filter_form.style['height'] = filter_form.offsetHeight + "px";
+        filterlist_toggle_blocked = true;
         setTimeout(filter_form_fadeout, 16);
         /*fs_filterlist.removeChild(filter_form);
         filter_msg_p = document.createElement("p");
@@ -23,6 +26,7 @@ function toggle_filterlist() {
     }
     else {  // expand
         filter_legend.textContent = "Filter [-]";
+        filterlist_toggle_blocked = true;
         setTimeout(filter_form_fadein, 16);
         /*filter_form.style['overflow'] = "hidden";
         filter_form.style['max-height'] = "1px";
@@ -52,6 +56,7 @@ function init_filterlist() {
         filter_form.style['overflow'] = "hidden";
         filter_form.style['max-height'] = "0px";
     }
+    filterlist_toggle_blocked = false;
 }
 
 function expand_filterlist() {
@@ -60,7 +65,10 @@ function expand_filterlist() {
 
 function filter_form_fadein() {
     filter_form.style['max-height'] = parseInt(filter_form.style['max-height']) + 10 + "px";
-    if (parseInt(filter_form.style['max-height']) >= 1000) return;
+    if (parseInt(filter_form.style['max-height']) >= 1000) {
+        filterlist_toggle_blocked = false;
+        return;
+    }
     setTimeout(filter_form_fadein, 16);    
 }
 
@@ -69,6 +77,7 @@ function filter_form_fadeout() {
     if (new_height <= 1) {
         filter_form.style['max-height'] = "0px";
         filter_form.style['height'] = "";
+        filterlist_toggle_blocked = false;
         return;
     }
     filter_form.style['height'] = new_height + "px";

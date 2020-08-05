@@ -34,7 +34,7 @@ if ($session['loggedin'] === true) {
 
 $order_by_raw = is_array($_GET['order_by']) ? $_GET['order_by'] : false;
 $order_by = array();
-if (is_array($order_by_raw)) {
+if ($order_by_raw !== false) {
     foreach ($order_by_raw as $cur_o) {
         if (!in_array($cur_o, $order_acceptable)) continue;
         $o = explode("_", $cur_o);
@@ -76,35 +76,27 @@ $sql_query .= ($limit ? " LIMIT " . ($limit + 1) : "") .
 $res = mysqli_query($mysql, $sql_query);
 $rn = mysqli_num_rows($res);
 
-rh_html_add("script", true, array("type" => "application/javascript"));
+rh_html_add("script", true, array("type" => "application/javascript"), false);
 if (isset($_GET['min_sev']) || $reported_since !== false || $assignee !== false || $status !== false || $limit !== false) rh_html_add_raw("var filter_form_status = true;");
 else rh_html_add_raw("var filter_form_status = false;");
 
 rh_html_add("h2", true, array(), false);
 rh_html_add_text("Momentan bestehende Defekte:");
 
-/*rh_html_add("div", true, array("style" => "font-weight: bold; font-size: 1.2em; text-align: center; max-width: 60%"));
-rh_html_down();
-rh_html_add("hr", false, array("style" => "display: inline-block; width: 40%"));
-rh_html_add("span", true, array("style" => "display: inline-block; text-align:center; width: 10%"), false);
-rh_html_add_text("Filter:");
-rh_html_add("hr", false, array("style" => "display: inline-block; width: 40%"));
-rh_html_up();*/
-
 rh_html_add("fieldset", true, array("id" => "listissues_filter", "style" => "margin-bottom: 2em; width: max-content"));
 rh_html_down();
-rh_html_add("legend", true, array("style" => "font-weight: bold; font-size: 14px", "id" => "listissues_filter_legend"));
+rh_html_add("legend", true, array("style" => "font-weight: bold; font-size: 14px", "id" => "listissues_filter_legend"), false);
 rh_html_add_text("Filter");
 rh_html_add("form", true, array("action" => "listfilter.php", "method" => "POST"));
 rh_html_down();
 rh_html_add("fieldset", true);
 rh_html_down();
-rh_html_add("legend", true);
+rh_html_add("legend", true, array(), false);
 rh_html_add_text("Schweregrad");
-rh_html_add("input", false, array("name" => "c_min_sev", "value" => "ok", "type" => "checkbox", "checked" => (isset($_GET['min_sev'])), "id" => "c_min_sev"), false);
-rh_html_add("label", true, array("for" => "c_min_sev", "style" => "min-width: 150px; display: inline-block"));
+rh_html_add("input", false, array("name" => "c_min_sev", "value" => "ok", "type" => "checkbox", "checked" => (isset($_GET['min_sev'])), "id" => "c_min_sev"));
+rh_html_add("label", true, array("for" => "c_min_sev", "style" => "min-width: 150px; display: inline-block"), false);
 rh_html_add_text("Filter aktiv");
-rh_html_add("label", true, array("for" => "min_sev", "style" => "min-width: 180px; display: inline-block"));
+rh_html_add("label", true, array("for" => "min_sev", "style" => "min-width: 180px; display: inline-block"), false);
 rh_html_add_text("Schweregrad mindestens: ", false, true);
 rh_html_add("select", true, array("name" => "min_sev", "id" => "min_sev"));
 rh_html_down();
@@ -123,24 +115,24 @@ rh_html_close();
 rh_html_up(2);
 rh_html_add("fieldset", true);
 rh_html_down();
-rh_html_add("legend", true);
+rh_html_add("legend", true, array(), false);
 rh_html_add_text("Datumsbereich");
-rh_html_add("input", false, array("name" => "c_min_time", "value" => "ok", "type" => "checkbox", "checked" => ($reported_since !== false), "id" => "c_min_time"), false);
-rh_html_add("label", true, array("for" => "c_min_time", "style" => "min-width: 150px; display: inline-block"));
+rh_html_add("input", false, array("name" => "c_min_time", "value" => "ok", "type" => "checkbox", "checked" => ($reported_since !== false), "id" => "c_min_time"));
+rh_html_add("label", true, array("for" => "c_min_time", "style" => "min-width: 150px; display: inline-block"), false);
 rh_html_add_text("Filter aktiv", false, false);
-rh_html_add("label", true, array("for" => "min_date", "style" => "min-width: 180px; display: inline-block"));
+rh_html_add("label", true, array("for" => "min_date", "style" => "min-width: 180px; display: inline-block"), false);
 rh_html_add_text("gemeldet seit:");
-rh_html_add("input", false, array("type" => "date", "name" => "min_date", "value" => ($reported_since !== false ? date("Y-m-d", $reported_since) : false), "id" => "min_date"), false);
+rh_html_add("input", false, array("type" => "date", "name" => "min_date", "value" => ($reported_since !== false ? date("Y-m-d", $reported_since) : false), "id" => "min_date"));
 rh_html_add("input", false, array("type" => "time", "name" => "min_time", "value" => ($reported_since !== false ? date("H:i", $reported_since) : false)));
 rh_html_up();
 rh_html_add("fieldset", true);
 rh_html_down();
-rh_html_add("legend", true);
+rh_html_add("legend", true, array(), false);
 rh_html_add_text("Zuweisung");
-rh_html_add("input", false, array("name" => "c_assignee", "value" => "ok", "type" => "checkbox", "checked" => ($assignee !== false), "id" => "c_assignee"), false);
-rh_html_add("label", true, array("for" => "c_assignee", "style" => "min-width: 150px; display: inline-block"));
+rh_html_add("input", false, array("name" => "c_assignee", "value" => "ok", "type" => "checkbox", "checked" => ($assignee !== false), "id" => "c_assignee"));
+rh_html_add("label", true, array("for" => "c_assignee", "style" => "min-width: 150px; display: inline-block"), false);
 rh_html_add_text("Filter aktiv");
-rh_html_add("label", true, array("for" => "assignee", "style" => "min-width: 180px; display: inline-block"));
+rh_html_add("label", true, array("for" => "assignee", "style" => "min-width: 180px; display: inline-block"), false);
 rh_html_add_text("zugewiesen: ", false, true);
 rh_html_add("select", true, array("name" => "assignee", "id" => "assignee"));
 rh_html_down();
@@ -156,12 +148,12 @@ while (($row = mysqli_fetch_assoc($assignable_users)) !== NULL) {
 rh_html_up(2);
 rh_html_add("fieldset", true);
 rh_html_down();
-rh_html_add("legend", true, array());
+rh_html_add("legend", true, array(), false);
 rh_html_add_text("Status", false, true);
 rh_html_add("input", false, array("name" => "c_status", "value" => "ok", "type" => "checkbox", "checked" => ($status !== false), "id" => "c_status"), false);
-rh_html_add("label", true, array("for" => "c_status", "style" => "min-width: 150px; display: inline-block"));
+rh_html_add("label", true, array("for" => "c_status", "style" => "min-width: 150px; display: inline-block"), false);
 rh_html_add_text("Filter aktiv");
-rh_html_add("label", true, array("for" => "status", "style" => "min-width: 180px; display: inline-block"));
+rh_html_add("label", true, array("for" => "status", "style" => "min-width: 180px; display: inline-block"), false);
 rh_html_add_text("nur mit Status:");
 rh_html_add("select", true, array("name" => "status", "id" => "status"));
 rh_html_down();
@@ -174,12 +166,12 @@ rh_html_close();
 rh_html_up(2);
 rh_html_add("fieldset", true, array("style" => "text-align: right"));
 rh_html_down();
-rh_html_add("legend", true);
+rh_html_add("legend", true, array(), false);
 rh_html_add_text("Anzahl");
 /*rh_html_add("input", false, array("name" => "c_limit", "value" => "ok", "type" => "checkbox", "checked" => ($limit !== false), "id" => "c_limit"), false);
 rh_html_add("label", true, array("for" => "c_limit", "style" => "min-width: 150px; display: inline-block"));
 rh_html_add_text("Filter aktiv");*/
-rh_html_add("label", true, array("for" => "limit", "style" => "display: inline-block"));
+rh_html_add("label", true, array("for" => "limit", "style" => "display: inline-block"), false);
 rh_html_add_text("zeige höchstens", false, false);
 rh_html_add("input", false, array("name" => "limit", "value" => $limit, "size" => "2", "style" => "text-align: center", "id" => "limit"), false);
 rh_html_add_text(" Fehler", false, true);
@@ -226,12 +218,23 @@ for ($i = 0; $i < $limit; $i++) {
     $t_data[] = $cur;
 }
 
-$t_header = htmlentities_array(array("ID", "Raum", "Defektes Gerät", "gemeldet", "von", "Schweregrad", "zugewiesen", "letzte Änderung", "Status", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));
+$current_filters = array();
+if (isset($_GET['min_sev'])) $current_filters['min_sev'] = (int) $_GET['min_sev'];
+if ($reported_since !== false) $current_filters['min_time'] = $reported_since;
+if ($assignee !== false) $current_filters['assignee'] = $assignee;
+if ($status !== false) $current_filters['status'] = $status;
+if (isset($_GET['limit'])) $current_filters['limit'] = (int) $_GET['limit'];
+if ($page !== false) $current_filters['page'] = $page;
+if ($order_by_raw !== false) $current_filters['order_by'] = $order_by_raw;
+
+$t_header = rh_htmlentities_array(array("id" => "ID", "Raum", "Defektes Gerät", "tr" => "gemeldet", "von", "sev" => "Schweregrad", "asg" => "zugewiesen", "up" => "letzte Änderung", "st" => "Status", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));
 $t_attr = array("style" => "width: 100%");
 $t_tdattr = array("style" => "text-align: center; border: 1px solid black; padding: .5em .5em");
 
-rh_html_table($t_header, $t_data, $t_attr, $t_tdattr);
-rh_html_add("script", true, array("src" => "collapsible_filterlist.js"));
+rh_html_table($t_header, $t_data, $t_attr, $t_tdattr, array(), "listfilter.php", $current_filters);
+rh_html_add("script", false, array("type" => "application/javascript", "src" => "collapsible_filterlist.js"), false);
+rh_html_add_text("", false, false);
+rh_html_close("script", false, false);
 
 rh_html_end();
 

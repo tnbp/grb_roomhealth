@@ -31,85 +31,92 @@ if ($issue !== NULL) {
     if ($room_id == -1) $room_id = $item['room_id'];
     $res = mysqli_query($mysql, "SELECT * FROM rooms WHERE id = " . $room_id);
     $room = mysqli_fetch_assoc($res);
-    rh_html_add("h1", true, array(), false);
-    rh_html_add_text("Zeige Defekt #" . $id . "...");
-    rh_html_add("h2", true, array(), false);
-    rh_html_add_text("Problem mit Gerät: " . $item['name'] . " in Raum: " . $room['name']);
-    rh_html_add("hr");
-    rh_html_add("p", true);
-    rh_html_down();
-    rh_html_add("span", true, array("style" => "font-weight: bold"), false);
-    rh_html_add_text("Beschreibung: ");
-    rh_html_close(false, false, false, false);
-    rh_html_add_text($issue['comment'], false, true);
-    rh_html_up();
-    rh_html_add("p", true);
-    rh_html_down();
-    rh_html_add("span", true, array("style" => "font-weight: bold"), false);
-    rh_html_add_text("gemeldet: ");
-    rh_html_close(false, false, false, false);
-    rh_html_add_text(date("Y-m-d H:i:s", $issue['time_reported']), false, true);
-    rh_html_add("span", true, array("style" => "font-weight: bold"), false);
-    rh_html_add_text(" von ");
-    rh_html_close(false, false, false, false);
-    rh_html_add_text($issue['name'], false, true);
-    rh_html_up();
-    rh_html_add("p", true);
-    rh_html_down();
-    rh_html_add("span", true, array("style" => "font-weight: bold"), false);
-    rh_html_add_text("Schweregrad: ");
-    rh_html_close(false, false, false, false);
-    rh_html_add_text($severity_description[$issue['severity']], false, true);
-    rh_html_up();
-    rh_html_add("p", true);
-    rh_html_down();
-    rh_html_add("span", true, array("style" => "font-weight: bold"), false);
-    rh_html_add_text("Status: ");
-    rh_html_close(false, false, false, false);
-    rh_html_add_text($issue['resolution'] . " " . $issue['status'], false, true);
-    rh_html_up();
-    rh_html_add("div", true, array(), true);
-    rh_html_down();
     if ($issue['assignee_id'] != -1) {
         $res = mysqli_query($mysql, "SELECT * FROM users WHERE id = " . $issue['assignee_id']);
         $assignee = mysqli_fetch_assoc($res);
-        rh_html_add_text("Zugewiesen: " . $assignee['name'], true);
+        $assignee = $assignee['name'];
     }
     else {
-        rh_html_add("span", true, array("style" => "font-style: italic"), false);
-        rh_html_add_text("noch niemand zugewiesen");
-        rh_html_close();
+        $assignee = "niemandem";
     }
-    rh_html_add("form", true, array("action" => "#", "method" => "POST"));
+    rh_html_add("h1", true, array(), false);
+    rh_html_add_text("Zeige Defekt #" . $id . "...");
+    rh_html_add("h2", true, array());
     rh_html_down();
-    if (has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT)) {
-        /*rh_html_add_text(" [ ");
-        rh_html_add("a", true, array("href" => "editissue.php?id=" . $id), false);
-        rh_html_add_text("Problem bearbeiten");
-        rh_html_close(false, false, false, false);
-        rh_html_add_text(" ]", false, false);*/
-        rh_html_add("input", false, array("value" => "Problem bearbeiten", "formaction" => "editissue.php?id=" . $id, "type" => "submit"));
-    }
-    if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $issue['assignee_id'] == -1) {
-        /*rh_html_add_text(" [ ");
-        rh_html_add("a", true, array("href" => "editissue.php?id=" . $id . "&assignself"), false);
-        rh_html_add_text("mir selbst zuweisen");
-        rh_html_close(false, false, false, false);
-        rh_html_add_text(" ]", false, false);*/
-        rh_html_add("input", false, array("value" => "mir selbst zuweisen", "formaction" => "postissue.php?id=" . $id . "&assignself", "type" => "submit"));
-    }
-    if (has_permission(PERMISSION_ISSUE_DELETE)) {
-        /*rh_html_add_text(" [ ");
-        rh_html_add("a", true, array("href" => "postissue.php?id=" . $id . "&delete"), false);
-        rh_html_add_text("Problem löschen");
-        rh_html_close(false, false, false, false);
-        rh_html_add_text(" ]", false, true);*/
-        rh_html_add("span", true, array("style" => "margin-left: 10em"));
-        rh_html_down();
-        rh_html_add("input", false, array("value" => "ok", "name" => "del_ok", "type" => "checkbox"));
-        rh_html_add("input", false, array("value" => "Problem löschen", "formaction" => "postissue.php?id=" . $id . "&delete", "type" => "submit"));
-    }
+    rh_html_add_text("Problem mit Gerät:", true, true);
+    $style_string = "margin-left: 1em; margin-right: 3em; display: inline-block; font-weight: normal; text-align: center; font-size: 1em";
+    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 300px; width: " . (strlen($item['name']) / 1.66) . "em"), "value" => $item['name'], "readonly" => true)); // not great; TODO: better width accommodation
+    rh_html_add_text("in Raum:");
+    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 100px; width: " . (strlen($room['name']) / 1.66) . "em"), "value" => $room['name'], "readonly" => true)); // not great either; see above
+    rh_html_up();
+    rh_html_add("fieldset", true);
+    rh_html_down();
+    rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Problemdetails");
+    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content"));
+    rh_html_down(); 
+    rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Meldung und Bearbeitung");
+    rh_html_add("label", true, array("for" => "_reported", "style" => "min-width: 150px; display: inline-block"), false);
+    rh_html_add_text("gemeldet:");
+    rh_html_add("input", false, array("name" => "_reported", "value" => date("Y-m-d H:i:s", $issue['time_reported']), "readonly" => true, "id" => "_reported", "style" => "text-align: right; margin-bottom: .5em"));
+    rh_html_add("br");
+    rh_html_add("label", true, array("for" => "reporter", "style" => "min-width: 150px; display: inline-block"), false);
+    rh_html_add_text("von:");
+    rh_html_add("input", false, array("name" => "reporter", "value" => $issue['name'], "readonly" => true, "style" => "text-align: right", "id" => "reporter"));
+    rh_html_add("br");
+    rh_html_add("label", true, array("for" => "assignee", "style" => "min-width: 150px; display: inline-block; margin-top: 2.5em"), false);
+    rh_html_add_text("zugewiesen:");
+    rh_html_add("input", false, array("id" => "assignee", "style" => "text-align: right; margin-bottom: .5em", "value" => $assignee, "readonly" => true));
+    rh_html_add("br");
+    rh_html_add("label", true, array("for" => "_updated", "style" => "min-width: 150px; display: inline-block"), false);
+    rh_html_add_text("zuletzt bearbeitet:");
+    rh_html_add("input", false, array("name" => "_updated", "value" => date("Y-m-d H:i:s", $issue['last_updated']), "readonly" => true, "id" => "_updated", "style" => "text-align: right"));
+    rh_html_up();
+    rh_html_add("fieldset", true, array("style" => "background: white"));
+    rh_html_down();
+    rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Problembeschreibung");
+    rh_html_close(false, false, false, false);
+    rh_html_add_text($issue['comment'], false, true);
     rh_html_up(2);
+    $show_delete_button = has_permission(PERMISSION_ISSUE_DELETE);
+    $show_edit_button = has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT);
+    $show_selfassign_button = (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $issue['assignee_id'] == -1);
+    if ($show_delete_button || $show_edit_button || $show_selfassign_button) {
+        rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto"), true);
+        rh_html_down();
+        rh_html_add("legend", true, array(), false);
+        rh_html_add_text("Problembehandlung");
+        rh_html_add("form", true, array("action" => "#", "method" => "POST"));
+        rh_html_down();
+        if ($show_delete_button) {
+            rh_html_add("fieldset", true, array("style" => "display: inline-block", "class" => "rh_delete"));
+            rh_html_down();
+            rh_html_add("legend", true, array(), false);
+            rh_html_add_text("Meldung löschen");
+            rh_html_add("input", false, array("value" => "ok", "name" => "del_ok", "type" => "checkbox"));
+            rh_html_add("input", false, array("value" => "Löschen", "formaction" => "postissue.php?id=" . $id . "&delete", "type" => "submit"));
+            rh_html_up();
+        }
+        if ($show_selfassign_button) {
+            rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+            rh_html_down();
+            rh_html_add("legend", true, array(), false);
+            rh_html_add_text("Meldung zuweisen");
+            rh_html_add("input", false, array("value" => "Mir selbst zuweisen", "formaction" => "postissue.php?id=" . $id . "&assignself", "type" => "submit"));
+            rh_html_up();
+        }
+        if ($show_edit_button) {
+            rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+            rh_html_down();
+            rh_html_add("legend", true, array(), false);
+            rh_html_add_text("Meldung bearbeiten");
+            rh_html_add("input", false, array("value" => "Bearbeiten", "formaction" => "editissue.php?id=" . $id, "type" => "submit"));
+            rh_html_up();
+        }
+        rh_html_up(2);
+    }
     rh_comment_section($issue);
     rh_html_end();
 }

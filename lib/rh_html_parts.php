@@ -3,7 +3,7 @@
 require_once("lib/rh_html.php");
 require_once("lib/permissions.php");
 
-function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), $trattr = array()) {
+function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), $trattr = array(), $return = false, $current_filters = array()) { // UNHOLY!
     if (isset($header['tr_attr'])) {
         $header_tr_attr = $header['tr_attr'];
         unset($header['tr_attr']);
@@ -20,9 +20,43 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     if (!isset($header_tr_attr['class'])) $header_tr_attr['class'] = "rh_head";
     rh_html_add("tr", true, $header_tr_attr);
     rh_html_down();
-    foreach ($header as $h) {
+    foreach ($header as $k => $h) {
         rh_html_add("th", true, $header_th_attr, false);
+        if (is_string($k)) {
+            if ($k == "th_attr") continue;
+            rh_html_down();
+            $filters_arr = array();
+            $order_by_arr = array();
+            foreach ($current_filters as $f => $v) {
+                if ($f != "order_by") $filters_arr[] = $f . "=" . $v;
+                else $order_by_arr = $v;
+            }
+            /*  The following part is pure, unadulterated bullshit.
+                If you've come here to fix it, don't. Just remove the ordering feature altogether,
+                or do something simpler.
+                
+                You have been warned.
+            */
+            if (count($order_by_arr) > 0) {
+                if (($key = array_search($k . "_d", $order_by_arr)) !== false) {
+                    unset($order_by_arr[$key]);
+                    array_unshift($order_by_arr, $k . "_a");
+                }
+                else if (($key = array_search($k . "_a", $order_by_arr)) !== false) {
+                    unset($order_by_arr[$key]);
+                    array_unshift($order_by_arr, $k . "_d");
+                }
+                else $order_by_arr[] = $k . "_d";
+            }
+            else $order_by_arr[] = $k . "_d";   // TODO: There's a bug in here somewhere... Good luck! :-)
+            print_r($order_by_arr);
+            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by[]=" . implode("&order_by[]=", $order_by_arr)));
+        }
         rh_html_add_raw($h, false);
+        if (is_string($k)) {
+            rh_html_close("a", false, false);
+            rh_html_up();
+        }
     }
     rh_html_close();
     rh_html_up();
@@ -296,7 +330,7 @@ function rh_loginform_ul($nexturi) {
 	}
 }
 
-function htmlentities_array($in, $mode = (ENT_QUOTES | ENT_HTML5)) {    // ugly!
+function rh_htmlentities_array($in, $mode = (ENT_QUOTES | ENT_HTML5)) {    // ugly!
     if (!is_array($in)) return array();
     foreach ($in as $key => $val) {
         if (is_string($val)) $in[$key] = htmlentities($val, $mode);

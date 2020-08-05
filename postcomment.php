@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
         if (!in_array($vis, $comvis_acceptable)) redirect("showissue.php?id=" . $issue['id'] . "&error=invalid_comment_edit&part=visible");
         if ($_POST['visible'] == "none") require_permission_or_redirect(PERMISSION_LEVEL_ADMIN, "showissue.php?id=" . $issue['id'] . "&error=invalid_comment_edit&part=exceed");
         mysqli_query($mysql, "UPDATE comments SET visible = '" . mysqli_real_escape_string($mysql, $vis) ."' WHERE id = " . $id);
-        redirect("showissue.php?id=" . $issue['id']);
+        redirect("showissue.php?id=" . $issue['id'] . "#commentmod_" . $id);
     }
 }
 else {

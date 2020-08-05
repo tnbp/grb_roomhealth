@@ -58,7 +58,13 @@ if ($issue !== NULL) {
     rh_html_add("h1", true, array(), false);
     rh_html_add_text("Bearbeiten: Defekt #" . $id . "...");
     rh_html_add("h2", true, array(), false);
-    rh_html_add_text("Problem mit Gerät:  " . $item['name'] . " in Raum: " . $room['name']);
+    rh_html_down();
+    rh_html_add_text("Problem mit Gerät:");
+    $style_string = "margin-left: 1em; margin-right: 3em; display: inline-block; font-weight: normal; text-align: center; font-size: 1em";
+    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 300px; width: " . (strlen($item['name']) / 1.66) . "em"), "value" => $item['name'], "readonly" => true), false); // not great; TODO: better width accommodation
+    rh_html_add_text("in Raum:");
+    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 100px; width: " . (strlen($room['name']) / 1.66) . "em"), "value" => $room['name'], "readonly" => true), false); // not great either; see above
+    rh_html_up();
     if (isset($_GET['error'])) {
         $errorbox_style = array("style" => "border: 2px solid red; background-color: #ffa0a0");
         if ($_GET['error'] == "nochange") rh_html_box("<span style=\"font-weight: bold\">FEHLER: </span>Keine &Auml;nderungen vorgenommen.", $errorbox_style);
@@ -156,7 +162,7 @@ if ($issue !== NULL) {
     rh_html_add_text("geschlossen");
     rh_html_add("br");
     rh_html_add("label", true, array("for" => "resolution", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"));
-    rh_html_add_text("Lösung:", true, true);
+    rh_html_add_text("Unterstatus:", true, true);
     rh_html_add("select", true, array("name" => "resolution", "readonly" => !has_permission(PERMISSION_ISSUE_SET_RESOLUTION), "disabled" => $disableother, "id" => "resolution"));
     rh_html_down(); 
     foreach ($resolution_acceptable as $resolution) {
@@ -176,19 +182,28 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("style" => "float: right; text-align: right; position: absolute; bottom: 8px; right: 0.8em"));
+    rh_html_add("div", true, array("style" => "float: right; text-align: right; position: absolute; bottom: 8px; right: 0.8em"));
     rh_html_down();
-    rh_html_add("legend", true, array(), false);
-    rh_html_add_text("Änderungen übernehmen");
-    rh_html_add("input", false, array("type" => "submit", "value" => "Speichern", "disabled" => $disableother));
-    rh_html_up();
-    rh_html_add("fieldset", true, array("style" => "float: right; margin-right: 5em; position: absolute; bottom: 8px; right: 11em"));
+    rh_html_add("fieldset", true, array("style" => "display: inline-block", "class" => "rh_delete"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Meldung löschen");
     rh_html_add("input", false, array("type" => "checkbox", "value" => "ok", "name" => "del_ok"));
     rh_html_add("input", false, array("type" => "submit", "formaction" => "postissue.php?id=" . $id . "&delete", "value" => "Löschen"));
-    rh_html_up(2);
+    rh_html_up();
+    rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+    rh_html_down();
+    rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Änderungen verwerfen");
+    rh_html_add("input", false, array("type" => "submit", "formaction" => "redirect.php?next=listissues.php", "value" => "zurück zur Liste"));
+    rh_html_up();
+    rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+    rh_html_down();
+    rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Änderungen übernehmen");
+    rh_html_add("input", false, array("type" => "submit", "value" => "Speichern", "disabled" => $disableother));
+    rh_html_add("input", false, array("type" => "submit", "name" => "backtolist", "value" => "Speichern und zurück zur Liste", "disabled" => $disableother));
+    rh_html_up(3);
 }
 else {
     redirect("index.php?error=invalid_issue_edit&part=issueid");

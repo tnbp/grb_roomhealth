@@ -61,7 +61,7 @@ for ($i = 0; $i < $rn; $i++) {
     $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['uname'], $severity_description[$row['severity']], "[&nbsp;<a href=\"showissue.php?id=" . $row['id'] ."\">mehr</a>&nbsp;]");
     $t_data[] = $cur;
 }
-$t_header = htmlentities_array(array("ID", "Raum", "Defektes Gerät", "gemeldet", "von", "Schweregrad", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));
+$t_header = rh_htmlentities_array(array("id" => "ID", "room" => "Raum", "Defektes Gerät", "gemeldet", "von", "Schweregrad", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));
 $t_attr = array("style" => "margin-left: auto; margin-right: auto; width: 100%");
 $t_tdattr = array("style" => "text-align: center; border: 1px solid black; padding: .5em .5em");
 

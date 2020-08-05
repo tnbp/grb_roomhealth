@@ -84,7 +84,7 @@ rh_html_up(); // leaving p
 rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false, "style" => "width: max-content"));
 rh_html_down(); // in div
 rh_html_add("legend", true);
-rh_html_add_text("Schweregrad: ", true, true);
+rh_html_add_text("Schweregrad", true, true);
 rh_html_add("ul", true, array("class" => "bare"));
 rh_html_down(); // in ul
 rh_html_add("li", true, array("class" => "bare"));

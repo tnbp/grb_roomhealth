@@ -136,6 +136,15 @@ fieldset.rh_disabled {
     background-color: lightgray;
 }
 
+fieldset.rh_delete {
+    background-color: #ff4a1d;
+}
+
+fieldset.rh_delete legend {
+    background-color: #ff4a1d;
+    color: white;
+}
+
 #listissues_filter {
     max-width: 60%;
     background-color: #f7f7ff;
@@ -144,4 +153,33 @@ fieldset.rh_disabled {
 #listissues_filter_legend {
     background-color: #f7f7ff;
     border-top: 1px solid gray;
+}
+
+fieldset.rh_comment {
+    margin-bottom: 2em;
+}
+
+fieldset.rh_comment:last-of-type {
+    margin-bottom: 0px;
+}
+
+fieldset.rh_systemnotice {
+    background: repeating-linear-gradient(
+  -55deg,
+  #efe,
+  #efe 10px,
+  #fff 10px,
+  #fff 20px
+);
+    margin-bottom: 2em;
+}
+
+fieldset.rh_systemnotice:last-of-type {
+    margin-bottom: 0px;
+}
+
+fieldset.rh_commentmod {
+    width: max-content; 
+    margin-left: auto;
+    background-color: white;
 }

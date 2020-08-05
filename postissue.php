@@ -95,7 +95,26 @@ if (isset($_GET['update'])) {
         }
         $updatequery = "UPDATE issues SET " . implode(", ", $update_arr) . " WHERE id = " . $issueid;
         mysqli_query($mysql, $updatequery);
-        redirect("editissue.php?id=" . $issueid . "&debugquery=" . urlencode($updatequery));
+        if (isset($update['status']) || isset($update['resolution']) || isset($update['assignee_id']) || isset($update['severity'])) {
+            // post a comment!
+            $body = $session['name'] . " hat die Fehlerbeschreibung geändert:\r\n";
+            if (isset($update['status'])) $body .= "STATUS: **" . $update['status'] . "**\r\n";
+            if (isset($update['resolution'])) $body .= "LÖSUNG: **" . $update['resolution'] . "**\r\n";
+            if (isset($update['assignee_id'])) {
+                if ($update['assignee_id'] == -1) $name = "niemandem";
+                else {
+                    $name = mysqli_query($mysql, "SELECT name FROM users WHERE id = " . $update['assignee_id']);
+                    $name = mysqli_fetch_assoc($name);
+                    if ($name === false) $name = "niemandem";
+                    else $name = $name['name'];
+                }
+                $body .= "ZUGEWIESEN: **" . $name . "**\r\n";
+            }
+            if (isset($update['severity'])) $body .= "SCHWEREGRAD: **" . $severity_description[$update['severity']] . "**\r\n";
+            mysqli_query($mysql, "INSERT INTO comments SET user_id = 0, issue_id = " . $issueid . ", timestamp = " . time() . ", body = '" . $body . "', visible = 'all'");
+        }
+        if (isset($_POST['backtolist'])) redirect("listissues.php");
+        else redirect("editissue.php?id=" . $issueid . "&debugquery=" . urlencode($updatequery));   // TODO: delete debugquery
     }
     else redirect("index.php?error=invalid_issue_update&part=" . $error);
 }
@@ -106,6 +125,8 @@ else if (isset($_GET['delete'])) {
     $issueid = (int) $_GET['id'];
     if ($_POST['del_ok'] != "ok") redirect("showissue.php?id=" . $issueid . "&error=checkbox");
     mysqli_query($mysql, "DELETE FROM issues WHERE id = " . $issueid);
+    // also delete all associated allow_comments!
+    mysqli_query($mysql, "DELETE FROM comments WHERE issue_id = " . $issueid);
     redirect("index.php");
 }
 else if (isset($_GET['assignself'])) {

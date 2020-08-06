@@ -192,7 +192,7 @@ function rh_comment_mod_form(&$comment) {
 }
 
 function rh_markdown(&$body) {
-    $body = preg_replace('/&ast;&ast;\s?(.*)\s?&ast;&ast;/', '<span style="font-weight: bold">$1</span>', $body);
+    $body = preg_replace('/&ast;&ast;\s?(.*)\s?&ast;&ast;/U', '<span style="font-weight: bold">$1</span>', $body);
     return $body;
 }
 

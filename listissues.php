@@ -226,6 +226,7 @@ if ($status !== false) $current_filters['status'] = $status;
 if (isset($_GET['limit'])) $current_filters['limit'] = (int) $_GET['limit'];
 if ($page !== false) $current_filters['page'] = $page;
 if ($order_by_raw !== false) $current_filters['order_by'] = $order_by_raw;
+else $current_filters['order_by'] = array("id_d");
 
 $t_header = rh_htmlentities_array(array("id" => "ID", "Raum", "Defektes Gerät", "tr" => "gemeldet", "von", "sev" => "Schweregrad", "asg" => "zugewiesen", "up" => "letzte Änderung", "st" => "Status", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));
 $t_attr = array("style" => "width: 100%");

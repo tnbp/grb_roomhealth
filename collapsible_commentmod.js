@@ -10,7 +10,12 @@ function commentmods_init() {
                     break;
                 }
             }
-            if (cm[i].id == document.URL.split("#")[1]) continue;
+            if (cm[i].id == document.URL.split("#")[1]) {
+                cm[i].legend.textContent = "Kommentarmoderation [-]";
+                cm[i].legend.onclick = commentmods_collapse;
+                cm[i].legend.style['cursor'] = "pointer";
+                continue;
+            }
             cm[i].style['overflow'] = "hidden";
             cm[i].style['padding-top'] = "0px";
             cm[i].style['padding-bottom'] = "0px";

@@ -183,3 +183,8 @@ fieldset.rh_commentmod {
     margin-left: auto;
     background-color: white;
 }
+
+tr.rh_head th a {
+    color: yellow;
+    text-decoration: none;
+}

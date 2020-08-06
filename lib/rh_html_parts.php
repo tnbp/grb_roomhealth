@@ -46,10 +46,9 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
                     unset($order_by_arr[$key]);
                     array_unshift($order_by_arr, $k . "_d");
                 }
-                else $order_by_arr[] = $k . "_d";
+                else array_unshift($order_by_arr, $k . "_d");
             }
-            else $order_by_arr[] = $k . "_d";   // TODO: There's a bug in here somewhere... Good luck! :-)
-            print_r($order_by_arr);
+            else $order_by_arr[] = $k . "_d";
             rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by[]=" . implode("&order_by[]=", $order_by_arr)));
         }
         rh_html_add_raw($h, false);

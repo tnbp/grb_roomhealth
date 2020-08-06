@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
     if (isset($_GET['del'])) {
         // we're deleting the comment!
         require_permission_or_redirect(PERMISSION_COMMENT_EDIT, "showissue.php?id=" . $issue['id'] . "&error=invalid_comment_del&part=permission");
-        if ($_POST['del_ok'] != "ok") redirect("showissue.php?id=" . $issue['id'] . "&error=checkbox&cid=" . $id);
+        if ($_POST['del_ok'] != "ok") redirect("showissue.php?id=" . $issue['id'] . "&error=checkbox&cid=" . $id . "#commentmod_" . $id);
         mysqli_query($mysql, "DELETE FROM comments WHERE id = " . $id);
         redirect("showissue.php?id=" . $issue['id']);
     }

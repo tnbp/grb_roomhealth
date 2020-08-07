@@ -1,9 +1,8 @@
 var filter_form, fs_filterlist;
 var filter_legend;
 var filterlist_toggle_blocked;
-init_filterlist();
+window.onload = init_filterlist;
 
-filter_legend.onclick = toggle_filterlist;
 var filter_msg_p;
 //var filter_form_status = false; // true == visible -> defined by PHP script
 
@@ -28,6 +27,7 @@ function init_filterlist() {
     fs_filterlist = document.getElementById("listissues_filter");
     filter_legend = document.getElementById("listissues_filter_legend");
     filter_legend.style['cursor'] = "pointer";
+    filter_legend.onclick = toggle_filterlist;
     for (i = 0; i < fs_filterlist.children.length; i++) {
         if (fs_filterlist.children[i].tagName == "FORM") {
             filter_form = fs_filterlist.children[i];

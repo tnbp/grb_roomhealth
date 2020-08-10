@@ -1,5 +1,8 @@
 var cm;
-window.onload = commentmods_init;
+var rh_onload;
+
+rh_onload.push(commentmods_init);
+//window.onload = commentmods_init;
 
 function commentmods_init() {
     cm = document.getElementsByClassName("rh_commentmod");

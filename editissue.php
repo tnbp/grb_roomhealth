@@ -17,6 +17,7 @@ $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $id);
 rh_html_head("Bearbeiten: Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
+rh_html_add("script", true, array("src" => "rh_buttons_align.js", "type" => "application/javascript"));
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_header();
@@ -134,7 +135,7 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled" : false), "style" => "width: max-content; float: left"));
+    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled" : false), "style" => "width: max-content; display: inline-block", "id" => "align_a"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Organisation");
@@ -182,7 +183,7 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("div", true, array("style" => "float: right; text-align: right; position: absolute; bottom: 8px; right: 0.8em"));
+    rh_html_add("div", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: .6em; right: .6em", "id" => "align_b"));
     rh_html_down();
     rh_html_add("fieldset", true, array("style" => "display: inline-block", "class" => "rh_delete"));
     rh_html_down();

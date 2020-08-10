@@ -119,7 +119,7 @@ function rh_html_box($content, $attr = array()) {
     rh_html_up();
 }
 
-function rh_html_head($title, $description = false, $keywords = false, $additional_tags = array()) {
+function rh_html_head($title, $description = false, $keywords = false, $include_js = true, $additional_tags = array()) {
     rh_html_doctype("html", true);
     rh_html_add("html", true, array("lang" => "de"));
     rh_html_down();
@@ -128,7 +128,8 @@ function rh_html_head($title, $description = false, $keywords = false, $addition
     rh_html_add("meta", false, array("charset" => "utf-8"));
     if ($description !== false) rh_html_add("meta", false, array("name" => "description", "content" => $description));
     if ($keywords !== false) rh_html_add("meta", false, array("name" => "keywords", "content" => $keywords));
-    foreach ($additional_tags as $tag) rh_html_add($tag['name'], $tag['needsclosing'], $tag['attributes']);
+    if ($include_js) rh_html_add("script", true, array("src" => "rh_common.js", "type" => "application/javascript"));
+    foreach ($additional_tags as $tag) rh_html_add($tag[0], $tag[1], $tag[2], $tag[3]);
     rh_html_add("title", true, array(), false);
     rh_html_add_text($title);
     rh_html_close();

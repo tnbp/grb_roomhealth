@@ -15,6 +15,7 @@ rh_html_init();
 rh_html_head("Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
+rh_html_add("script", true, array("src" => "rh_buttons_align.js", "type" => "application/javascript"));
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_header();

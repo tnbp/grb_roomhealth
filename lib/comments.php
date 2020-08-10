@@ -8,7 +8,7 @@ function rh_comment_section(&$issue) {
     $res = mysqli_query($mysql, "SELECT comments.*,users.name FROM comments LEFT JOIN users ON comments.user_id = users.id WHERE issue_id = " . $issue['id'] . " ORDER BY id DESC");rh_html_add("script", false, array("type" => "application/javascript", "src" => "collapsible_commentmod.js"), false);
     rh_html_add_text("", false, false);
     rh_html_close("script", false, false);
-    rh_html_add("div", true, array("style" => "background-color: white; margin-left: 2em;"));
+    rh_html_add("div", true, array("style" => "background-color: white; margin-left: 2em; position: relative"));
     rh_html_down();
     //rh_html_add("hr");
     rh_html_add("h3", true, array(), false);
@@ -114,7 +114,7 @@ function rh_comment_form(&$issue) {
     rh_html_add_text("", false, false);
     rh_html_close("textarea");
     rh_html_up();
-    rh_html_add("fieldset", true, array("style" => "width: max-content"));
+    rh_html_add("fieldset", true, array("style" => "width: max-content", "id" => "align_a"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentarsichtbarkeit");
@@ -128,7 +128,7 @@ function rh_comment_form(&$issue) {
         rh_html_close();
     }
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("style" => "float: right; text-align: right; position: absolute; bottom: 8px; right: 0.8em"));
+    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: .7em; right: .7em", "id" => "align_b"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentar hinzufügen");

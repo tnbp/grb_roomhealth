@@ -1,3 +1,19 @@
+* {
+    font-size: 1em;
+    font-family: Open Sans;
+    font-family: sans-serif;
+}
+
+input {
+    min-height: 30px;
+    vertical-align: middle;
+}
+
+select {
+    min-height: 30px;
+    vertical-align: middle;
+}
+
 ul.rh_navigation {
     list-style-type: none;
     margin: 0;

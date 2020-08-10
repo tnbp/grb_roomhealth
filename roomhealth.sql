@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 12. Jul 2020 um 12:48
+-- Erstellungszeit: 10. Aug 2020 um 13:14
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -26,6 +26,35 @@ USE `roomhealth`;
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `issue_id` int(11) NOT NULL,
+  `timestamp` bigint(20) NOT NULL,
+  `body` text NOT NULL,
+  `visible` enum('all','loggedin','author','mods','none') NOT NULL DEFAULT 'all'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `comments`
+--
+
+INSERT INTO `comments` (`id`, `user_id`, `issue_id`, `timestamp`, `body`, `visible`) VALUES
+(1, 2, 2, 1596003701, 'It is Wednesday, my dudes!', 'none'),
+(2, 1, 2, 1596003790, 'Nicht hilfreich.', 'all'),
+(5, 1, 5, 1596631251, 'Kommentar eins!\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'all'),
+(6, 1, 5, 1596631394, 'Kommentar zwei!\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'all'),
+(7, 1, 5, 1596631411, 'Kommentar drei - nur für eingeloggte Nutzer!\r\n\r\nLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 'all'),
+(8, 0, 2, 1596634100, 'Ian Schwarz hat die Fehlerbeschreibung geändert:\r\nLÖSUNG: **WORKSFORME**\r\n', 'all'),
+(9, 0, 5, 1596634635, 'Ian Schwarz hat die Fehlerbeschreibung geändert:\r\nZUGEWIESEN: **Ian Schwarz**\r\n', 'all'),
+(10, 0, 5, 1596723376, 'Ian Schwarz hat die Fehlerbeschreibung geändert:\r\nSTATUS: **CLOSED**\r\nLÖSUNG: **WONTFIX**\r\n', 'all');
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `issues`
 --
 
@@ -39,17 +68,21 @@ CREATE TABLE `issues` (
   `severity` enum('critical','high','normal','low') NOT NULL,
   `assignee_id` int(11) NOT NULL,
   `status` enum('OPEN','CLOSED') NOT NULL,
-  `resolution` enum('REPORTED','CONFIRMED','NEEDSINFO','WORKSFORME','DUPLICATE','WONTFIX','RESOLVED') NOT NULL
+  `resolution` enum('REPORTED','CONFIRMED','NEEDSINFO','WORKSFORME','DUPLICATE','WONTFIX','RESOLVED') NOT NULL,
+  `allow_comments` enum('all','author','mod','admin') NOT NULL DEFAULT 'all',
+  `last_updated` bigint(20) NOT NULL DEFAULT -1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Daten für Tabelle `issues`
 --
 
-INSERT INTO `issues` (`id`, `time_reported`, `reporter_id`, `comment`, `item_id`, `room_id`, `severity`, `assignee_id`, `status`, `resolution`) VALUES
-(1, 0, 4, 'In Raum A001 ist der ELMO defekt. Auf dem Beamer bekommt man kein Bild vom Elmo. Das Bild vom Computer funktioniert.', 7, -1, 'high', 1, 'OPEN', 'REPORTED'),
-(2, 1594500083, 1, 'Deine Mudder hat aufm Elmo gesessen.', 7, -1, 'high', -1, 'OPEN', 'REPORTED'),
-(3, 1594500835, 1, 'Deine Mudda hat aufm Elmo gesessen.', 7, -1, 'critical', -1, 'OPEN', 'REPORTED');
+INSERT INTO `issues` (`id`, `time_reported`, `reporter_id`, `comment`, `item_id`, `room_id`, `severity`, `assignee_id`, `status`, `resolution`, `allow_comments`, `last_updated`) VALUES
+(1, 0, 4, 'In Raum A001 ist der ELMO defekt. Auf dem Beamer bekommt man kein Bild vom Elmo. Das Bild vom Computer funktioniert.', 7, -1, 'high', 1, 'OPEN', 'NEEDSINFO', 'all', 1596288683),
+(2, 1594500083, 1, 'Dein Vadder hat aufm Elmo gesessen.', -1, 4, 'high', 1, 'CLOSED', 'WORKSFORME', 'all', 1596634100),
+(3, 1594500835, 1, 'Deine Mudda hat aufm Elmo gesessen.', 7, -1, 'critical', 1, 'OPEN', 'CONFIRMED', 'all', 1596286350),
+(4, 1594570682, 1, 'ohne Gegenstand!', -1, 8, 'low', 1, 'CLOSED', 'REPORTED', 'all', 1596621263),
+(5, 1594571941, 1, 'Da steht ein Pferd aufm Flur, das ist so niedlich!', -1, 6, 'normal', 1, 'CLOSED', 'WONTFIX', 'all', 1596723376);
 
 -- --------------------------------------------------------
 
@@ -138,7 +171,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `session_id`, `expires`) VALUES
-(11, 1, '443e99328b3bf6eb7abdaf7668423264', 1594504435);
+(64, 1, 'e15d349ecd57ed374e0c9cfad1ef4075', 1597061626);
 
 -- --------------------------------------------------------
 
@@ -159,7 +192,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `login`, `name`, `pwhash`, `permissions`) VALUES
-(1, 'swz', 'Ian Schwarz', '$2y$10$bmuckG0j6wvZHytdoZZRYekkd46a9jLLgi2afu2E6Y6mJO8VYSiGe', 255),
+(0, '', 'system', 'INVALID', 0),
+(1, 'swz', 'Ian Schwarz', '$2y$10$bmuckG0j6wvZHytdoZZRYekkd46a9jLLgi2afu2E6Y6mJO8VYSiGe', 1023),
 (2, 'abc', 'Abigail Cesar', '$2y$10$YcLgcCJPEIMlTM1Nol.ARemR1Yw5XEi.tTs58Frs6ihJyXtMHohq2', 255),
 (3, 'def', 'Dennis Finger', '$2y$10$xhFbrt3t5ASuhSToQ9grq.Yo0oBdnRhCdvWe99C6NGFo/b2LuleIO', 255),
 (4, 'xyz', 'Xander Yzmir', '$2y$10$6yiUQymJxAalWbFXX.BB1eyakNtreXaDNrCl0lMF0EUleb.8eQUce', 0);
@@ -167,6 +201,12 @@ INSERT INTO `users` (`id`, `login`, `name`, `pwhash`, `permissions`) VALUES
 --
 -- Indizes der exportierten Tabellen
 --
+
+--
+-- Indizes für die Tabelle `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indizes für die Tabelle `issues`
@@ -204,10 +244,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT für Tabelle `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT für Tabelle `issues`
 --
 ALTER TABLE `issues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT für Tabelle `items`
@@ -225,7 +271,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT für Tabelle `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT für Tabelle `users`

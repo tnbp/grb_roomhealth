@@ -10,6 +10,8 @@ rh_session();
 
 if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_show");
 $id = (int) $_GET['id'];
+$res = mysqli_query($mysql, "SELECT issues.*,users.name FROM issues LEFT JOIN users ON issues.reporter_id = users.id WHERE issues.id = " . $id);
+$issue = mysqli_fetch_assoc($res);
 
 rh_html_init();
 rh_html_head("Fehler #" . $id);
@@ -19,9 +21,6 @@ if (can_post_comment($issue)) rh_html_add("script", true, array("src" => "rh_but
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_header();
-
-$res = mysqli_query($mysql, "SELECT issues.*,users.name FROM issues LEFT JOIN users ON issues.reporter_id = users.id WHERE issues.id = " . $id);
-$issue = mysqli_fetch_assoc($res);
 
 if ($issue !== NULL) {
     $item_id = $issue['item_id'];

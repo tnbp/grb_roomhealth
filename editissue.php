@@ -175,7 +175,7 @@ if ($issue !== NULL) {
     rh_html_add("br");
     rh_html_add("label", true, array("for" => "allow_comments", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"));
     rh_html_add_text("Kommentarfunktion:", true, true);
-    rh_html_add("select", true, array("name" => "allow_comments", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "id" => "allow_comments", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled" : false)));
+    rh_html_add("select", true, array("name" => "allow_comments", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "id" => "allow_comments", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled" : false));
     rh_html_down(); 
     foreach ($allcom_acceptable as $allcom) {
         rh_html_add("option", true, array("value" => $allcom, "selected" => ($issue['allow_comments'] == $allcom)), false);

@@ -23,7 +23,7 @@ function commentmods_init() {
             cm[i].style['overflow'] = "hidden";
             cm[i].style['padding-top'] = "0px";
             cm[i].style['padding-bottom'] = "0px";
-            cm[i].style['height'] = "0px";
+            cm[i].style['height'] = "1em";
             cm[i].legend.textContent = "Kommentarmoderation [+]";
             cm[i].legend.onclick = commentmods_expand;
             cm[i].legend.style['cursor'] = "pointer";

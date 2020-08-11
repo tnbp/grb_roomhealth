@@ -183,7 +183,7 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("div", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: .6em; right: .6em", "id" => "align_b"));
+    rh_html_add("div", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: .7em; right: .7em", "id" => "align_b"));
     rh_html_down();
     rh_html_add("fieldset", true, array("style" => "display: inline-block", "class" => "rh_delete"));
     rh_html_down();

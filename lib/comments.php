@@ -128,7 +128,7 @@ function rh_comment_form(&$issue) {
         rh_html_close();
     }
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: .7em; right: .7em", "id" => "align_b"));
+    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: .64em; right: .64em", "id" => "align_b"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentar hinzufügen");

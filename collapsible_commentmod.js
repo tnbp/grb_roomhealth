@@ -6,6 +6,7 @@ rh_onload.push(commentmods_init);
 
 function commentmods_init() {
     cm = document.getElementsByClassName("rh_commentmod");
+    if (!cm.length) return;
     for (i = 0; i < cm.length; i++) {
             for (j = 0; j < cm[i].children.length; j++) {
                 if (cm[i].children[j].tagName == "LEGEND") {

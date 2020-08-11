@@ -14,7 +14,7 @@ function rh_html_add($element = "p", $needs_closing = false, $attributes = array
     else $rh_html['indent_on_next'] = false;
     echo "<" . $element;
     foreach ($attributes as $attr => $value) {
-        if ($value !== true && $value !== false) echo " " . $attr . "=\"" . (($attr == "src" || $attr == "href") ? urlencode($value) : htmlentities($value, ENT_QUOTES | ENT_HTML5)) . "\"";
+        if ($value !== true && $value !== false) echo " " . $attr . "=\"" . htmlentities($value, ENT_QUOTES | ENT_HTML5) . "\"";
         else if ($value === true) echo " " . $attr;
         // if false, do nothing
     }

@@ -42,7 +42,7 @@ function commentmods_collapse() {
     this.parentElement.style['overflow'] = "hidden";
     this.parentElement.style['padding-top'] = "0px";
     this.parentElement.style['padding-bottom'] = "0px";
-    this.parentElement.style['height'] = "0px";
+    this.parentElement.style['height'] = "1em";
     this.textContent = "Kommentarmoderation [+]";
     this.onclick = commentmods_expand;
 }

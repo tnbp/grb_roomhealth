@@ -27,7 +27,9 @@ function verify_login($login, $password) {
 	if ($rc != 1) return false;
 	$row = mysqli_fetch_assoc($res);
 	if (password_verify($password, $row['pwhash']) === true) {
-		mysqli_query($mysql, "INSERT INTO sessions SET user_id = " . (int)$row['id'] . ", session_id = '" . mysqli_real_escape_string($mysql, $session['id']) . "', expires = " . (int)(time()+(60*60)));
+        $already_loggedin = mysqli_query($mysql, "SELECT * FROM sessions WHERE user_id = " . $row['id']);
+        if (mysqli_num_rows($already_loggedin)) mysqli_query($mysql, "UPDATE sessions SET session_id = '" . mysqli_real_escape_string($mysql, $session['id']) . "', expires = " . (int)(time()+(60*60)) . " WHERE user_id = " . $row['id']);
+		else mysqli_query($mysql, "INSERT INTO sessions SET user_id = " . (int)$row['id'] . ", session_id = '" . mysqli_real_escape_string($mysql, $session['id']) . "', expires = " . (int)(time()+(60*60)));
 		$session['name'] = $row['name'];
 		return true;
 	}

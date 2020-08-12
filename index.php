@@ -12,6 +12,7 @@ global $mysql, $session;
 rh_html_head("GRB Room Health", "GRB Room Health", "Fehlermeldung, IT-Defekte");
 rh_html_add("body", true);
 rh_html_down();
+rh_html_add("script", true, array("src" => "rh_version.js", "type" => "application/javascript"));
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);

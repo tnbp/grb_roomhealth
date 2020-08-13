@@ -1,0 +1,88 @@
+body {
+    background-color: #add8e6;
+}
+
+#allcontainer {
+    margin: auto;
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    min-width: 40%;
+    min-height: 20%;
+    max-width: max-content;
+    max-height: max-content;
+}
+
+p.title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0px 0px;
+    padding-left: 1em;
+}
+
+span.form {
+    width: 200px;
+    display: inline-block;
+}
+
+span.form + input {
+    margin-bottom: 1em;
+}
+
+fieldset.form {
+    width: max-content;
+    padding-top: 1em;
+    margin-left: 1em;
+}
+
+legend {
+    font-weight: bold;
+}
+
+span.form-submit {
+    text-align: right;
+    display: block;
+    margin-left: 200px;
+}
+
+fieldset.result {
+    text-align: center;
+    margin-left: 1em;
+    width: 50%;
+    min-width: max-content;
+}
+
+span.result {
+    margin-right: 2em;
+}
+
+#result {
+    width: 50em;
+    text-align: center;
+}
+
+div.sep {
+    background-color: #eeeeff;
+    margin-bottom: 1em;
+    padding: 1em 0px 1em;
+}
+
+#errormsg {
+    display: block;
+    background-color: #e00000;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0px !important;
+}
+
+#copymsg {
+    display: block;
+    background-color: #007000;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0px !important;
+    margin-left: 15em;
+    margin-right: 15em;
+}

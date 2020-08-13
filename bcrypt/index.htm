@@ -1,1 +1,36 @@
-
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="bcrypt Passworthash-Generator">
+        <meta name="keywords" content="bcrypt Passwort">
+        <script src="bcrypt.js" type="application/javascript"></script>
+        <title>bcrypt Passworthash-Generator</title>
+        <link rel="stylesheet" href="bcrypt.css">
+    </head>
+    <body>
+        <div id="allcontainer">
+            <div class="sep">
+                <p class="title">bcrypt-Passworthash-Generator</p>
+            </div>
+            <div class="sep">
+                <fieldset class="form">
+                    <legend>Passworteingabe</legend>
+                    <span id="errormsg"></span>
+                    <span class="form">Passwort:</span><input type="password" id="pw1"><br>
+                    <span class="form">Passwort erneut eingeben:</span><input type="password" id="pw2"><br>
+                    <span class="form-submit"><button type="button" id="pw_btn">Hash berechnen</button></span>
+                </fieldset>
+            </div>
+            <div class="sep">
+                <fieldset class="result">
+                    <legend>Ergebnis</legend>
+                    <span class="result">Berechneter Hash:</span>
+                    <input id="result" readonly>
+                    <span id="copymsg"></span>
+                </fieldset>
+            </div>
+        </div>
+        <script src="generator.js" type="application/javascript"></script>
+    </body>
+</html>

@@ -11,7 +11,7 @@ require_loggedin_or_redirect();
 
 $roomid = (int)$_POST['roomid'];
 $itemid = (int)$_POST['itemid'];
-$comment = htmlentities($_POST['comment'], ENT_QUOTES);
+$comment = $_POST['comment'];
 $severity = $_POST['severity'];
 
 if ($roomid != -1) {

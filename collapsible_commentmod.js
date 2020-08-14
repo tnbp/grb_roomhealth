@@ -2,7 +2,6 @@ var cm;
 var rh_onload;
 
 rh_onload.push(commentmods_init);
-//window.onload = commentmods_init;
 
 function commentmods_init() {
     cm = document.getElementsByClassName("rh_commentmod");
@@ -32,6 +31,7 @@ function commentmods_init() {
 
 function commentmods_expand() {
     this.parentElement.style['height'] = "max-content";
+    if (this.parentElement.style['height'] != "max-content") this.parentElement.style['height'] = "auto"; // IE 11
     this.parentElement.style['padding-bottom'] = "8px";
     this.parentElement.style['padding-top'] = "4px";
     this.textContent = "Kommentarmoderation [-]";

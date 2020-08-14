@@ -29,7 +29,7 @@ if (isset($_GET['update'])) {
     $assigneeid = (int) $_POST['assignee_id'];
     $resolution = $_POST['resolution'];
     $status = $_POST['status'];
-    $severity = $_POST['severity'];
+    //$severity = $_POST['severity'];
     $allow_comments = $_POST['allow_comments'];
     
     $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $issueid);

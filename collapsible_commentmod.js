@@ -4,6 +4,7 @@ var rh_onload;
 rh_onload.push(commentmods_init);
 
 function commentmods_init() {
+    isIE = (navigator.userAgent.indexOf('MSIE') > -1 || navigator.appVersion.indexOf('Trident/') > -1);     // Internet Explorer cannot into "max-content"
     cm = document.getElementsByClassName("rh_commentmod");
     if (!cm.length) return;
     for (i = 0; i < cm.length; i++) {
@@ -26,12 +27,16 @@ function commentmods_init() {
             cm[i].legend.textContent = "Kommentarmoderation [+]";
             cm[i].legend.onclick = commentmods_expand;
             cm[i].legend.style['cursor'] = "pointer";
+            if (isIE) {
+                cm[i].style['float'] = "right";
+                cm[i].style['display'] = "inline-block";
+            }
     }
 }
 
 function commentmods_expand() {
     this.parentElement.style['height'] = "max-content";
-    if (this.parentElement.style['height'] != "max-content") this.parentElement.style['height'] = "auto"; // IE 11
+    if (this.parentElement.style['height'] != "max-content") this.parentElement.style['height'] = "auto"; // IE
     this.parentElement.style['padding-bottom'] = "8px";
     this.parentElement.style['padding-top'] = "4px";
     this.textContent = "Kommentarmoderation [-]";

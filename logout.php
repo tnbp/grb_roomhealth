@@ -6,6 +6,9 @@ rh_session();
 global $mysql, $session;
 
 $res = mysqli_query($mysql, "DELETE FROM sessions WHERE session_id = '" . $session['id'] . "'");
-redirect(urldecode($_GET['next']));
+if (!isset($_GET['next'])) $next = "index.php";
+else $next = urldecode($_GET['next']);
+
+redirect($next);
 
 ?>

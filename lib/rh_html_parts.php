@@ -49,7 +49,7 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
                 else array_unshift($order_by_arr, $k . "_d");
             }
             else $order_by_arr[] = $k . "_d";
-            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by[]=" . implode("&order_by[]=", $order_by_arr)));
+            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by=" . implode("&order_by=", $order_by_arr)));
         }
         rh_html_add_raw($h, false);
         if (is_string($k)) {

@@ -24,8 +24,8 @@ if (($limit = (int) $_POST['limit']) > 0) {
 else if (($limit = (int) $_GET['limit']) > 0) {
     $filter_args[] = "limit=" . $limit;
 }
-if (is_array($_GET['order_by'])) {
-    foreach ($_GET['order_by'] as $order) $filter_args[] = "order_by[]=" . $order;
+if (is_array(($order_by = http_get_array("order_by")))) {
+    foreach ($order_by as $order) $filter_args[] = "order_by=" . $order;
 }
 
 redirect("listissues.php?" . implode("&", $filter_args));

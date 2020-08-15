@@ -32,7 +32,7 @@ if ($session['loggedin'] === true) {
     rh_html_room_selector(false, "newissue.php");
 }
 
-$order_by_raw = is_array($_GET['order_by']) ? $_GET['order_by'] : false;
+$order_by_raw = http_get_array("order_by");
 $order_by = array();
 if ($order_by_raw !== false) {
     foreach ($order_by_raw as $cur_o) {

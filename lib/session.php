@@ -34,4 +34,28 @@ function redirect($target) {
     die();
 }
 
+/*  script.php?a[]=one&a[]=two&a[]=three is PHP's way of transferring arrays via HTTP GET, but
+    "[" and "]" (square brackets) are not valid characters in HTML href parameters.
+    This function extracts arrays from the REQUEST_URI string; arrays are possible like:
+    script.php?a=one&a=two&a=three
+*/
+    
+function http_get_array($param) {
+    if (strpos($_SERVER['REQUEST_URI'], "?") === false) return false;
+    $request_params = explode("&", preg_replace("/.*\?[^?]*/U", "", $_SERVER['REQUEST_URI']));
+    $c = count($request_params);
+    $ret = array();
+    if ($c == 1 && $request_params[0] == "") return false;
+    for ($i = 0; $i < $c; $i++) {
+        if (strpos($request_params[$i], "=") === false) {
+            if ($cur[0] == $param) $ret[] = true;
+            continue;
+        }
+        $cur = explode("=", $request_params[$i]);
+        if ($cur[0] == $param) $ret[] = $cur[1];
+    }
+    if (!count($ret)) return false;
+    return $ret;
+}
+
 ?>

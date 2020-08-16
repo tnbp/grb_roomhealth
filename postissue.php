@@ -114,24 +114,24 @@ if (isset($_GET['update'])) {
             mysqli_query($mysql, "INSERT INTO comments SET user_id = 0, issue_id = " . $issueid . ", timestamp = " . time() . ", body = '" . $body . "', visible = 'all'");
         }
         if (isset($_POST['backtolist'])) redirect("listissues.php");
-        else redirect("editissue.php?id=" . $issueid . "&debugquery=" . urlencode($updatequery));   // TODO: delete debugquery
+        else redirect("showissue.php?id=" . $issueid);
     }
-    else redirect("index.php?error=invalid_issue_update&part=" . $error);
+    else redirect("editissue.php?id=" . $issueid . "&error=invalid_issue_update&part=" . $error);
 }
 else if (isset($_GET['delete'])) {
     // if we're *deleting* the issue, we just need to check for permission...
-    require_permission_or_redirect(PERMISSION_ISSUE_DELETE, "index.php?error=invalid_issue_del&part=permission");
-    if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_del&part=issueid");
+    require_permission_or_redirect(PERMISSION_ISSUE_DELETE, "listissues.php?error=invalid_issue_del&part=permission");
+    if (!isset($_GET['id'])) redirect("listissues.php?error=invalid_issue_del&part=issueid");
     $issueid = (int) $_GET['id'];
     if ($_POST['del_ok'] != "ok") redirect("showissue.php?id=" . $issueid . "&error=checkbox");
     mysqli_query($mysql, "DELETE FROM issues WHERE id = " . $issueid);
     // also delete all associated allow_comments!
     mysqli_query($mysql, "DELETE FROM comments WHERE issue_id = " . $issueid);
-    redirect("index.php");
+    redirect("listissues.php");
 }
 else if (isset($_GET['assignself'])) {
-    require_permission_or_redirect(PERMISSION_ISSUE_ASSIGN_SELF, "index.php?error=invalid_issue_post&part=permissions");
-    if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_post&part=issueid");
+    require_permission_or_redirect(PERMISSION_ISSUE_ASSIGN_SELF, "listissues.php?error=invalid_issue_post&part=permissions");
+    if (!isset($_GET['id'])) redirect("listissues.php?error=invalid_issue_post&part=issueid");
     $issueid = (int) $_GET['id'];
     mysqli_query($mysql, "UPDATE issues SET assignee_id = " . $session['userid'] . " WHERE id = " . $issueid);
     redirect("showissue.php?id=" . $issueid);
@@ -140,9 +140,12 @@ else {
     // if we're only posting a new issue, there's not much that can go wrong, right?
     if (!isset($error)) {
         mysqli_query($mysql, "INSERT INTO issues SET time_reported = " . time() . ", reporter_id = " . $session['userid'] . ", comment = '" . mysqli_real_escape_string($mysql, $comment) . "', item_id = " . $itemid . ", room_id = " . $roomid . ", severity = '" . $severity . "', assignee_id = -1, status = 'OPEN', resolution = 'REPORTED'");
-        redirect("index.php");
+        $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
+        $newissue = mysqli_fetch_assoc($res);
+        if ($newissue !== false) redirect("showissue.php?id= " . $newissue['id']);
+        else redirect("listissues.php");
     }
-    else redirect("index.php?error=invalid_issue_post&part=" . $error);
+    else redirect("listissues.php?error=invalid_issue_post&part=" . $error);
 }
 
 ?>

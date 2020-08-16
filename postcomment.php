@@ -47,7 +47,10 @@ else {
     $body = trim($_POST['body']);
     if (!strlen($body)) redirect("showissue.php?id=" . $issue['id'] . "&error=invalid_comment_post&part=body");
     mysqli_query($mysql, "INSERT INTO comments SET user_id = " . $session['userid'] . ", issue_id = " . $issue['id'] . ", timestamp = " . time() . ", body = '" . mysqli_real_escape_string($mysql, $_POST['body']) . "', visible = '" . mysqli_real_escape_string($mysql, $vis) . "'");
-    redirect("showissue.php?id=" . $issue['id']);
+    $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
+    $commentid = mysqli_fetch_assoc($res);
+    if ($commentid !== false) redirect("showissue.php?id=" . $issue['id'] . "#commentmod_" . $commentid['id']);
+    else redirect("showissue.php?id=" . $issue['id']);
 }
 
 ?>

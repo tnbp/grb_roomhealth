@@ -339,6 +339,8 @@ function rh_htmlentities_array($in, $mode = (ENT_QUOTES | ENT_HTML5)) {    // ug
 }
 
 function rh_html_end() {
+    global $mysql;
+    if ($mysql) mysqli_close($mysql);
     rh_html_up(RH_HTML_MAX_DEPTH);
 }
 

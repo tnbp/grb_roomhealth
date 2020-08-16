@@ -31,6 +31,8 @@ function get_session($info = false) {
 
 function redirect($target) {
     header("Location: " . $target);
+    global $mysql;
+    if ($mysql) mysqli_close($mysql);
     die();
 }
 

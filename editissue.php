@@ -104,7 +104,7 @@ if ($issue !== NULL) {
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problembeschreibung");
-    rh_html_add("textarea", true, array("name" => "comment", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "style" => "width: 100%; min-height: 400px", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled" : false), false);
+    rh_html_add("textarea", true, array("name" => "comment", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "style" => "width: 100%; min-height: 400px", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled_noperm" : false), false);
     rh_html_add_text($issue['comment'], false, false);
     rh_html_close();
     rh_html_up(); 
@@ -114,7 +114,7 @@ if ($issue !== NULL) {
     rh_html_add_text("Nähere Angaben");
     rh_html_add("label", true, array("for" => "itemid", "style" => "min-width: 150px; display: inline-block"));
     rh_html_add_text("Defekter Gegenstand:", true, true);
-    rh_html_add("select", true, array("name" => "itemid", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "id" => "itemid", "style" => "margin-right: 15em", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled" : false));
+    rh_html_add("select", true, array("name" => "itemid", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "id" => "itemid", "style" => "margin-right: 15em", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled_noperm" : false));
     rh_html_down(); 
     $res = mysqli_query($mysql, "SELECT * FROM items WHERE room_id = " . $room_id);
     while (($row = mysqli_fetch_assoc($res)) !== NULL) {
@@ -127,7 +127,7 @@ if ($issue !== NULL) {
     rh_html_up();
     rh_html_add("label", true, array("for" => "severity", "style" => "margin-right: 2em; display: inline-block"));
     rh_html_add_text("Dringlichkeit:", true, true);
-    rh_html_add("select", true, array("name" => "severity", "readonly" => !has_permission(PERMISSION_ISSUE_SET_SEVERITY), "disabled" => $disableother, "id" => "severity", "class" => !has_permission(PERMISSION_ISSUE_SET_SEVERITY) ? "rh_disabled" : false));
+    rh_html_add("select", true, array("name" => "severity", "readonly" => !has_permission(PERMISSION_ISSUE_SET_SEVERITY), "disabled" => $disableother, "id" => "severity", "class" => !has_permission(PERMISSION_ISSUE_SET_SEVERITY) ? "rh_disabled_noperm" : false));
     rh_html_down(); 
     foreach ($severity_acceptable as $sev) {
         rh_html_add("option", true, array("value" => $sev, "selected" => ($issue['severity'] == $sev)), false);
@@ -141,7 +141,7 @@ if ($issue !== NULL) {
     rh_html_add_text("Organisation");
     rh_html_add("label", true, array("for" => "assignee_id", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"));
     rh_html_add_text("zugewiesen:", true, true);
-    rh_html_add("select", true, array("name" => "assignee_id", "readonly" => !has_permission(PERMISSION_ISSUE_ASSIGN_SELF | PERMISSION_ISSUE_ASSIGN), "disabled" => $disableother, "id" => "assignee_id", "class" => !has_permission(PERMISSION_ISSUE_ASSIGN_SELF | PERMISSION_ISSUE_ASSIGN) ? "rh_disabled" : false));
+    rh_html_add("select", true, array("name" => "assignee_id", "readonly" => !has_permission(PERMISSION_ISSUE_ASSIGN_SELF | PERMISSION_ISSUE_ASSIGN), "disabled" => $disableother, "id" => "assignee_id", "class" => !has_permission(PERMISSION_ISSUE_ASSIGN_SELF | PERMISSION_ISSUE_ASSIGN) ? "rh_disabled_noperm" : false));
     rh_html_down(); 
     $res = mysqli_query($mysql, "SELECT * FROM users WHERE permissions & " . PERMISSION_ISSUE_ASSIGNABLE);
     while (($row = mysqli_fetch_assoc($res)) !== NULL) {
@@ -164,7 +164,7 @@ if ($issue !== NULL) {
     rh_html_add("br");
     rh_html_add("label", true, array("for" => "resolution", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"));
     rh_html_add_text("Unterstatus:", true, true);
-    rh_html_add("select", true, array("name" => "resolution", "readonly" => !has_permission(PERMISSION_ISSUE_SET_RESOLUTION), "disabled" => $disableother, "id" => "resolution", "class" => !has_permission(PERMISSION_ISSUE_SET_RESOLUTION) ? "rh_disabled" : false));
+    rh_html_add("select", true, array("name" => "resolution", "readonly" => !has_permission(PERMISSION_ISSUE_SET_RESOLUTION), "disabled" => $disableother, "id" => "resolution", "class" => !has_permission(PERMISSION_ISSUE_SET_RESOLUTION) ? "rh_disabled_noperm" : false));
     rh_html_down(); 
     foreach ($resolution_acceptable as $resolution) {
         rh_html_add("option", true, array("value" => $resolution, "selected" => ($issue['resolution'] == $resolution)), false);
@@ -175,7 +175,7 @@ if ($issue !== NULL) {
     rh_html_add("br");
     rh_html_add("label", true, array("for" => "allow_comments", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"));
     rh_html_add_text("Kommentarfunktion:", true, true);
-    rh_html_add("select", true, array("name" => "allow_comments", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "id" => "allow_comments", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled" : false));
+    rh_html_add("select", true, array("name" => "allow_comments", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "id" => "allow_comments", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled_noperm" : false));
     rh_html_down(); 
     foreach ($allcom_acceptable as $allcom) {
         rh_html_add("option", true, array("value" => $allcom, "selected" => ($issue['allow_comments'] == $allcom)), false);

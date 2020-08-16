@@ -15,7 +15,7 @@ pw_btn.onclick = calculate_hash;
 
 function calculate_hash() {
     if (pw1.value != pw2.value) {
-        errormsg.display("Passwörter stimmen nicht überein!");
+        errormsg.display(unescape("Passw%F6rter stimmen nicht %FCberein%21"));
         return;
     }
     if (pw1.value.length < 8) {

@@ -3,6 +3,8 @@
 var rh_onload = new Array();
 var rh_onresize = new Array();
 
+rh_onload.push(del_checkbox_assist_init);
+
 window.onload = function() {
         for (i = 0; i < rh_onload.length; i++) rh_onload[i]();
 }
@@ -21,4 +23,29 @@ function check_overlap(e1, e2) {
             overlap = -1;
         }
         return overlap;
+}
+
+function del_checkbox_assist_init() {
+    var delete_fs = document.getElementsByClassName("rh_delete");
+    for (i = 0; i < delete_fs.length; i++) {
+        for (j = 0; j < delete_fs[i].childNodes.length; j++) {
+            if (delete_fs[i].childNodes[j].type == "submit") {
+                delete_fs[i].childNodes[j].onclick = del_checkbox_assist_check;
+                break;
+            }
+        }
+    }
+}
+
+function del_checkbox_assist_check() {
+    for (i = 0; i < this.parentNode.childNodes.length; i++) {
+        that = this.parentNode.childNodes[i];
+        if (that.type == "checkbox") del_ok = that;
+    }
+    if (typeof that === undefined) return true; // something went wrong; let PHP handle it
+    if (!that.checked) {
+        alert(unescape("L%F6schen bitte durch Anklicken der Checkbox best%E4tigen."));
+        return false;
+    }
+    return true;
 }

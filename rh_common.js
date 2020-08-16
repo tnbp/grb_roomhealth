@@ -3,7 +3,7 @@
 var rh_onload = new Array();
 var rh_onresize = new Array();
 
-rh_onload.push(del_checkbox_assist_init);
+//rh_onload.push(del_checkbox_assist_init);
 
 window.onload = function() {
         for (i = 0; i < rh_onload.length; i++) rh_onload[i]();
@@ -31,7 +31,6 @@ function del_checkbox_assist_init() {
         for (j = 0; j < delete_fs[i].childNodes.length; j++) {
             if (delete_fs[i].childNodes[j].type == "submit") {
                 delete_fs[i].childNodes[j].onclick = del_checkbox_assist_check;
-                break;
             }
         }
     }

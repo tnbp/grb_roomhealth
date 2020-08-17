@@ -1,6 +1,15 @@
 <?php
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+require_once("config.inc.php");
+
+if (DEBUG) {
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+}
+else {
+    ini_set('display_errors', 0);
+    error_reporting(E_ERROR | E_WARNING | E_PARSE);
+}
 
 function rh_session() {
 	session_start();
@@ -8,8 +17,8 @@ function rh_session() {
 	$session['id'] = session_id();
 	$session['loggedin'] = false;
 	
-	$mysql = mysqli_connect("localhost", "root", "", "roomhealth") or die("Could not connect to database :-(");
-	mysqli_set_charset($mysql, "utf8mb4");
+	$mysql = mysqli_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB) or die("Could not connect to database :-(");
+	mysqli_set_charset($mysql, MYSQL_CHARSET);
 	mysqli_query($mysql, "DELETE FROM sessions WHERE expires < " . time());
 	$res = mysqli_query($mysql, "SELECT sessions.*, users.name, users.permissions FROM sessions,users WHERE session_id = '" . mysqli_real_escape_string($mysql, $session['id'])."' AND sessions.user_id = users.id");
 	$rc = mysqli_num_rows($res);
@@ -17,7 +26,7 @@ function rh_session() {
 		$row = mysqli_fetch_assoc($res);
 		$session['name'] = $row['name'];
 		$session['userid'] = $row['user_id'];
-		$session['expires'] = time()+60*60;
+		$session['expires'] = time() + SESSION_VALIDITY;
 		$session['loggedin'] = true;
 		$session['permissions'] = $row['permissions'];
 		mysqli_query($mysql, "UPDATE sessions SET expires = " . $session['expires'] . " WHERE session_id = '" . mysqli_real_escape_string($mysql, $session['id']) . "'");
@@ -59,6 +68,12 @@ function http_get_array($param) {
     }
     if (!count($ret)) return false;
     return $ret;
+}
+
+if (!function_exists("array_key_last")) {
+    function array_key_last($a) {
+        return key(array_slice($a, -1, 1, true));
+    }
 }
 
 ?>

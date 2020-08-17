@@ -72,6 +72,8 @@ function http_get_array($param) {
 
 if (!function_exists("array_key_last")) {
     function array_key_last($a) {
+        if (!is_array($a)) return NULL;
+        if (!count($a)) return NULL;
         return key(array_slice($a, -1, 1, true));
     }
 }

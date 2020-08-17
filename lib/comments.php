@@ -5,9 +5,8 @@ require_once("lib/permissions.php");
 
 function rh_comment_section(&$issue) {
     global $mysql, $session;
-    $res = mysqli_query($mysql, "SELECT comments.*,users.name FROM comments LEFT JOIN users ON comments.user_id = users.id WHERE issue_id = " . $issue['id'] . " ORDER BY id DESC");rh_html_add("script", false, array("type" => "application/javascript", "src" => "collapsible_commentmod.js"), false);
-    rh_html_add_text("", false, false);
-    rh_html_close("script", false, false);
+    $res = mysqli_query($mysql, "SELECT comments.*,users.name FROM comments LEFT JOIN users ON comments.user_id = users.id WHERE issue_id = " . $issue['id'] . " ORDER BY id DESC");
+    rh_html_add_js(false, "rh_collapsible_commentmod.js");
     rh_html_add("div", true, array("style" => "background-color: white; margin-left: 2em; position: relative"));
     rh_html_down();
     //rh_html_add("hr");
@@ -104,13 +103,13 @@ function rh_comment_form(&$issue) {
     rh_html_down();
     rh_html_add("legend", true, array("style" => "font-size: 16px; font-weight: bold"), false);
     rh_html_add_text("Kommentar hinzufügen:");
-    rh_html_add("form", true, array("action" => "postcomment.php?issue=" . $issue['id'], "method" => "POST"));
+    rh_html_add("form", true, array("action" => "postcomment.php?issue=" . $issue['id'], "method" => "POST", "id" => "comments_form"));
     rh_html_down();
     rh_html_add("fieldset", true);
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentartext");
-    rh_html_add("textarea", false, array("name" => "body", "style" => "width: 100%; min-height: 200px"), false); // this is shit!
+    rh_html_add("textarea", false, array("name" => "body", "style" => "width: 100%; min-height: 200px", "id" => "comments_textarea"), false); // this is shit!
     rh_html_add_text("", false, false);
     rh_html_close("textarea");
     rh_html_up();
@@ -133,7 +132,25 @@ function rh_comment_form(&$issue) {
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentar hinzufügen");
     rh_html_add("input", false, array("value" => "Abschicken", "type" => "submit"));
-    rh_html_up(3);
+    rh_html_up(2);
+    $form_verify_js = <<<EOD
+document.getElementById("comments_form").onsubmit = rh_verify_comments_form;
+
+function rh_verify_comments_form() {    
+    var submit = true;
+    
+    if (document.getElementById("comments_textarea").value == "") {
+        document.getElementById("comments_textarea").parentNode.style['background-color'] = "#ff4a1d";
+        document.getElementById("comments_textarea").oninput = function() { document.getElementById("comments_textarea").parentNode.style['background-color'] = ""; };
+        submit = false;
+    }
+    if (!submit) alert("Bitte geben Sie einen Kommentartext ein!");
+
+    return submit;
+}
+EOD;
+    rh_html_add_js($form_verify_js);
+    rh_html_up();
 }
 
 function can_see_comment(&$comment) {

@@ -14,7 +14,7 @@ global $mysql, $session;
 rh_html_head("Neuen Defekt melden" . $id);
 rh_html_add("body", true);
 rh_html_down();
-rh_html_add("script", true, array("src" => "rh_buttons_align.js", "type" => "application/javascript"));
+rh_html_add_js(false, "rh_buttons_align.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);
@@ -46,7 +46,7 @@ else if (isset($_POST['classroom']) && isset($_POST['by_classroom'])) {
 }
 else $rc = 0;
     
-rh_html_add("form", true, array("action" => "newissue.php", "method" => "POST"));
+rh_html_add("form", true, array("action" => "newissue.php", "method" => "POST", "id" => "newissue_form"));
 rh_html_down(); // in form
 rh_html_add("div", true, array("style" => "width: max-content"));
 rh_html_down();
@@ -78,7 +78,7 @@ rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : fals
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Problembeschreibung", true, true);
-rh_html_add("textarea", true, array("name" => "comment", "style" => "width: 100%; min-height: 400px", "disabled" => ($rc == 0)), false);
+rh_html_add("textarea", true, array("name" => "comment", "style" => "width: 100%; min-height: 400px", "disabled" => ($rc == 0), "id" => "newissue_textarea"), false);
 rh_html_add_text(isset($_POST['comment']) ? $_POST['comment'] : "");
 rh_html_close();
 rh_html_up(); // leaving p
@@ -134,6 +134,36 @@ rh_html_add("legend", true, array(), false);
 rh_html_add_text("Abschicken");
 rh_html_add("input", false, array("type" => "submit", "formaction" => "postissue.php", "value" => "Defekt melden", "style" => "margin-left: 2px; margin-top: 1em", "disabled" => ($rc == 0)));
 rh_html_up();
+
+// This is not very good. But it works...
+
+$form_verify_js = <<<EOD
+document.getElementById("newissue_form").onsubmit = rh_verify_newissue_form;
+
+function rh_verify_newissue_form() {
+    if (document.activeElement.getAttribute("formaction").indexOf("resetroom") > -1) return true;
+    
+    var submit = true;
+    
+    if (document.getElementById("newissue_textarea").value == "") {
+        document.getElementById("newissue_textarea").parentNode.style['background-color'] = "#ff4a1d";
+        document.getElementById("newissue_textarea").oninput = function() { document.getElementById("newissue_textarea").parentNode.style['background-color'] = ""; };
+        submit = false;
+    }
+    if (!document.getElementById("radio_crit").checked && !document.getElementById("radio_high").checked && !document.getElementById("radio_normal").checked && !document.getElementById("radio_low").checked) {
+        document.getElementById("align_a").style['background-color'] = "#ff4a1d";
+        document.getElementById("radio_crit").onchange = document.getElementById("radio_high").onchange = document.getElementById("radio_normal").onchange = document.getElementById("radio_low").onchange = function() {
+            document.getElementById("align_a").style['background-color'] = "";
+        }
+        submit = false;
+    }
+    if (!submit) alert("Bitte alle benötigten Felder ausfüllen!");
+
+    return submit;
+}
+EOD;
+
+if ($rc != 0) rh_html_add_js($form_verify_js);
 
 rh_html_end();
 

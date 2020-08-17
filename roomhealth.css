@@ -207,7 +207,10 @@ tr.rh_head th a {
     text-decoration: none;
 }
 
-/* OH BOY */
+/*  OH BOY 
+    bad, bad, hacky solution below:
+    V V V V V V V V V V V V V V V V
+*/
 
 .rh_disabled:before {
     content: "Bitte erst Raum ausw\00e4hlen";
@@ -223,7 +226,7 @@ tr.rh_head th a {
     border: 4px solid orangered;
     border-radius: 20px;
     opacity: .8;
-    width: calc(100% - 6.2em - 4px);
+    width: calc(100% - 6.2em - 6px);
     color: black;
     font-weight: bold;
 }

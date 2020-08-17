@@ -17,7 +17,7 @@ $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $id);
 rh_html_head("Bearbeiten: Fehler #" . $id);
 rh_html_add("body", true);
 rh_html_down();
-rh_html_add("script", true, array("src" => "rh_buttons_align.js", "type" => "application/javascript"));
+rh_html_add_js(false, "rh_buttons_align.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_header();
@@ -204,6 +204,10 @@ if ($issue !== NULL) {
     rh_html_add_text("Änderungen übernehmen");
     rh_html_add("input", false, array("type" => "submit", "value" => "Speichern", "disabled" => $disableother));
     rh_html_add("input", false, array("type" => "submit", "name" => "backtolist", "value" => "Speichern und zurück zur Liste", "disabled" => $disableother));
+    /*  I thought about adding some JavaScript to validate the form here, but I decided not to.
+        If you're trusted enough to edit issue reports, you should be trusted with not doing stupid stuff here.
+        If you cannot be trusted thus, you'll have to deal with the backend shouting at you. No hand-holding.
+    */
     rh_html_up(3);
 }
 else {

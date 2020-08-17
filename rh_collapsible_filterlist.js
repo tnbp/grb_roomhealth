@@ -4,7 +4,6 @@ var filterlist_toggle_blocked;
 
 var rh_onload;
 rh_onload.push(init_filterlist);
-//window.onload = init_filterlist;
 
 var filter_msg_p;
 //var filter_form_status = false; // true == visible -> defined by PHP script

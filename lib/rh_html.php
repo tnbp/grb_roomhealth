@@ -75,10 +75,22 @@ function rh_html_add_text($content, $indent = false, $newline = false) {
     else $rh_html['indent_on_next'] = false;
 }
 
-function rh_html_add_raw($content, $indent = false) {
+function rh_html_add_raw($content, $indent = false, $line_by_line = true) {
     global $rh_html;
-    if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']);
-    echo $content;
+    if ($line_by_line === true) {
+        $content = str_replace("\r", "", $content);
+        $lines = explode("\n", $content);
+        $last = array_key_last($lines);
+        foreach ($lines as $n => $line) {
+            if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']);
+            if ($n === $last) echo $line;
+            else echo $line . "\n";
+        }
+    }
+    else {
+        if ($indent !== false) echo str_repeat("\t", $rh_html['current_level']);
+        echo $content;
+    }
     if ($indent !== false) echo "\n";
     else $rh_html['indent_on_next'] = false;
 }
@@ -86,6 +98,19 @@ function rh_html_add_raw($content, $indent = false) {
 function rh_html_indent_on_next($toggle = true) {
     global $rh_html;
     $rh_html['indent_on_next'] = ($toggle ? true : false);
+}
+
+function rh_html_add_js($script, $src = false) {
+    rh_html_add("script", true, array("type" => "application/javascript", "src" => $src), $src === false);
+    if ($script !== false) {
+        rh_html_down();
+        rh_html_add_raw($script, true);
+        rh_html_up();
+    }
+    else {
+        rh_html_indent_on_next(false);
+        rh_html_close();
+    }
 }
 
 ?>

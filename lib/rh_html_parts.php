@@ -21,8 +21,9 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     rh_html_add("tr", true, $header_tr_attr);
     rh_html_down();
     foreach ($header as $k => $h) {
-        rh_html_add("th", true, $header_th_attr, false);
-        if (is_string($k)) {
+        $k_is_string = is_string($k);
+        rh_html_add("th", true, $header_th_attr, $k_is_string);
+        if ($k_is_string) {
             if ($k == "th_attr") continue;
             rh_html_down();
             $filters_arr = array();
@@ -49,10 +50,10 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
                 else array_unshift($order_by_arr, $k . "_d");
             }
             else $order_by_arr[] = $k . "_d";
-            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by=" . implode("&order_by=", $order_by_arr)));
+            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by=" . implode("&order_by=", $order_by_arr)), false);
         }
         rh_html_add_raw($h, false);
-        if (is_string($k)) {
+        if ($k_is_string) {
             rh_html_close("a", false, false);
             rh_html_up();
         }
@@ -128,7 +129,7 @@ function rh_html_head($title, $description = false, $keywords = false, $include_
     rh_html_add("meta", false, array("charset" => "utf-8"));
     if ($description !== false) rh_html_add("meta", false, array("name" => "description", "content" => $description));
     if ($keywords !== false) rh_html_add("meta", false, array("name" => "keywords", "content" => $keywords));
-    if ($include_js) rh_html_add("script", true, array("src" => "rh_common.js", "type" => "application/javascript"));
+    if ($include_js) rh_html_add_js(false, "rh_common.js");
     foreach ($additional_tags as $tag) rh_html_add($tag[0], $tag[1], $tag[2], $tag[3]);
     rh_html_add("title", true, array(), false);
     rh_html_add_text($title);

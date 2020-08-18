@@ -42,8 +42,8 @@ function del_checkbox_assist_check() {
         var that = this.parentNode.childNodes[i];
         if (that.type == "checkbox") del_ok = that;
     }
-    if (typeof that === undefined) return true; // something went wrong; let PHP handle it
-    if (!that.checked) {
+    if (typeof del_ok === undefined) return true; // something went wrong; let PHP handle it
+    if (!del_ok.checked) {
         alert(unescape("L%F6schen bitte durch Anklicken der Checkbox best%E4tigen."));
         return false;
     }

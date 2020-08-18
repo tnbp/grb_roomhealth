@@ -66,6 +66,7 @@ if (isset($_GET['update'])) {
     if ($comment != $row['comment']) {
         // update comment...
         $update['comment'] = mysqli_real_escape_string($mysql, $comment);
+        if (!strlen(trim($comment))) $error = "empty";
         if (!has_permission(PERMISSION_ISSUE_EDIT)) $error = "permission";
     }
     if ($roomid != $row['room_id'] && $itemid == -1) {

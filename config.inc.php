@@ -10,6 +10,8 @@ define("MYSQL_CHARSET", "utf8mb4");
 
 define("SESSION_VALIDITY", 3600); // time before session becomes invalid for inactivity (in seconds; 3600 = 1 hour)
 
+define("DATE_INPUT_POLYFILL_SCRIPT", "nodep-date-input-polyfill.dist.js");
+
 define("DEBUG", false);
 
 ?>

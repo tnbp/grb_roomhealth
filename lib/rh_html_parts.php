@@ -129,7 +129,10 @@ function rh_html_head($title, $description = false, $keywords = false, $include_
     rh_html_add("meta", false, array("charset" => "utf-8"));
     if ($description !== false) rh_html_add("meta", false, array("name" => "description", "content" => $description));
     if ($keywords !== false) rh_html_add("meta", false, array("name" => "keywords", "content" => $keywords));
-    if ($include_js) rh_html_add_js(false, "rh_common.js");
+    if ($include_js) {
+        rh_html_add_js(false, "rh_common.js");
+        if (file_exists(DATE_INPUT_POLYFILL_SCRIPT)) rh_html_add_js(false, DATE_INPUT_POLYFILL_SCRIPT);
+    }
     foreach ($additional_tags as $tag) rh_html_add($tag[0], $tag[1], $tag[2], $tag[3]);
     rh_html_add("title", true, array(), false);
     rh_html_add_text($title);

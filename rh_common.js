@@ -4,6 +4,7 @@ var rh_onload = new Array();
 var rh_onresize = new Array();
 
 rh_onload.push(del_checkbox_assist_init);
+rh_onload.push(remove_unsupported_tags);
 
 window.onload = function() {
         for (var i = 0; i < rh_onload.length; i++) rh_onload[i]();
@@ -48,4 +49,11 @@ function del_checkbox_assist_check() {
         return false;
     }
     return true;
+}
+
+function remove_unsupported_tags() {
+    var min_time = document.getElementsByName("min_time")[0];
+    if (typeof min_time != "undefined") {
+            if (min_time.type != "time") min_time.remove();
+    }
 }

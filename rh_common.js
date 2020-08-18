@@ -54,6 +54,6 @@ function del_checkbox_assist_check() {
 function remove_unsupported_tags() {
     var min_time = document.getElementsByName("min_time")[0];
     if (typeof min_time != "undefined") {
-            if (min_time.type != "time") min_time.remove();
+            if (min_time.type != "time") min_time.style['display'] = "none";
     }
 }

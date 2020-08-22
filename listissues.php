@@ -50,6 +50,12 @@ $assignee = isset($_GET['assignee']) ? (int) $_GET['assignee'] : false;
 $status = isset($_GET['status']) ? $_GET['status'] : false;
 $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : false;
 $page = (isset($_GET['page']) && $limit) ? (int) $_GET['page'] : false;
+$reported_by = isset($_GET['reported_by']) ? (int) $_GET['reported_by'] : false;
+$room = isset($_GET['room']) ? (int) $_GET['room'] : false;
+
+/*  reported_by and room cannot be set as filters manually, but are handled here anyway.
+    listfilter.php will remove them.
+*/
 
 $sql_where = " (issues.item_id = items.id OR (issues.item_id = -1 AND issues.room_id = r1.id))";
 if ($status !== false) $sql_where .= " AND issues.status = '" . mysqli_real_escape_string($mysql, $status) . "'";
@@ -59,6 +65,8 @@ if ($assignee !== false) {
 }
 if ($min_severity !== false) $sql_where .= " AND issues.severity+0 <= " . $min_severity;
 if ($reported_since !== false) $sql_where .= " AND issues.time_reported >= " . $reported_since;
+if ($reported_by !== false) $sql_where .= " AND issues.reporter_id = " . $reported_by;
+if ($room !== false) $sql_where .= " AND issues.room_id = " . $room;
 
 $sql_query = "SELECT issues.*, items.name AS iname, r2.name AS rname, r2.id AS rid, r1.name AS rname_alt, r1.id AS rid_alt, u1.name AS repname, u2.name AS asgname 
              FROM issues LEFT JOIN users AS u1 ON u1.id = issues.reporter_id 
@@ -76,7 +84,9 @@ $sql_query .= ($limit ? " LIMIT " . ($limit + 1) : "") .
 $res = mysqli_query($mysql, $sql_query);
 $rn = mysqli_num_rows($res);
 
-if (isset($_GET['min_sev']) || $reported_since !== false || $assignee !== false || $status !== false || $limit !== false) rh_html_add_js("var filter_form_status = true;");
+$showlist = !isset($_GET['nolist']);
+
+if ($showlist && (isset($_GET['min_sev']) || $reported_since !== false || $assignee !== false || $status !== false || $limit !== false)) rh_html_add_js("var filter_form_status = true;");
 else rh_html_add_js("var filter_form_status = false;");
 
 rh_html_add("h2", true, array(), false);

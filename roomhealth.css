@@ -16,17 +16,21 @@ select {
 
 ul.rh_navigation {
     list-style-type: none;
-    margin: 0;
-    margin-left: -1em;
-    margin-right: -1em;
     padding: 0;
-    overflow: hidden;
-    background-color: #333333;
+    overflow-y: visible;
 }
 
+ul.rh_navigation:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+li.rh_navigation_dropdown,
 li.rh_navigation {
     float: left;
     margin-top: 8px;
+    cursor: pointer;
 }
 
 li.rh_loginform_ul {
@@ -88,24 +92,46 @@ li.rh_loginform_ul a:hover {
     font-weight: bold;
 }
 
-
+li.rh_navigation_dropdown a,
 li.rh_navigation a {
     display: block;
     color: white;
-    text-align: center;
+    text-align: left;
     padding: 16px;
     text-decoration: none;
     background-color: #222222;
     margin-left: 5px;
 }
 
+li.rh_navigation_dropdown div {
+    display: none;
+}
+
+li.rh_navigation_dropdown:hover div a {
+    position: relative;
+    z-index: 100;
+}
+
+div.rh_header {
+    margin: 0px -1em;
+    background-color: #333333;
+    display: block;
+}
+
 li.rh_navigation:first-of-type {
     margin-left: -5px;
 }
 
+li.rh_navigation_dropdown a:hover,
 li.rh_navigation a:hover {
     background-color: #c0c0c0;
     color: black;
+}
+
+li.rh_navigation_dropdown:hover div {
+    display: block;
+    position: absolute;
+    z-index: 100;
 }
 
 #allcontainer {

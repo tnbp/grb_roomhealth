@@ -246,7 +246,7 @@ function rh_header($nexturi = false) {
 }
 
 function rh_navigation($nexturi) {
-    rh_html_add("ul", true, array("class" => "rh_navigation"));
+    rh_html_add("ul", true, array("class" => "rh_navigation", "style" => "position: relative"));
     rh_html_down();
     rh_html_add("li", true, array("class" => "rh_navigation"));
     rh_html_down();
@@ -274,20 +274,28 @@ function rh_navigation($nexturi) {
     rh_html_add_text("Raumplan");
     rh_html_close();
     rh_html_up();
-    if (has_permission(PERMISSION_ISSUE_ASSIGNABLE)) {
-        rh_html_add("li", true, array("class" => "rh_navigation"));
+    if (is_loggedin()) {
+        rh_html_add("li", true, array("class" => "rh_navigation_dropdown"));
         rh_html_down();
-        rh_html_add("a", true, array("href" => "listissues.php?assignee=" . get_session("userid") . "&status=OPEN"), false);
-        rh_html_add_text("Mir zugewiesene Defekte");
-        rh_html_close();
+        rh_html_add("a", true, array(), false);
+        rh_html_add_text("Meine Defekte");
+        rh_html_add("div", true);
+        rh_html_down();
+        if (has_permission(PERMISSION_ISSUE_ASSIGNABLE)) {
+            rh_html_add("a", true, array("href" => "listissues.php?assignee=" . get_session("userid") . "&status=OPEN&nolist"), false);
+            rh_html_add_text("mir zugewiesene, offene Defekte");
+        }
+        if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF)) {
+            rh_html_add("a", true, array("href" => "listissues.php?assignee=-1&status=OPEN&nolist"), false);
+            rh_html_add_text("noch nicht zugewiesene Defekte");
+        }
+        if (get_session("classroom") !== false) {
+            rh_html_add("a", true, array("href" => "listissues.php?room=" . get_session("classroom") . "&nolist"), false);
+            rh_html_add_text("Defekte in meinem Klassenraum");
+        }
+        rh_html_add("a", true, array("href" => "listissues.php?reported_by=" . get_session("userid") . "&nolist"), false);
+        rh_html_add_text("von mir gemeldet");
         rh_html_up();
-    }
-    if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF)) {
-        rh_html_add("li", true, array("class" => "rh_navigation"));
-        rh_html_down();
-        rh_html_add("a", true, array("href" => "listissues.php?assignee=-1&status=OPEN"), false);
-        rh_html_add_text("Noch nicht zugewiesene Defekte");
-        rh_html_close();
         rh_html_up();
     }
     if ($_GET['error'] == "login") {

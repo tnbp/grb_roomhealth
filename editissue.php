@@ -40,12 +40,13 @@ if ($issue !== NULL) {
             if ($room !== false) $room_id = $room['id'];
         }
     }
-    if (isset($_POST['comment'])) $issue['comment'] = htmlentities($_POST['comment']);
-    if (isset($_POST['severity'])) $issue['severity'] = htmlentities($_POST['severity']);
+    if (isset($_POST['comment'])) $issue['comment'] = $_POST['comment'];
+    $issue['comment'] = str_replace(array("\n"), "", $issue['comment']);
+    if (isset($_POST['severity'])) $issue['severity'] = $_POST['severity'];
     if (isset($_POST['assignee_id'])) $issue['assignee_id'] = (int) $_POST['assignee_id'];
-    if (isset($_POST['status'])) $issue['status'] = htmlentities($_POST['status']);
-    if (isset($_POST['resolution'])) $issue['resolution'] = htmlentities($_POST['resolution']);
-    if (isset($_POST['allow_comments'])) $issue['allow_comments'] = htmlentities($_POST['allow_comments']);
+    if (isset($_POST['status'])) $issue['status'] = $_POST['status'];
+    if (isset($_POST['resolution'])) $issue['resolution'] = $_POST['resolution'];
+    if (isset($_POST['allow_comments'])) $issue['allow_comments'] = $_POST['allow_comments'];
     $res = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM rooms LEFT JOIN classes ON classes.room_id = rooms.id WHERE rooms.id = " . $room_id);
     $room = mysqli_fetch_assoc($res);
     $res = mysqli_query($mysql, "SELECT name,id FROM users WHERE id = " . $issue['reporter_id'] . " OR id = " . $issue['assignee_id']);

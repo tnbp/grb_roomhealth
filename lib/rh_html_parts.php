@@ -176,7 +176,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         rh_html_close();
         rh_html_up();
         rh_html_add("input", false, array("type" => "submit", "value" => "Auswählen", "formaction" => $formaction, "name" => "by_room"));
-        if (isset($_POST['comment'])) rh_html_add("input", false, array("type" => "hidden", "name" => "comment", "value" => $_POST['comment']));
+        if (isset($_POST['comment'])) rh_html_add("input", false, array("type" => "hidden", "name" => "comment", "value" => str_replace("\n", "", $_POST['comment'])));
         if (isset($_POST['severity'])) rh_html_add("input", false, array("type" => "hidden", "name" => "severity", "value" => $_POST['severity']));
         if (isset($_POST['assignee_id'])) rh_html_add("input", false, array("type" => "hidden", "name" => "assignee_id", "value" => (int) $_POST['assignee_id']));
         if (isset($_POST['status'])) rh_html_add("input", false, array("type" => "hidden", "name" => "status", "value" => $_POST['status']));

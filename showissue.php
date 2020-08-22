@@ -77,8 +77,10 @@ if ($issue !== NULL) {
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problembeschreibung");
-    rh_html_close(false, false, false, false);
-    rh_html_add_text($issue['comment'], false, true);
+    rh_html_close();
+    rh_html_add("pre", true, array(), false);
+    rh_html_add_text(str_replace("\n", "", $issue['comment']), false, false);
+    rh_html_close();
     rh_html_up(2);
     $show_delete_button = has_permission(PERMISSION_ISSUE_DELETE);
     $show_edit_button = has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT);

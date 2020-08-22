@@ -227,7 +227,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         rh_html_down();
         rh_html_add("legend", true, array(), false);
         rh_html_add_text("Raum");
-        rh_html_add("label", true, array("for" => "submit_room", "style" => "min-width: 200px; display: inline-block; font-weight: bold"), false);
+        rh_html_add("label", true, array("for" => "submit_room", "style" => "min-width: 300px; display: inline-block; font-weight: bold"), false);
         rh_html_add_text($room['name']);
         if (count($additional_info)) rh_html_add_text(" (" . implode(", ", $additional_info) . ")");
         rh_html_add("span", true, array("style" => "display: inline-block; min-width: 200px; text-align: right"));

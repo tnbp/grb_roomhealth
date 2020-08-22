@@ -59,7 +59,7 @@ rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : fals
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Nähere Angaben", true, true);
-rh_html_add("label", true, array("for" => "itemid", "style" => "min-width: 200px; display: inline-block"), false);
+rh_html_add("label", true, array("for" => "itemid", "style" => "min-width: 300px; display: inline-block"), false);
 rh_html_add_text("Defekter Gegenstand:");
 rh_html_add("select", true, array("name" => "itemid", "style" => "min-width: 200px", "disabled" => ($rc == 0), "id" => "itemid")); // ech!
 rh_html_down(); // in select

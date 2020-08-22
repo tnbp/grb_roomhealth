@@ -35,7 +35,7 @@ if ($issue !== NULL) {
     if (isset($_GET['newroom'])) {
         if (isset($_POST['by_room'])) $room_id = (int) $_POST['roomid'];
         if (isset($_POST['by_classroom'])) {    // BLERGH!
-            $room = mysqli_query($mysql, "SELECT * FROM rooms WHERE class = '" . mysqli_real_escape_string($mysql, $_POST['classroom']) . "'");
+            $room = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM classes LEFT JOIN rooms on classes.room_id = rooms.id WHERE classes.name = '" . mysqli_real_escape_string($mysql, $_POST['classroom']) . "'");
             $room = mysqli_fetch_assoc($room);
             if ($room !== false) $room_id = $room['id'];
         }
@@ -46,7 +46,7 @@ if ($issue !== NULL) {
     if (isset($_POST['status'])) $issue['status'] = htmlentities($_POST['status']);
     if (isset($_POST['resolution'])) $issue['resolution'] = htmlentities($_POST['resolution']);
     if (isset($_POST['allow_comments'])) $issue['allow_comments'] = htmlentities($_POST['allow_comments']);
-    $res = mysqli_query($mysql, "SELECT * FROM rooms WHERE id = " . $room_id);
+    $res = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM rooms LEFT JOIN classes ON classes.room_id = rooms.id WHERE rooms.id = " . $room_id);
     $room = mysqli_fetch_assoc($res);
     $res = mysqli_query($mysql, "SELECT name,id FROM users WHERE id = " . $issue['reporter_id'] . " OR id = " . $issue['assignee_id']);
     $reporter = $assignee = "niemand";

@@ -157,18 +157,22 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         }
         rh_html_add("label", true, array("for" => "select_roomid", "style" => "min-width: 200px; display: inline-block"));
         rh_html_add_text("... in Raum: ", true, true);
-        rh_html_add("select", true, array("name" => "roomid", "id" => "select_roomid", "style" => "min-width: 200px"));
+        rh_html_add("select", true, array("name" => "roomid", "id" => "select_roomid", "style" => "min-width: 300px"));
         rh_html_down();
-        $res = mysqli_query($mysql, "SELECT * FROM rooms ORDER BY name ASC");
+        $res = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM rooms LEFT JOIN classes ON rooms.id = classes.room_id ORDER BY name ASC");
         $rc = mysqli_num_rows($res);
         $classrooms = array();
         for ($i = 0; $i < $rc; $i++) {
             $row = mysqli_fetch_assoc($res);
+            $additional_info = array();
+            if ($row['cname'] != NULL) $additional_info[] = "Klassenraum " . $row['cname'];
+            if ($row['description'] != "") $additional_info[] = $row['description'];
             rh_html_add("option", true, array("value" => (int)$row['id'], "selected" => ($_POST['roomid'] == $row['id'])), false);
-            if ($row['class'] == "") rh_html_add_text($row['name'], false, false);
-            else echo rh_html_add_text($row['name'] . " (Klassenraum " . $row['class']. ")", false, false);
-            if ($row['class'] != "" && !in_array($row['class'], $classrooms)) $classrooms[] = $row['class'];
+            if (!count($additional_info)) rh_html_add_text($row['name'], false, false);
+            else echo rh_html_add_text($row['name'] . " (" . implode(", ", $additional_info) . ")", false, false);
+            if ($row['cname'] != NULL && !in_array($row['cname'], $classrooms)) $classrooms[] = $row['cname'];
         }
+        sort($classrooms);
         rh_html_close();
         rh_html_up();
         rh_html_add("input", false, array("type" => "submit", "value" => "Auswählen", "formaction" => $formaction, "name" => "by_room"));
@@ -178,7 +182,6 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         if (isset($_POST['status'])) rh_html_add("input", false, array("type" => "hidden", "name" => "status", "value" => $_POST['status']));
         if (isset($_POST['resolution'])) rh_html_add("input", false, array("type" => "hidden", "name" => "resolution", "value" =>$_POST['resolution']));
         if (isset($_POST['allow_comments'])) rh_html_add("input", false, array("type" => "hidden", "name" => "allow_comments", "value" => $_POST['allow_comments']));
-        //rh_html_up();
         if ($newform) {
             rh_html_up();
             rh_html_add("form", true, array("action" => "newissue.php", "method" => "POST"), true);
@@ -186,16 +189,16 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         }
         else rh_html_add("br");
         if (isset($_POST['roomid'])) {
-            $class = mysqli_query($mysql, "SELECT class FROM rooms WHERE id = " . (int)$_POST['roomid']);
+            $class = mysqli_query($mysql, "SELECT name FROM classes WHERE room_id = " . (int)$_POST['roomid']);
             $class = mysqli_fetch_assoc($class);
-            if ($class !== false) $class = $class['class'];
+            if ($class !== false) $class = $class['name'];
         }
         rh_html_add("label", true, array("for" => "select_classroom", "style" => "min-width: 200px; display: inline-block"), true);
         rh_html_add_text("... im Klassenraum: ", true, true);
-        rh_html_add("span", true, array("style" => "display: inline-block; min-width: 200px; text-align: right; margin-top: 0.5em"));
+        rh_html_add("span", true, array("style" => "display: inline-block; min-width: 300px; text-align: right; margin-top: 0.5em"));
         rh_html_down();
         rh_html_add("select", true, array("id" => "select_classroom", "name" => "classroom"), true);
-        rh_html_down(); // now in select
+        rh_html_down();
         for ($i = 0; $i < sizeof($classrooms); $i++) {
             rh_html_add("option", true, array("value" => $classrooms[$i], "selected" => ($class == $classrooms[$i])), false);
             rh_html_add_text($classrooms[$i]);
@@ -216,13 +219,17 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         rh_html_up();
     }
     else {
+        $additional_info = array();
+        if ($room['cname'] != NULL) $additional_info[] = "Klassenraum " . $room['cname'];
+        if ($room['description'] != "") $additional_info[] = $room['description'];
+        
         rh_html_add("fieldset", true, array("style" => "width: max-content"));
         rh_html_down();
         rh_html_add("legend", true, array(), false);
         rh_html_add_text("Raum");
         rh_html_add("label", true, array("for" => "submit_room", "style" => "min-width: 200px; display: inline-block; font-weight: bold"), false);
         rh_html_add_text($room['name']);
-        if ($room['class'] != "") rh_html_add_text(" (Klassenraum " . $room['class'] . ")");
+        if (count($additional_info)) rh_html_add_text(" (" . implode(", ", $additional_info) . ")");
         rh_html_add("span", true, array("style" => "display: inline-block; min-width: 200px; text-align: right"));
         rh_html_down();
         rh_html_add("input", false, array("type" => "hidden", "name" => "roomid", "value" => (int)$room['id']));

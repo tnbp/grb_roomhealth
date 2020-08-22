@@ -31,17 +31,17 @@ rh_html_down(); // in div
 if (isset($_GET['resetroom'])) $rc = 0;
 else if (isset($_GET['roomid'])) {
     $room_id = (int) $_GET['roomid'];
-    $res = mysqli_query($mysql, "SELECT * FROM rooms WHERE id = " . $room_id);
+    $res = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM rooms LEFT JOIN classes ON classes.room_id = rooms.id WHERE rooms.id = " . $room_id);
     $rc = mysqli_num_rows($res);
 }
 else if (isset($_POST['roomid']) && isset($_POST['by_room'])) {
     $room_id = (int) $_POST['roomid'];
-    $res = mysqli_query($mysql, "SELECT * FROM rooms WHERE id = " . $room_id);
+    $res = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM rooms LEFT JOIN classes ON classes.room_id = rooms.id WHERE rooms.id = " . $room_id);
     $rc = mysqli_num_rows($res);
 }
 else if (isset($_POST['classroom']) && isset($_POST['by_classroom'])) {
     $classroom = $_POST['classroom'];
-    $res = mysqli_query($mysql, "SELECT * FROM rooms WHERE class = '" . mysqli_real_escape_string($mysql, $classroom) . "'");
+    $res = mysqli_query($mysql, "SELECT rooms.*, classes.name AS cname FROM classes LEFT JOIN rooms on classes.room_id = rooms.id WHERE classes.name = '" . mysqli_real_escape_string($mysql, $classroom) . "'");
     $rc = mysqli_num_rows($res);
 }
 else $rc = 0;

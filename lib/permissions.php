@@ -15,9 +15,8 @@ define("PERMISSION_LEVEL_MOD", PERMISSION_ISSUE_ASSIGN_SELF | PERMISSION_ISSUE_S
 define("PERMISSION_LEVEL_ADMIN", PERMISSION_LEVEL_MOD | PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_DELETE | PERMISSION_ISSUE_ASSIGN | PERMISSION_ISSUE_SET_RESOLUTION);
 // to be defined
 
-function require_permission_or_redirect($permission, $target = "index.php") {
-    global $session;
-    if ($session['permissions'] & $permission) return;
+function require_permission_or_redirect($permission, $target = "index.php") {   // replace this with more readable: has_permission($permission) or redirect()...
+    if (has_permission($permission)) return;
     redirect($target);
 }
 

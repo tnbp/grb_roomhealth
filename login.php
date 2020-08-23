@@ -22,7 +22,7 @@ else {
 		
 function verify_login($login, $password) {
 	global $mysql, $session;
-	$res = mysqli_query($mysql, "SELECT * FROM users WHERE login = '" . mysqli_real_escape_string($mysql, $login). "'");
+	$res = mysqli_query($mysql, "SELECT * FROM users WHERE LOWER(login) = LOWER('" . mysqli_real_escape_string($mysql, $login). "')");
 	$rc = mysqli_num_rows($res);
 	if ($rc != 1) return false;
 	$row = mysqli_fetch_assoc($res);

@@ -11,20 +11,23 @@ require_loggedin_or_redirect();
 
 global $mysql, $session;
 
-rh_html_head("Neuen Defekt melden" . $id);
+rh_html_head("GRB: Neuen IT-Defekt melden");
 rh_html_add("body", true);
 rh_html_down();
 rh_html_add_js(false, "rh_buttons_align.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);
-rh_html_add_text("GRB Raumstatus");
+rh_html_add_text("GRB: Neuen IT-Defekt melden");
 rh_html_close();
 
 rh_header();
 
 rh_html_add("h2", true, array(), false);
-rh_html_add_text("Neuen Defekt melden");
+rh_html_down();
+rh_html_add("img", false, array("src" => "img/newissue.png", "alt" => "Neuen Defekt melden", "style" => "vertical-align: bottom"));
+rh_html_add_text("Neuen Defekt melden...");
+rh_html_up();
 rh_html_add("div", true, array("style" => "position: relative"));
 rh_html_down(); // in div
 
@@ -55,7 +58,7 @@ if ($rc > 0) {
     rh_html_room_selector($row, "newissue.php?resetroom");
 }
 else rh_html_room_selector(false, "newissue.php", false);
-rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false));
+rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Nähere Angaben", true, true);
@@ -74,7 +77,7 @@ for ($i = 0; $i < $rc_i; $i++) {
 }
 rh_html_close();
 rh_html_up(3); // leaving select, p
-rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false));
+rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Problembeschreibung", true, true);
@@ -82,7 +85,7 @@ rh_html_add("textarea", true, array("name" => "comment", "style" => "width: 100%
 rh_html_add_text(isset($_POST['comment']) ? $_POST['comment'] : "");
 rh_html_close();
 rh_html_up(); // leaving p
-rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false, "style" => "width: max-content", "id" => "align_a"));
+rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false, "style" => "width: max-content; background-color: white", "id" => "align_a"));
 rh_html_down(); // in div
 rh_html_add("legend", true);
 rh_html_add_text("Schweregrad", true, true);
@@ -93,6 +96,7 @@ rh_html_down(); // in li
 rh_html_add("input", false, array("type" => "radio", "name" => "severity", "value" => "critical", "checked" => ($_POST['severity'] == "critical"), "disabled" => ($rc == 0), "id" => "radio_crit"));
 rh_html_add("label", true, array("for" => "radio_crit"));
 rh_html_down();
+rh_html_add("img", false, array("src" => "img/sev_critical.png", "alt" => "schwerwiegend", "style" => "vertical-align: middle"));
 rh_html_add("span", true, array("style" => "font-style: italic; font-weight: bold"), false);
 rh_html_add_text("schwerwiegend");
 rh_html_close(false, false, false, false);
@@ -103,6 +107,7 @@ rh_html_down(); // in li
 rh_html_add("input", false, array("type" => "radio", "name" => "severity", "value" => "high", "checked" => ($_POST['severity'] == "high"), "disabled" => ($rc == 0), "id" => "radio_high"));
 rh_html_add("label", true, array("for" => "radio_high"));
 rh_html_down();
+rh_html_add("img", false, array("src" => "img/sev_high.png", "alt" => "hoch", "style" => "vertical-align: middle"));
 rh_html_add("span", true, array("style" => "font-style: italic; font-weight: bold"), false);
 rh_html_add_text("hoch");
 rh_html_close(false, false, false, false);
@@ -113,6 +118,7 @@ rh_html_down(); // in li
 rh_html_add("input", false, array("type" => "radio", "name" => "severity", "value" => "normal", "checked" => ($_POST['severity'] == "normal"), "disabled" => ($rc == 0), "id" => "radio_normal"));
 rh_html_add("label", true, array("for" => "radio_normal"));
 rh_html_down();
+rh_html_add("img", false, array("src" => "img/sev_normal.png", "alt" => "mittel", "style" => "vertical-align: middle"));
 rh_html_add("span", true, array("style" => "font-style: italic; font-weight: bold"), false);
 rh_html_add_text("mittel");
 rh_html_close(false, false, false, false);
@@ -123,12 +129,13 @@ rh_html_down(); // in li
 rh_html_add("input", false, array("type" => "radio", "name" => "severity", "value" => "low", "checked" => ($_POST['severity'] == "low"), "disabled" => ($rc == 0), "id" => "radio_low"));
 rh_html_add("label", true, array("for" => "radio_low"));
 rh_html_down();
+rh_html_add("img", false, array("src" => "img/sev_low.png", "alt" => "niedrig", "style" => "vertical-align: middle"));
 rh_html_add("span", true, array("style" => "font-style: italic; font-weight: bold"), false);
 rh_html_add_text("niedrig");
 rh_html_close(false, false, false, false);
 rh_html_add_text(" - Unterricht wird kaum beeinflusst", false, true);
 rh_html_up(4); // leaving li, ul, div
-rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: 0px; right: 0px", "class" => ($rc == 0) ? "rh_disabled" : false, "id" => "align_b"));
+rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: 0px; right: 0px; background-color: white", "class" => ($rc == 0) ? "rh_disabled" : false, "id" => "align_b"));
 rh_html_down();
 rh_html_add("legend", true, array(), false);
 rh_html_add_text("Abschicken");

@@ -10,13 +10,13 @@ rh_html_init();
 
 global $mysql, $session;
 
-rh_html_head("GRB Room Health", "GRB Room Health", "Fehlermeldung, IT-Defekte");
+rh_html_head("GRB: Alle IT-Defekte");
 rh_html_add("body", true);
 rh_html_down();
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);
-rh_html_add_text("GRB Raumstatus - Alle Defekte");
+rh_html_add_text("GRB: Alle IT-Defekte");
 rh_html_close();
 
 rh_header();
@@ -28,7 +28,10 @@ if (isset($_GET['error'])) {
 
 if ($session['loggedin'] === true) {
     rh_html_add("h2", true, array(), false);
+    rh_html_down();
+    rh_html_add("img", false, array("src" => "img/newissue.png", "alt" => "Neuen Defekt melden", "style" => "vertical-align: bottom"));
     rh_html_add_text("Neuen Defekt melden...");
+    rh_html_up();
     rh_html_room_selector(false, "newissue.php");
 }
 
@@ -90,7 +93,10 @@ if ($showlist && (isset($_GET['min_sev']) || $reported_since !== false || $assig
 else rh_html_add_js("var filter_form_status = false;");
 
 rh_html_add("h2", true, array(), false);
+rh_html_down();
+rh_html_add("img", false, array("src" => "img/listissues.png", "alt" => "Momentan bestehende Defekte", "style" => "vertical-align: bottom"));
 rh_html_add_text("Momentan bestehende Defekte:");
+rh_html_up();
 
 rh_html_add("fieldset", true, array("id" => "listissues_filter", "style" => "margin-bottom: 2em; width: max-content"));
 rh_html_down();
@@ -221,7 +227,7 @@ for ($i = 0; $i < $limit; $i++) {
     $cur_actions = "<a href=\"showissue.php?id=" . $row['id'] ."\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>";
     if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $row['assignee_id'] == -1) $cur_actions .= "&nbsp;<a href=\"postissue.php?id=" . $row['id'] ."&assignself\"><img src=\"img/assignself.png\" alt=\"mir selbst zuweisen\" title=\"mir selbst zuweisen\"></a>";
     if (has_permission(PERMISSION_ISSUE_EDIT)) $cur_actions .= "&nbsp;<a href=\"editissue.php?id=" . $row['id'] ."\"><img src=\"img/edit.png\" alt=\"bearbeiten\" title=\"bearbeiten\"></a>";
-    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['repname'], $severity_description[$row['severity']], $cur_asgname, date("Y-m-d H:i:s", $row['last_updated']), $row['status'] . "<br>" . $row['resolution'], $cur_actions);
+    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['repname'], "<img src=\"img/sev_" . $row['severity'] . ".png\" alt=\"" . $row['severity'] . "\">" . $severity_description[$row['severity']], $cur_asgname, date("Y-m-d H:i:s", $row['last_updated']), $row['status'] . "<br>" . $row['resolution'], $cur_actions);
     $t_data[] = $cur;
 }
 

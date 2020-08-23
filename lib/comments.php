@@ -7,25 +7,27 @@ function rh_comment_section(&$issue) {
     global $mysql, $session;
     $res = mysqli_query($mysql, "SELECT comments.*,users.name FROM comments LEFT JOIN users ON comments.user_id = users.id WHERE issue_id = " . $issue['id'] . " ORDER BY id DESC");
     rh_html_add_js(false, "rh_collapsible_commentmod.js");
-    rh_html_add("div", true, array("style" => "background-color: white; margin-left: 2em; position: relative"));
+    rh_html_add("div", true, array("style" => "background-color: #f7f7ff; margin-left: 2em; position: relative"));
     rh_html_down();
     //rh_html_add("hr");
     rh_html_add("h3", true, array(), false);
+    rh_html_down();
+    rh_html_add("img", false, array("src" => "img/comments.png", "alt" => "Kommentare", "style" => "vertical-align: middle"));
     rh_html_add_text("Kommentare:");
+    rh_html_up();
     if (!mysqli_num_rows($res)) {
-        rh_html_add("p", true, array("style" => "font-style: italic"), false);
+        rh_html_add("p", true, array("style" => "font-style: italic; padding-left: 1em"), false);
+        rh_html_down();
+        rh_html_add("img", false, array("src" => "img/info.png", "alt" => "Information", "style" => "vertical-align: middle"));
         rh_html_add_text("keine Kommentare...");
+        rh_html_up();
     }
     else {
         while (($comment = mysqli_fetch_assoc($res)) !== NULL) {
             rh_display_comment($comment);
         }
     }
-    if (can_post_comment($issue)) {
-        //rh_html_add("hr");
-        rh_comment_form($issue);
-    }
-    //rh_html_add("hr");
+    if (can_post_comment($issue)) rh_comment_form($issue);
     rh_html_up();
 }
 
@@ -102,10 +104,13 @@ function rh_comment_form(&$issue) {
     rh_html_add("fieldset", true, array("style" => "position: relative"));
     rh_html_down();
     rh_html_add("legend", true, array("style" => "font-size: 16px; font-weight: bold"), false);
+    rh_html_down();
+    rh_html_add("img", false, array("src" => "img/comment_new.png", "alt" => "Kommentar hinzufügen", "style" => "vertical-align: middle"));
     rh_html_add_text("Kommentar hinzufügen:");
+    rh_html_up();
     rh_html_add("form", true, array("action" => "postcomment.php?issue=" . $issue['id'], "method" => "POST", "id" => "comments_form"));
     rh_html_down();
-    rh_html_add("fieldset", true);
+    rh_html_add("fieldset", true, array("style" => "background-color: white"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentartext");
@@ -113,21 +118,24 @@ function rh_comment_form(&$issue) {
     rh_html_add_text("", false, false);
     rh_html_close("textarea");
     rh_html_up();
-    rh_html_add("fieldset", true, array("style" => "width: max-content", "id" => "align_a"));
+    rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white", "id" => "align_a"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentarsichtbarkeit");
+    rh_html_add("img", false, array("src" => "img/visibility.png", "alt" => "Sichtbarkeit", "style" => "vertical-align: middle"));
     rh_html_add("label", true, array("for" => "visible", "style" => "margin-right: 3em; display: inline-block"), false);
     rh_html_add_text("sichtbar machen für:");
     rh_html_add("select", true, array("name" => "visible", "id" => "visible"));
     rh_html_down();
     foreach ($comvis_acceptable as $vis) {
+        if ($vis == "mods" && !has_permission(PERMISSION_LEVEL_MOD)) continue;
+        if ($vis == "none" && !has_permission(PERMISSION_LEVEL_ADMIN)) continue; // do not allow these for users; that makes no sense
         rh_html_add("option", true, array("value" => $vis, "selected" => ($comment['visible'] == $vis)), false);
         rh_html_add_text($comvis_description[$vis]);
         rh_html_close();
     }
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: .64em; right: .64em", "id" => "align_b"));
+    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: .64em; right: .64em; background-color: white", "id" => "align_b"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Kommentar hinzufügen");

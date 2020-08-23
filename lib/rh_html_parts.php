@@ -155,7 +155,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
     if ($room === false) {
         // we are not displaying a room, but the actual selector;
         // however, if we're changing a room, $_POST['roomid'] will be set!
-        rh_html_add("fieldset", true, array("style" => "width: max-content"));
+        rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white"));
         rh_html_down();
         rh_html_add("legend", true, array(), false);
         rh_html_add_text("Defekt melden...");
@@ -231,7 +231,7 @@ function rh_html_room_selector($room, $formaction, $newform = true) {
         if ($room['cname'] != NULL) $additional_info[] = "Klassenraum " . $room['cname'];
         if ($room['description'] != "") $additional_info[] = $room['description'];
         
-        rh_html_add("fieldset", true, array("style" => "width: max-content"));
+        rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white"));
         rh_html_down();
         rh_html_add("legend", true, array(), false);
         rh_html_add_text("Raum");
@@ -313,30 +313,31 @@ function rh_navigation($nexturi) {
         unset($_GET['error']); // do not display it twice
     }
     rh_loginform_ul($nexturi);
-    rh_html_up(2);
+    rh_html_up();
 }
 
 function rh_loginform_ul($nexturi) {
 	if ($nexturi === false) $nexturi = $_SERVER['REQUEST_URI'];
-	global $session, $mysql;
+	global $mysql;
 	if (is_loggedin()) {
-        rh_html_add("li", true, array("class" => "rh_logininfo_ul"));
+		rh_html_add("li", true, array("class" => "rh_loginform_ul"));
         rh_html_down();
-        rh_html_add("span", true, array("class" => "rh_logininfo_ul", "style" => "padding: 16px"));
+        rh_html_add("span", true, array("style" => "margin-top: 8px"));
         rh_html_down();
-        rh_html_add("span", true, array("class" => "rh_logininfo_ul", "style" => "padding-right: 2em"), false);
-		rh_html_add_text("Eingeloggt als: ");
-		rh_html_close();
-		rh_html_add("span", true, array("class" => "rh_logininfo_ul", "style" => "font-weight: bold"), false);
-		rh_html_add_text($session['name']);
-		rh_html_close();
-		rh_html_up();
-        rh_html_add("span", true, array("class" => "rh_logininfo_ul"));
+        rh_html_add("span", true, array("style" => "display: inline-block; clear: right; float: none; padding-right: 2em"));
+        rh_html_add_text("Eingeloggt als:");
+        rh_html_add("span", true, array("style" => "display: inline-block; clear: right; float: none; font-weight: bold; padding-right: 4px"));
         rh_html_down();
-		rh_html_add("a", true, array("href" => "logout.php?next=" . urlencode($nexturi)), false);
-		rh_html_add_text("Ausloggen");
-		rh_html_close();
-		rh_html_up();
+        rh_html_add_text(get_session("name"));
+		rh_html_add("img", false, array("src" => get_session("gender") == "female" ? "img/user_fmle.png" : "img/user_male.png", "alt" => "Benutzersymbol", "style" => "vertical-align: text-bottom; z-index: 20; position: relative"));
+		if (has_permission(PERMISSION_LEVEL_ADMIN)) rh_html_add("img", false, array("src" => "img/user_adm.png", "alt" => "Administrator", "title" => "Administrator", "style" => "vertical-align: text-bottom; position: relative; z-index: 10; margin-left: -1.2em"));
+		else if (has_permission(PERMISSION_LEVEL_MOD)) rh_html_add("img", false, array("src" => "img/user_mod.png", "alt" => "Moderator", "title" => "Moderator", "style" => "vertical-align: text-bottom; position: relative; z-index: 10"));
+		else if (has_permission(PERMISSION_ISSUE_ASSIGNABLE)) rh_html_add("img", false, array("src" => "img/user_hlpr.png", "alt" => "Technik-Team", "title" => "Technik-Team", "style" => "vertical-align: text-bottom; position: relative; z-index: 10"));
+		if (($classname = get_session("classname")) !== false) rh_html_add("img", false, array("src" => "img/user_ctch.png", "alt" => "Klassenlehrer" . (get_session("gender") == "female" ? "in " : " ") . $classname, "title" => "Klassenlehrer" . (get_session("gender") == "female" ? "in " : " ") . $classname, "style" => "vertical-align: text-bottom; margin-left: -1.2em"));
+        rh_html_up();
+        rh_html_add("a", true, array("href" => "logout.php?next=" . urlencode($nexturi), "style" => "display: inline-block; clear: right; float: none"), false);
+        rh_html_add_text("Ausloggen");
+        rh_html_up(2);
     }
 	else {
         rh_html_add("li", true, array("class" => "rh_loginform_ul"));
@@ -353,7 +354,7 @@ function rh_loginform_ul($nexturi) {
 		rh_html_add("input", false, array("type" => "submit", "value" => "Login"));
 		rh_html_up();
 		rh_html_add("input", false, array("type" => "hidden", "name" => "nexturi", "value" => urlencode($nexturi)));
-		rh_html_up();
+		rh_html_up(2);
 	}
 }
 

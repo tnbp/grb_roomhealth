@@ -14,12 +14,15 @@ $res = mysqli_query($mysql, "SELECT issues.*,users.name FROM issues LEFT JOIN us
 $issue = mysqli_fetch_assoc($res);
 
 rh_html_init();
-rh_html_head("Fehler #" . $id);
+rh_html_head("GRB: IT-Defekt #" . $id);
 rh_html_add("body", true);
 rh_html_down();
 if (can_post_comment($issue)) rh_html_add_js(false, "rh_buttons_align.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
+rh_html_add("h1", true, array(), false);
+rh_html_add_text("GRB: Zeige Defekt #" . $id . "...");
+rh_html_close();
 rh_header();
 
 if ($issue !== NULL) {
@@ -39,8 +42,6 @@ if ($issue !== NULL) {
     else {
         $assignee = "niemandem";
     }
-    rh_html_add("h1", true, array(), false);
-    rh_html_add_text("Zeige Defekt #" . $id . "...");
     rh_html_add("h2", true, array());
     rh_html_down();
     rh_html_add_text("Problem mit Gerät:", true, true);
@@ -49,11 +50,11 @@ if ($issue !== NULL) {
     rh_html_add_text("in Raum:");
     rh_html_add("input", false, array("style" => ($style_string . "; min-width: 100px; width: " . (strlen($room['name']) / 1.66) . "em"), "value" => $room['name'], "readonly" => true)); // not great either; see above
     rh_html_up();
-    rh_html_add("fieldset", true);
+    rh_html_add("fieldset", true, array("style" => "background-color: #f7f7ff"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problemdetails");
-    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content"));
+    rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; background-color: white"));
     rh_html_down(); 
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Meldung und Bearbeitung");
@@ -86,7 +87,7 @@ if ($issue !== NULL) {
     $show_edit_button = has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT);
     $show_selfassign_button = (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $issue['assignee_id'] == -1);
     if ($show_delete_button || $show_edit_button || $show_selfassign_button) {
-        rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto"), true);
+        rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; background-color: #f7f7ff"), true);
         rh_html_down();
         rh_html_add("legend", true, array(), false);
         rh_html_add_text("Problembehandlung");
@@ -102,7 +103,7 @@ if ($issue !== NULL) {
             rh_html_up();
         }
         if ($show_selfassign_button) {
-            rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+            rh_html_add("fieldset", true, array("style" => "display: inline-block; background-color: white"));
             rh_html_down();
             rh_html_add("legend", true, array(), false);
             rh_html_add_text("Meldung zuweisen");
@@ -110,7 +111,7 @@ if ($issue !== NULL) {
             rh_html_up();
         }
         if ($show_edit_button) {
-            rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+            rh_html_add("fieldset", true, array("style" => "display: inline-block; background-color: white"));
             rh_html_down();
             rh_html_add("legend", true, array(), false);
             rh_html_add_text("Meldung bearbeiten");

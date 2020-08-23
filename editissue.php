@@ -14,12 +14,14 @@ require_permission_or_redirect(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_AS
 $id = (int) $_GET['id'];
 $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $id);
 
-rh_html_head("Bearbeiten: Fehler #" . $id);
+rh_html_head("GRB: Fehler #" . $id . " bearbeiten");
 rh_html_add("body", true);
 rh_html_down();
 rh_html_add_js(false, "rh_buttons_align.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
+rh_html_add("h1", true, array(), false);
+rh_html_add_text("GRB: Bearbeite Defekt #" . $id . "...");
 rh_header();
 
 $issue = mysqli_fetch_assoc($res);
@@ -57,8 +59,6 @@ if ($issue !== NULL) {
         if ($user['id'] == $issue['reporter_id']) $reporter = $user['name'];
         if ($user['id'] == $issue['assignee_id']) $assignee = $user['name'];
     }
-    rh_html_add("h1", true, array(), false);
-    rh_html_add_text("Bearbeiten: Defekt #" . $id . "...");
     rh_html_add("h2", true, array(), false);
     rh_html_down();
     rh_html_add_text("Problem mit Gerät:");
@@ -73,14 +73,14 @@ if ($issue !== NULL) {
     }
     rh_html_add("form", true, array("method" => "POST", "action" => "postissue.php?update"));
     rh_html_down(); 
-    rh_html_add("fieldset", true, array("style" => "position: relative"));
+    rh_html_add("fieldset", true, array("style" => "position: relative; background-color: #f7f7ff"));
     rh_html_down(); 
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problemdetails");
     rh_html_add("input", false, array("name" => "issueid", "value" => $id, "type" => "hidden"));
     rh_html_add("div", true, array("style" => "width: max-content"));
     rh_html_down();
-    rh_html_add("fieldset", true, array("style" => "text-align: right", "class" => ($disableother ? "rh_disabled" : false)));
+    rh_html_add("fieldset", true, array("style" => "text-align: right; background-color: white", "class" => ($disableother ? "rh_disabled" : false)));
     rh_html_down(); 
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Meldung und Bearbeitung");
@@ -101,7 +101,7 @@ if ($issue !== NULL) {
     }
     else rh_html_room_selector($room, "editissue.php?id=" . $id . "&resetroom");
     rh_html_up();
-    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled" : false)));
+    rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($disableother ? "rh_disabled" : false)));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problembeschreibung");
@@ -109,7 +109,7 @@ if ($issue !== NULL) {
     rh_html_add_text($issue['comment'], false, false);
     rh_html_close();
     rh_html_up(); 
-    rh_html_add("fieldset", true, array("style" => "width: max-content", "class" => ($disableother ? "rh_disabled" : false)));
+    rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white", "class" => ($disableother ? "rh_disabled" : false)));
     rh_html_down(); 
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Nähere Angaben");
@@ -136,7 +136,7 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled" : false), "style" => "width: max-content; display: inline-block", "id" => "align_a"));
+    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled" : false), "style" => "width: max-content; display: inline-block; background-color: white", "id" => "align_a"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Organisation");
@@ -193,13 +193,13 @@ if ($issue !== NULL) {
     rh_html_add("input", false, array("type" => "checkbox", "value" => "ok", "name" => "del_ok"));
     rh_html_add("input", false, array("type" => "submit", "formaction" => "postissue.php?id=" . $id . "&delete", "value" => "Löschen"));
     rh_html_up();
-    rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+    rh_html_add("fieldset", true, array("style" => "display: inline-block; background-color: white"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Änderungen verwerfen");
     rh_html_add("input", false, array("type" => "submit", "formaction" => "redirect.php?next=listissues.php", "value" => "zurück zur Liste"));
     rh_html_up();
-    rh_html_add("fieldset", true, array("style" => "display: inline-block"));
+    rh_html_add("fieldset", true, array("style" => "display: inline-block; background-color: white"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Änderungen übernehmen");

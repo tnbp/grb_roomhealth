@@ -76,7 +76,7 @@ li.rh_logininfo_ul a {
     background-color: #222222;
 }
 
-li.rh_logininfo_ul a:hover {
+li.rh_loginform_ul a:hover {
     display: block;
     color: white;
     text-align: center;
@@ -92,12 +92,6 @@ li.rh_loginform_ul a {
     padding: 16px;
     text-decoration: none;
     background-color: #222222;
-}
-
-li.rh_loginform_ul a:hover {
-    background-color: #a0a0a0;
-    color: black;
-    font-weight: bold;
 }
 
 li.rh_navigation_dropdown a,
@@ -189,7 +183,7 @@ ul.bare {
 
 fieldset.rh_disabled, fieldset.rh_disabled_noperm {
     color: gray;
-    background-color: lightgray;
+    background-color: lightgray !important;
 }
 
 fieldset.rh_delete {
@@ -203,11 +197,11 @@ fieldset.rh_delete legend {
 
 #listissues_filter {
     max-width: 60%;
-    background-color: #f7f7ff;
+    background-color: white;
 }
 
 #listissues_filter_legend {
-    background-color: #f7f7ff;
+    background-color: white;
     border-top: 1px solid gray;
 }
 
@@ -303,4 +297,10 @@ th.rh_html_table_order:hover a.order_none::after {
     content: url(img/arrow_desc.png);
     vertical-align: text-bottom;
     position: absolute;
+}
+
+tr.rh_odd img,
+tr.rh_even img {
+    vertical-align: middle;
+    padding-right: 4px;
 }

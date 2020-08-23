@@ -9,14 +9,14 @@ rh_html_init();
 
 global $mysql, $session;
 
-rh_html_head("GRB Room Health", "GRB Room Health", "Fehlermeldung, IT-Defekte");
+rh_html_head("GRB: IT-Defekte", "GRB: IT-Defekte", "Fehlermeldung, IT-Defekte");
 rh_html_add("body", true);
 rh_html_down();
 rh_html_add_js(false, "rh_version.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);
-rh_html_add_text("GRB Raumstatus");
+rh_html_add_text("GRB: IT-Defekte");
 rh_html_close();
 
 rh_header();
@@ -37,8 +37,10 @@ if (isset($_GET['error'])) {
 
 if ($session['loggedin'] === true) {
     rh_html_add("h2", true, array(), false);
+    rh_html_down();
+    rh_html_add("img", false, array("src" => "img/newissue.png", "alt" => "Neuen Defekt melden", "style" => "vertical-align: bottom"));
     rh_html_add_text("Neuen Defekt melden...");
-    rh_html_close();
+    rh_html_up();
     rh_html_add("div", true, array(), true);
     rh_html_down();
     rh_html_room_selector(false, "newissue.php");
@@ -50,7 +52,10 @@ $res = mysqli_query($mysql, "SELECT issues.*, items.name AS iname, r2.name AS rn
 $rn = mysqli_num_rows($res);
 
 rh_html_add("h2", true, array(), false);
+rh_html_down();
+rh_html_add("img", false, array("src" => "img/listissues.png", "alt" => "Momentan bestehende Defekte", "style" => "vertical-align: bottom"));
 rh_html_add_text("Momentan bestehende Defekte:");
+rh_html_up();
 if ($rn == 20) {
     rh_html_add("p", true, array("style" => "font-style: italic"), false);
     rh_html_add_text("Zu viele Defekte... zeige nur die neuesten 20!");
@@ -59,7 +64,7 @@ if ($rn == 20) {
 $t_data = array();
 for ($i = 0; $i < $rn; $i++) {
     $row = mysqli_fetch_assoc($res);
-    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['uname'], $severity_description[$row['severity']], "<a href=\"showissue.php?id=" . $row['id'] ."\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>");
+    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['uname'], "<img src=\"img/sev_" . $row['severity'] . ".png\" alt=\"" . $row['severity'] . "\">" . $severity_description[$row['severity']], "<a href=\"showissue.php?id=" . $row['id'] ."\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>");
     $t_data[] = $cur;
 }
 $t_header = rh_htmlentities_array(array("id" => "ID", "Raum", "Defektes Gerät", "tr" => "gemeldet", "von", "sev" => "Schweregrad", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));

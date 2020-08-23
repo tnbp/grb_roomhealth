@@ -4,6 +4,14 @@
     font-family: sans-serif;
 }
 
+h1 {
+    font-size: xx-large;
+    margin: 0px 0px;
+}
+
+h2, h3 {
+    font-size: x-large;
+}
 input {
     min-height: 30px;
     vertical-align: middle;
@@ -234,8 +242,13 @@ fieldset.rh_commentmod {
 }
 
 tr.rh_head th a {
-    color: yellow;
     text-decoration: none;
+    color: white;
+}
+
+tr.rh_head th:hover a {
+    text-decoration: none;
+    color: black;
 }
 
 /*  OH BOY 
@@ -268,4 +281,26 @@ tr.rh_head th a {
 
 #align_b:hover:before {
     display: none !important;
+}
+
+/* END BAD HACKY SOLUTION */
+
+th.rh_html_table_order:hover {
+    background-color: #c0c0c0;
+    position: relative;
+}
+
+th.rh_html_table_order a.order_asc::after,
+th.rh_html_table_order:hover a.order_desc::after {
+    content: url(img/arrow_asc.png);
+    vertical-align: text-bottom;
+    position: absolute;
+}
+
+th.rh_html_table_order a.order_desc::after,
+th.rh_html_table_order:hover a.order_asc::after,
+th.rh_html_table_order:hover a.order_none::after {
+    content: url(img/arrow_desc.png);
+    vertical-align: text-bottom;
+    position: absolute;
 }

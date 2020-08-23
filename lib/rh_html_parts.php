@@ -21,8 +21,13 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     rh_html_add("tr", true, $header_tr_attr);
     rh_html_down();
     foreach ($header as $k => $h) {
+        $header_th_attr_current = $header_th_attr;
         $k_is_string = is_string($k);
-        rh_html_add("th", true, $header_th_attr, $k_is_string);
+        if ($k_is_string) {
+            if ($header_th_attr_current['class'] != "") $header_th_attr_current['class'] .= " ";
+            $header_th_attr_current['class'] .= "rh_html_table_order";
+        }
+        rh_html_add("th", true, $header_th_attr_current, $k_is_string);
         if ($k_is_string) {
             if ($k == "th_attr") continue;
             rh_html_down();
@@ -38,19 +43,22 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
                 
                 You have been warned.
             */
+            $class_now = "order_none";
             if (count($order_by_arr) > 0) {
                 if (($key = array_search($k . "_d", $order_by_arr)) !== false) {
                     unset($order_by_arr[$key]);
                     array_unshift($order_by_arr, $k . "_a");
+                    $class_now = "order_desc";
                 }
                 else if (($key = array_search($k . "_a", $order_by_arr)) !== false) {
                     unset($order_by_arr[$key]);
                     array_unshift($order_by_arr, $k . "_d");
+                    $class_now = "order_asc";
                 }
                 else array_unshift($order_by_arr, $k . "_d");
             }
             else $order_by_arr[] = $k . "_d";
-            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by=" . implode("&order_by=", $order_by_arr)), false);
+            rh_html_add("a", false, array("href" => $return . "?" . implode("&", $filters_arr) . "&order_by=" . implode("&order_by=", $order_by_arr), "class" => $class_now), false);
         }
         rh_html_add_raw($h, false);
         if ($k_is_string) {

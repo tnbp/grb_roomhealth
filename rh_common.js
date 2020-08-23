@@ -5,6 +5,7 @@ var rh_onresize = new Array();
 
 rh_onload.push(del_checkbox_assist_init);
 rh_onload.push(remove_unsupported_tags);
+rh_onload.push(make_tds_clickable);
 
 window.onload = function() {
         for (var i = 0; i < rh_onload.length; i++) rh_onload[i]();
@@ -55,5 +56,20 @@ function remove_unsupported_tags() {
     var min_time = document.getElementsByName("min_time")[0];
     if (typeof min_time != "undefined") {
             if (min_time.type != "time") min_time.style['display'] = "none";
+    }
+}
+
+function make_tds_clickable() {
+    var tds = document.getElementsByClassName("rh_html_table_order");
+    for (var i = 0; i < tds.length; i++) {
+        for (var j = 0; j < tds[i].children.length; j++) {
+            if (tds[i].children[j].tagName == "A") {
+                tds[i].href = tds[i].children[j].href;
+                tds[i].onclick = function() { window.location.href = this.href; };
+                tds[i].style['cursor'] = "pointer";
+                tds[i].title = (tds[i].children[j].className == "order_desc" ? "aufsteigend sortieren" : "absteigend sortieren");
+                break;
+            }
+        }
     }
 }

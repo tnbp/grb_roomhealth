@@ -372,4 +372,50 @@ function rh_html_end() {
     rh_html_up(RH_HTML_MAX_DEPTH);
 }
 
+function rh_resolution_img($status, $resolution) {
+    // $status is not used for now...
+    $imgtag = "<img src=\"img/%s.png\" alt=\"%s\" style=\"vertical-align: middle; padding-right: 4px; float: right\">";
+    switch ($resolution) {
+            case "REPORTED":
+            $src = "s_reported";
+            $alt = "REPORTED";
+            break;
+            
+            case "CONFIRMED":
+            $src = "s_confirmed";
+            $alt = "CONFIRMED";
+            break;
+            
+            case "NEEDSINFO":
+            $src = "s_needsinfo";
+            $alt = "NEEDSINFO";
+            break;
+            
+            case "WORKSFORME":
+            $src = "s_worksforme";
+            $alt = "WORKSFORME";
+            break;
+            
+            case "DUPLICATE":
+            $src = "s_duplicate";
+            $alt = "DUPLICATE";
+            break;
+            
+            case "WONTFIX":
+            $src = "s_wontfix";
+            $alt = "WONTFIX";
+            break;
+            
+            case "RESOLVED":
+            $src = "s_resolved";
+            $alt = "RESOLVED";
+            break;
+            
+            default:
+            return "";
+            break;
+    }
+    return sprintf($imgtag, $src, $alt);
+}
+
 ?>

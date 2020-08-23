@@ -304,3 +304,29 @@ tr.rh_even img {
     vertical-align: middle;
     padding-right: 4px;
 }
+
+span.sev_critical,
+span.sev_high,
+span.sev_normal,
+span.sev_low {
+    display: inline-block;
+    float: left;
+    text-align: left;
+}
+
+span.sev_critical {
+    font-weight: bold;
+    background-color: darkred;
+    padding: 2px 2px;
+    color: white;
+}
+
+span.sev_high {
+    font-weight: bold;
+    color: darkred;
+}
+
+span.sev_low {
+    font-style: italic;
+    color: darkgray;
+}

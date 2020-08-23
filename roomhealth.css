@@ -108,6 +108,8 @@ li.rh_navigation_dropdown div {
 }
 
 li.rh_navigation_dropdown:hover div a {
+    background-color: #333333;
+    color: white;
     position: relative;
     z-index: 100;
 }
@@ -122,6 +124,8 @@ li.rh_navigation:first-of-type {
     margin-left: -5px;
 }
 
+li.rh_navigation_dropdown div a:hover,
+li.rh_navigation_dropdown:hover a,
 li.rh_navigation_dropdown a:hover,
 li.rh_navigation a:hover {
     background-color: #c0c0c0;
@@ -138,6 +142,7 @@ li.rh_navigation_dropdown:hover div {
     background-color: #eeeeff;
     width: 80%;
     max-width: 1200px;
+    min-height: 400px;
     margin-left: auto;
     margin-right: auto;
     padding: 1em 1em 2em;

@@ -218,9 +218,9 @@ $t_data = array();
 for ($i = 0; $i < $limit; $i++) {
     $row = mysqli_fetch_assoc($res);
     $cur_asgname = $row['asgname'] ? $row['asgname'] : "<span style=\"font-style: italic\">niemand</span>";
-    $cur_actions = "[&nbsp;<a href=\"showissue.php?id=" . $row['id'] ."\">mehr</a>&nbsp;]";
-    if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $row['assignee_id'] == -1) $cur_actions .= " [&nbsp;<a href=\"postissue.php?id=" . $row['id'] ."&assignself\">mir selbst zuweisen</a>&nbsp;]";
-    if (has_permission(PERMISSION_ISSUE_EDIT)) $cur_actions .= " [&nbsp;<a href=\"editissue.php?id=" . $row['id'] ."\">bearbeiten</a>&nbsp;]";
+    $cur_actions = "<a href=\"showissue.php?id=" . $row['id'] ."\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>";
+    if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $row['assignee_id'] == -1) $cur_actions .= "&nbsp;<a href=\"postissue.php?id=" . $row['id'] ."&assignself\"><img src=\"img/assignself.png\" alt=\"mir selbst zuweisen\" title=\"mir selbst zuweisen\"></a>";
+    if (has_permission(PERMISSION_ISSUE_EDIT)) $cur_actions .= "&nbsp;<a href=\"editissue.php?id=" . $row['id'] ."\"><img src=\"img/edit.png\" alt=\"bearbeiten\" title=\"bearbeiten\"></a>";
     $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['repname'], $severity_description[$row['severity']], $cur_asgname, date("Y-m-d H:i:s", $row['last_updated']), $row['status'] . "<br>" . $row['resolution'], $cur_actions);
     $t_data[] = $cur;
 }

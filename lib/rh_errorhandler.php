@@ -17,16 +17,20 @@ function rh_errorhandler($errorlist = false) {
     }
     switch ($_GET['error']) {
         default:
-        rh_html_add("div", true, array("class" => "rh_errorbox"));
-        rh_html_down();
-        rh_html_add("span", true, array("class" => "rh_errortext"));
-        rh_html_add_text("Fehler:");
-        rh_html_close();
-        rh_html_add_text("Unbekannter Fehler.");
-        rh_html_up();
+        rh_errorbox("Unbekannter Fehler.");
         break;
     }
     return;
+}
+
+function rh_errorbox($content) {
+    rh_html_add("div", true, array("class" => "rh_errorbox"));
+    rh_html_down();
+    rh_html_add("span", true, array("class" => "rh_errortext"));
+    rh_html_add_text("Fehler:");
+    rh_html_close();
+    rh_html_add_text($content);
+    rh_html_up();
 }
 
 ?>

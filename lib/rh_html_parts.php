@@ -344,7 +344,7 @@ function rh_loginform_ul($nexturi) {
         rh_html_down();
 		rh_html_add("form", true, array("action" => "login.php", "method" => "POST"));
 		rh_html_down();
-        rh_html_add("span", true, array("class" => "rh_loginform_ul", "style" => "padding: 16px"));
+        rh_html_add("span", true, array("class" => "rh_loginform_ul", "style" => "padding: 1em 1em"));
 		rh_html_down();
 		rh_html_add_text("Benutzer:", true, false);
 		rh_html_add("input", false, array("name" => "login", "style" => "margin-left: 4px; margin-right: 12px"));

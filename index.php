@@ -2,6 +2,7 @@
 
 require_once("lib/rh_html_parts.php");
 require_once("lib/session.php");
+require_once("lib/rh_errorhandler.php");
 include("include/acceptable.php");
 
 rh_session();
@@ -21,7 +22,7 @@ rh_html_close();
 
 rh_header();
 
-if (isset($_GET['error'])) {
+/*if (isset($_GET['error'])) {
     $errorbox_style = array("style" => "border: 2px solid red; background-color: #ffa0a0");
     if ($_GET['error'] == "invalid_issue_post") {
         if ($_GET['part'] == "room") rh_html_box("<span style=\"font-weight: bold\">FEHLER: </span>Ung&uuml;ltiger Raum.", $errorbox_style);
@@ -33,7 +34,8 @@ if (isset($_GET['error'])) {
         rh_html_box("<span style=\"font-weight: bold\">FEHLER: </span>Ung&uuml;ltige Fehler-ID.", $errorbox_style);
     }
     else rh_html_box("<span style=\"font-weight: bold\">FEHLER: </span>Unbekannter Fehler (error: " . $_GET['error'] . ", part: " . $_GET['part'] . ").", $errorbox_style);
-}
+}*/
+rh_errorhandler();
 
 if ($session['loggedin'] === true) {
     rh_html_add("h2", true, array(), false);

@@ -330,3 +330,16 @@ span.sev_low {
     font-style: italic;
     color: darkgray;
 }
+
+div.rh_errorbox {
+    border: 2px solid red;
+    background-color: moccasin;
+    padding: 1em 1em;
+}
+
+span.rh_errortext {
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 1em;
+}

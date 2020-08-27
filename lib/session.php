@@ -20,7 +20,7 @@ function rh_session() {
 	$mysql = mysqli_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB) or die("Could not connect to database :-(");
 	mysqli_set_charset($mysql, MYSQL_CHARSET);
 	mysqli_query($mysql, "DELETE FROM sessions WHERE expires < " . time());
-	$res = mysqli_query($mysql, "SELECT sessions.*, users.name, users.permissions, users.gender, classes.room_id AS classroom, classes.name AS classname FROM sessions,users LEFT JOIN classes ON classes.teacher_id = users.id WHERE session_id = '" . mysqli_real_escape_string($mysql, $session['id'])."' AND sessions.user_id = users.id");
+	$res = mysqli_query($mysql, "SELECT sessions.*, users.name, users.permissions, users.gender, users.email, classes.room_id AS classroom, classes.name AS classname FROM sessions,users LEFT JOIN classes ON classes.teacher_id = users.id WHERE session_id = '" . mysqli_real_escape_string($mysql, $session['id'])."' AND sessions.user_id = users.id LIMIT 1");
 	$rc = mysqli_num_rows($res);
 	if ($rc == 1) {
 		$row = mysqli_fetch_assoc($res);
@@ -32,6 +32,7 @@ function rh_session() {
 		$session['classroom'] = (($row['classroom'] != NULL) ? $row['classroom'] : false);
 		$session['classname'] = (($row['classname'] != NULL) ? $row['classname'] : false);
 		$session['gender'] = $row['gender'];
+		$session['email'] = $row['email'];
 		mysqli_query($mysql, "UPDATE sessions SET expires = " . $session['expires'] . " WHERE session_id = '" . mysqli_real_escape_string($mysql, $session['id']) . "'");
 	}
 }

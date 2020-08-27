@@ -42,7 +42,7 @@ if ($issue !== NULL) {
     else {
         $assignee = "niemandem";
     }
-    rh_html_add("h2", true, array());
+    rh_html_add("h2", true, array("style" => "white-space: nowrap"));
     rh_html_down();
     rh_html_add_text("Problem mit Gerät:", true, true);
     $style_string = "margin-left: 1em; margin-right: 3em; display: inline-block; font-weight: normal; text-align: center; font-size: 1em";
@@ -79,7 +79,7 @@ if ($issue !== NULL) {
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problembeschreibung");
     rh_html_close();
-    rh_html_add("pre", true, array(), false);
+    rh_html_add("pre", true, array("style" => "white-space: break-spaces"), false);
     rh_html_add_text(str_replace("\n", "", $issue['comment']), false, false);
     rh_html_close();
     rh_html_up(2);

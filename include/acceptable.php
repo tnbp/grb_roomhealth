@@ -83,4 +83,18 @@ $order_description = array(
                         "up" => "issues.last_updated"
                         );
 
+$gender_acceptable = array(
+                        "unspecified",
+                        "male",
+                        "female",
+                        "other"
+                        );
+                        
+$gender_description = array(
+                        "unspecified" => "nicht angegeben",
+                        "male" => "männlich",
+                        "female" => "weiblich",
+                        "other" => "Sonstiges"
+                        );
+
 ?>

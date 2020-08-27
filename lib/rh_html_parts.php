@@ -303,6 +303,7 @@ function rh_navigation($nexturi) {
         }
         rh_html_add("a", true, array("href" => "listissues.php?reported_by=" . get_session("userid") . "&nolist"), false);
         rh_html_add_text("von mir gemeldet");
+        rh_html_close();
         rh_html_up();
         rh_html_up();
     }
@@ -324,11 +325,18 @@ function rh_loginform_ul($nexturi) {
         rh_html_down();
         rh_html_add("span", true, array("style" => "margin-top: 8px"));
         rh_html_down();
-        rh_html_add("span", true, array("style" => "display: inline-block; clear: right; float: none; padding-right: 2em"));
+        rh_html_add("span", true, array("style" => "display: inline-block; clear: right; float: none; padding-right: 2em"), false);
         rh_html_add_text("Eingeloggt als:");
-        rh_html_add("span", true, array("style" => "display: inline-block; clear: right; float: none; font-weight: bold; padding-right: 4px"));
+        rh_html_add("span", true, array("style" => "display: inline-block; clear: right; float: none; font-weight: bold; padding-right: 4px; position: relative", "class" => "rh_navigation_dropdown"));
         rh_html_down();
-        rh_html_add_text(get_session("name"));
+        rh_html_add("div", true);
+        rh_html_down();
+        rh_html_add("a", true, array("href" => "userinfo.php", "title" => "E-Mailadresse anpassen, Passwort ändern, etc."));
+        rh_html_down();
+        rh_html_add("img", false, array("src" => "img/settings.png", "alt" => "Einstellungen"));
+        rh_html_add_text("Einstellungen");
+        rh_html_up(2);
+        rh_html_add_text(get_session("name"), true, true);
 		rh_html_add("img", false, array("src" => get_session("gender") == "female" ? "img/user_fmle.png" : "img/user_male.png", "alt" => "Benutzersymbol", "style" => "vertical-align: text-bottom; z-index: 20; position: relative"));
 		if (has_permission(PERMISSION_LEVEL_ADMIN)) rh_html_add("img", false, array("src" => "img/user_adm.png", "alt" => "Administrator", "title" => "Administrator", "style" => "vertical-align: text-bottom; position: relative; z-index: 10; margin-left: -1.2em"));
 		else if (has_permission(PERMISSION_LEVEL_MOD)) rh_html_add("img", false, array("src" => "img/user_mod.png", "alt" => "Moderator", "title" => "Moderator", "style" => "vertical-align: text-bottom; position: relative; z-index: 10"));
@@ -337,6 +345,7 @@ function rh_loginform_ul($nexturi) {
         rh_html_up();
         rh_html_add("a", true, array("href" => "logout.php?next=" . urlencode($nexturi), "style" => "display: inline-block; clear: right; float: none"), false);
         rh_html_add_text("Ausloggen");
+        rh_html_close();
         rh_html_up(2);
     }
 	else {

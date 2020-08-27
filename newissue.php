@@ -58,7 +58,7 @@ if ($rc > 0) {
     rh_html_room_selector($row, "newissue.php?resetroom");
 }
 else rh_html_room_selector(false, "newissue.php", false);
-rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled" : false));
+rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Nähere Angaben", true, true);
@@ -77,7 +77,7 @@ for ($i = 0; $i < $rc_i; $i++) {
 }
 rh_html_close();
 rh_html_up(3); // leaving select, p
-rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled" : false));
+rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Problembeschreibung", true, true);
@@ -85,7 +85,7 @@ rh_html_add("textarea", true, array("name" => "comment", "style" => "width: 100%
 rh_html_add_text(isset($_POST['comment']) ? $_POST['comment'] : "");
 rh_html_close();
 rh_html_up(); // leaving p
-rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled" : false, "style" => "width: max-content; background-color: white", "id" => "align_a"));
+rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false, "style" => "width: max-content; background-color: white", "id" => "align_a"));
 rh_html_down(); // in div
 rh_html_add("legend", true);
 rh_html_add_text("Schweregrad", true, true);

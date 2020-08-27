@@ -1,15 +1,32 @@
 <?php
 
-define("PERMISSION_ISSUE_SET_STATUS",     1);
-define("PERMISSION_ISSUE_DELETE",         2);
-define("PERMISSION_ISSUE_ASSIGN_SELF",    4);
-define("PERMISSION_ISSUE_ASSIGN",         12);    // actual value: 8; but implies PERMISSION_ISSUE_ASSIGN_SELF
-define("PERMISSION_ISSUE_SET_SEVERITY",   16);
-define("PERMISSION_ISSUE_SET_RESOLUTION", 32);
-define("PERMISSION_ISSUE_EDIT",           64);
-define("PERMISSION_COMMENT_ALWAYS",       128);
-define("PERMISSION_COMMENT_EDIT",         256);
-define("PERMISSION_ISSUE_ASSIGNABLE",     512);
+$permissions_list = array(
+                        "PERMISSION_ISSUE_SET_STATUS"       => 1,
+                        "PERMISSION_ISSUE_DELETE"           => 2,
+                        "PERMISSION_ISSUE_ASSIGN_SELF"      => 4,
+                        "PERMISSION_ISSUE_ASSIGN"           => 12,
+                        "PERMISSION_ISSUE_SET_SEVERITY"     => 16,
+                        "PERMISSION_ISSUE_SET_RESOLUTION"   => 32,
+                        "PERMISSION_ISSUE_EDIT"             => 64,
+                        "PERMISSION_COMMENT_ALWAYS"         => 128,
+                        "PERMISSION_COMMENT_EDIT"           => 256,
+                        "PERMISSION_ISSUE_ASSIGNABLE"       => 512
+);
+
+$permissions_description  = array(
+                        "PERMISSION_ISSUE_SET_STATUS"       => "Benutzer darf Status von Defekten verändern",
+                        "PERMISSION_ISSUE_DELETE"           => "Benutzer darf Defektmeldungen löschen",
+                        "PERMISSION_ISSUE_ASSIGN_SELF"      => "Benutzer darf sich Defekte selbst zuweisen",
+                        "PERMISSION_ISSUE_ASSIGN"           => "Benutzer darf Defekte anderen Nutzern zuweisen",
+                        "PERMISSION_ISSUE_SET_SEVERITY"     => "Benutzer darf Schweregrad von Defekten verändern",
+                        "PERMISSION_ISSUE_SET_RESOLUTION"   => "Benutzer darf Lösung von Defekten verändern",
+                        "PERMISSION_ISSUE_EDIT"             => "Benutzer darf Defektmeldungen bearbeiten",
+                        "PERMISSION_COMMENT_ALWAYS"         => "Benutzer darf immer kommentieren",
+                        "PERMISSION_COMMENT_EDIT"           => "Benutzer darf Kommentare verändern",
+                        "PERMISSION_ISSUE_ASSIGNABLE"       => "Benutzer darf Defektmeldungen übernehmen"
+);
+
+foreach ($permissions_list as $p => $v) define($p, $v);
 
 define("PERMISSION_LEVEL_MOD", PERMISSION_ISSUE_ASSIGN_SELF | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_EDIT | PERMISSION_COMMENT_ALWAYS | PERMISSION_ISSUE_ASSIGNABLE | PERMISSION_COMMENT_EDIT);
 define("PERMISSION_LEVEL_ADMIN", PERMISSION_LEVEL_MOD | PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_DELETE | PERMISSION_ISSUE_ASSIGN | PERMISSION_ISSUE_SET_RESOLUTION);

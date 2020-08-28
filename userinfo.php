@@ -238,7 +238,7 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     rh_html_up(4);
     $disable_permissions = (get_session("userid") == $user['id']);
     $disable_permissions_note = "Du kannst deine eigenen Benutzerrechte nicht ändern und deinen eigenen Account nicht deaktivieren.";
-    rh_html_add("fieldset", true, array("style" => "margin-top: 1em; text-align: left", "class" => $disable_permissions ? "rh_disabled rh_permissions" : false, "title" => $disable_permissions ? $disable_permissions_note: false));
+    rh_html_add("fieldset", true, array("style" => "margin-top: 1em; text-align: left; font-size: small", "class" => $disable_permissions ? "rh_disabled rh_permissions" : false, "title" => $disable_permissions ? $disable_permissions_note: false));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Benutzerrechte");

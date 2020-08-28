@@ -84,7 +84,7 @@ if ($issue !== NULL) {
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problembeschreibung");
     rh_html_close();
-    rh_html_add("pre", true, array("style" => "white-space: break-spaces"), false);
+    rh_html_add("pre", true, array("style" => "white-space: pre-wrap"), false);
     rh_html_add_text(str_replace("\n", "", $issue['comment']), false, false);
     rh_html_close();
     rh_html_up(2);

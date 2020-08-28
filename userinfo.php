@@ -11,6 +11,8 @@ rh_html_init();
 global $mysql;
 is_loggedin() or redirect("index.php");
 
+$goto = false;
+
 $id = (int) $_GET['id'];
 if ($id) has_permission(PERMISSION_LEVEL_ADMIN) or redirect("userinfo.php");
 else $id = get_session("userid");
@@ -19,7 +21,9 @@ $resetuser = isset($_GET['resetuser']);
 
 $res = mysqli_query($mysql, "SELECT * FROM users WHERE users.id = " . $id);
 $user = mysqli_fetch_assoc($res);
-if ($user === false) redirect("index.php?error=nosuchuser");
+if ($user === NULL) {
+    redirect("index.php?error=nosuchuser");
+}
 
 $allclasses = array();
 $res = mysqli_query($mysql, "SELECT name,id,teacher_id FROM classes ORDER BY name ASC");
@@ -45,7 +49,7 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     if ($resetuser) rh_html_add("form", true, array("action" => "userinfo.php", "method" => "GET"));
     else rh_html_add("form", true, array("action" => "userinfo.php?id=". $id . "&resetuser", "method" => "POST"));
     rh_html_down();
-    rh_html_add("fieldset", true, array("style" => "float: left; margin-bottom: 2em"));
+    rh_html_add("fieldset", true, array("style" => "float: left; margin-bottom: 1em; background-color: white"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Benutzerverwaltung: Benutzer auswählen");
@@ -73,10 +77,14 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     rh_html_add("input", false, array("type" => "submit", "value" => "Ändern"));
     rh_html_up(2);
 }
+rh_errorhandler(array("only" => array("perm", "nosuchuser", "self_disallowed", "nochange")));
+display_changed_message(array("active"));
 rh_html_add("fieldset", true, array("style" => "text-align: center; background-color: white; width: 50%; margin: 1em auto; clear: both", "class" => ($resetuser ? "rh_disabled rh_useredit" : false)));
 rh_html_down();
 rh_html_add("legend", true, array(), false);
 rh_html_add_text("Passwort ändern");
+rh_errorhandler(array("only" => array("wrongpw", "pw_nomatch", "pw_short", "pw_weak")));
+display_changed_message(array("password"));
 rh_html_add("form", true, array("action" => "useredit.php?user=" . $user['id'], "method" => "POST"));
 rh_html_down();
 rh_html_add("div", true, array("style" => "margin-bottom: 2em"));
@@ -115,6 +123,7 @@ rh_html_add("fieldset", true, array("style" => "text-align: center; background-c
 rh_html_down();
 rh_html_add("legend", true, array(), false);
 rh_html_add_text("Stammdaten ändern");
+display_changed_message(array("email", "gender", "class"));
 rh_html_add("form", true, array("action" => "useredit.php?user=" . $user['id'], "method" => "POST"));
 rh_html_down();
 rh_html_add("div", true);
@@ -173,12 +182,14 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Benutzerverwaltung");
+    display_changed_message(array("name", "login", "initialpw", "permissions"));
     rh_html_add("form", true, array("action" => "useredit.php?user=" . $user['id'], "method" => "POST"));
     rh_html_down();
     rh_html_add("fieldset", true);
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Name und Login");
+    rh_errorhandler(array("only" => array("dupl_login")));
     rh_html_add("div", true);
     rh_html_down();
     rh_html_add("label", true, array("style" => "display: inline-block; min-width: 30%; text-align: left", "for" => "username"), false);
@@ -259,6 +270,30 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     For one, there are far too many style attributes in here.
 */
 
+rh_html_add_js(false, "rh_message_fade.js");
 rh_html_end();
+
+function display_changed_message($which) {
+    $messages = array(
+        "active" => "Accountstatus geändert.",
+        "password" => "Passwort aktualisiert.",
+        "email" => "E-Mailadresse aktualisiert.",
+        "gender" => "Geschlecht aktualisiert",
+        "class" => "Klassenlehrer-Status aktualisiert.",
+        "name" => "Name aktualisiert",
+        "login" => "Benutzerlogin geändert.",
+        "initialpw" => "Passwort auf Initialpasswort zurückgesetzt.",
+        "permissions" => "Benutzerrechte geändert."
+    );
+    $changed = http_get_array("changed");
+    $n = count($changed);
+    $gotobox = false;
+    for ($i = 0; $i < $n; $i++) {
+        if (in_array($changed[$i], $which)) {
+            rh_generic_box($messages[$changed[$i]], "message", "Hinweis", ($gotobox ? false : "msgbox"));
+            if (!$gotobox) $gotobox = true;
+        }
+    }
+}
 
 ?>

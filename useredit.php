@@ -29,7 +29,7 @@ if (isset($_GET['toggleactive'])) {
     }
     // also close all active sessions
     mysqli_query($mysql, "DELETE FROM sessions WHERE user_id = " . $userid);
-    redirect("userinfo.php?id=" . $userid ."&changed=active");
+    redirect("userinfo.php?id=" . $userid ."&changed=active#msgbox");
 }
 else {
     if (isset($_GET['user'])) {
@@ -77,7 +77,7 @@ else {
             // we couldn't find that user; error out!
             redirect("userinfo.php?error=nosuchuser");
         }
-        redirect("userinfo.php?changed=password");
+        redirect("userinfo.php?changed=password#msgbox");
     }
     else if (isset($_POST['emailaddr'])) {
         // check permissions; everyone can change their own, admins can change everyone's, others can't change anything.
@@ -110,8 +110,7 @@ else {
         }
         $all_changes = array_keys($changes);
         mysqli_query($mysql, "UPDATE users SET " . implode($updates, ", ") . " WHERE id = " . $userid);
-        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=") : "changed=") . implode("&changed=", $all_changes));
-        // TODO: add PERMISSION_... descriptions
+        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=") : "changed=") . implode("&changed=", $all_changes) . "#msgbox");
     }
     else if (isset($_POST['username'])) {
         // admins only
@@ -138,13 +137,13 @@ else {
         foreach ($changes as $c => $v) $updates[] = $c . " = '" . $v . "'";
         $all_changes = array_keys($changes);
         mysqli_query($mysql, "UPDATE users SET " . implode($updates, ", ") . " WHERE id = " . $userid);
-        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=") : "changed=") . implode("&changed=", $all_changes));
+        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=") : "changed=") . implode("&changed=", $all_changes) . "#msgbox");
     }
     else if (isset($_POST['initialpw'])) {
         // admins only
         has_permission(PERMISSION_LEVEL_ADMIN) || redirect("index.php?error=perm");
         mysqli_query($mysql, "UPDATE users SET pwhash = '" . password_hash($user['initial_pw'], PASSWORD_BCRYPT) . "' WHERE id = " . $userid);
-        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=initialpw") : "changed=initialpw"));
+        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=initialpw") : "changed=initialpw") . "#msgbox");
     }
     else if (isset($_POST['edit_permissions'])) {
         // admins only
@@ -158,7 +157,7 @@ else {
         }
         if ($newpermissions != $user['permissions']) mysqli_query($mysql, "UPDATE users SET permissions = " . $newpermissions . " WHERE id = " . $userid);
         else redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&") : "") . "error=nochange");
-        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=permissions") : "changed=permissions"));
+        redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=permissions#msgbox") : "changed=permissions#msgbox"));
     }
 }
 

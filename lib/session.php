@@ -1,6 +1,7 @@
 <?php
 
 require_once("config.inc.php");
+require_once("lib/rh_errorhandler.php");
 
 if (DEBUG) {
     ini_set('display_errors', 1);
@@ -44,6 +45,7 @@ function get_session($info = false) {
 }
 
 function redirect($target) {
+    if (preg_match("/[?&]error=/", $target)) $target .= "#errorbox";
     header("Location: " . $target);
     global $mysql;
     if ($mysql) mysqli_close($mysql);

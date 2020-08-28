@@ -371,14 +371,29 @@ span.sev_low {
 }
 
 div.rh_errorbox {
-    border: 2px solid red;
-    background-color: moccasin;
-    padding: 1em 1em;
+    border: 2px solid #b00;
+    background-color: #b00;
+    font-weight: bolder;
 }
 
-span.rh_errortext {
-    color: red;
+div.rh_messagebox {
+    border: 2px solid darkgreen;
+    background-color: darkgreen;
+}
+
+div.rh_errorbox,
+div.rh_messagebox {
+    padding: 1em 1em;
+    margin-bottom: 1em;
+    clear: both;
     font-weight: bold;
+    color: white;
+}
+
+span.rh_errortext,
+span.rh_messagetext {
+    color: white;
+    font-weight: normal;
     display: inline-block;
-    margin-right: 1em;
+    margin-left: 1em;
 }

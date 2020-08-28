@@ -42,14 +42,19 @@ if ($issue !== NULL) {
     else {
         $assignee = "niemandem";
     }
-    rh_html_add("h2", true, array("style" => "white-space: nowrap"));
+    rh_html_add("h2", true, array("style" => "white-space: normal"));
+    rh_html_down();
+    rh_html_add("span", true, array("style" => "white-space: nowrap"));
     rh_html_down();
     rh_html_add_text("Problem mit Gerät:", true, true);
     $style_string = "margin-left: 1em; margin-right: 3em; display: inline-block; font-weight: normal; text-align: center; font-size: 1em";
-    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 300px; width: " . (strlen($item['name']) / 1.66) . "em"), "value" => $item['name'], "readonly" => true)); // not great; TODO: better width accommodation
-    rh_html_add_text("in Raum:");
-    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 100px; width: " . (strlen($room['name']) / 1.66) . "em"), "value" => $room['name'], "readonly" => true)); // not great either; see above
+    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 300px; width: " . (strlen($item['name']) / 1.66) . "em"), "value" => $item['name'], "readonly" => true));
     rh_html_up();
+    rh_html_add("span", true, array("style" => "white-space: nowrap"));
+    rh_html_down();
+    rh_html_add_text("in Raum:");
+    rh_html_add("input", false, array("style" => ($style_string . "; min-width: 100px; width: " . (strlen($room['name']) / 1.66) . "em"), "value" => $room['name'], "readonly" => true));
+    rh_html_up(2);
     rh_html_add("fieldset", true, array("style" => "background-color: #f7f7ff"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);

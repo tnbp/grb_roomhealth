@@ -127,7 +127,7 @@ if ($issue !== NULL) {
     rh_html_close();
     rh_html_up();
     rh_html_add("label", true, array("for" => "severity", "style" => "margin-right: 2em; display: inline-block"));
-    rh_html_add_text("Dringlichkeit:", true, true);
+    rh_html_add_text("Schweregrad:", true, true);
     rh_html_add("select", true, array("name" => "severity", "readonly" => !has_permission(PERMISSION_ISSUE_SET_SEVERITY), "disabled" => $disableother, "id" => "severity", "class" => !has_permission(PERMISSION_ISSUE_SET_SEVERITY) ? "rh_disabled_noperm" : false));
     rh_html_down(); 
     foreach ($severity_acceptable as $sev) {

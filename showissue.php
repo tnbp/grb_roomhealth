@@ -10,7 +10,7 @@ rh_session();
 
 if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_show");
 $id = (int) $_GET['id'];
-$res = mysqli_query($mysql, "SELECT issues.*, users.name, notifications.min_level-1 AS n_level FROM users LEFT JOIN issues ON issues.reporter_id = users.id LEFT JOIN notifications ON users.id = notifications.user_id AND notifications.issue_id = " . $id . " WHERE issues.id = " . $id);
+$res = mysqli_query($mysql, "SELECT issues.*, users.name, notifications.min_level-1 AS n_level FROM users LEFT JOIN issues ON issues.reporter_id = users.id LEFT JOIN notifications ON notifications.issue_id = issues.id AND notifications.user_id = " . get_session("userid"). " WHERE issues.id = " . $id);
 $issue = mysqli_fetch_assoc($res);
 
 rh_html_init();

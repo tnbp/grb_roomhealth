@@ -7,6 +7,15 @@ function send_notification($to, $subject, $body, $additional = array()) {
 	$subject = filter_var($subject, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	$body = wordwrap(filter_var($body, FILTER_SANITIZE_FULL_SPECIAL_CHARS), 78, "\r\n");
 
+    $php_version = explode(".", phpversion());
+	if (($php_version[0] * 10 + $php_version[1]) < 72) {	// PHP < 7.2
+		$header = "";
+		foreach ($additional as $k => $v) {
+			$header .= $k . ": " . $v . "\r\n";
+		}
+	}
+	else $header = $additional;
+	
 	global $mysql;
 	if (!is_array($to)) {
         if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return false;
@@ -21,21 +30,12 @@ function send_notification($to, $subject, $body, $additional = array()) {
             $v = mysqli_real_escape_string($mysql, $v);
         }
         $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email IN '" . implode("', '", $to));
-        while (($row = mysqli_num_rows($db_check)) !== NULL) $bcc[] = $row['email'];
+        while (($row = mysqli_fetch_assoc($db_check)) !== NULL) $bcc[] = $row['email'];
         if (!count($bcc)) return false;
         $header['Bcc'] = implode(", ", $bcc);
     }
 
 	if (!isset($additional['From'])) $additional['From'] = RH_MAIL_FROM;
-
-	$php_version = explode(".", phpversion());
-	if (($php_version[0] * 10 + $php_version[1]) < 72) {	// PHP < 7.2
-		$header = "";
-		foreach ($additional as $k => $v) {
-			$header .= $k . ": " . $v . "\r\n";
-		}
-	}
-	else $header = $additional;
 
     $mailto = "";
 	return mail($mailto, $subject, $body, $header);

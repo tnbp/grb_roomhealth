@@ -99,7 +99,8 @@ $gender_description = array(
                         
 $notification_triggers = array(
                         "NOTIFICATION_TRIGGER_STATUS" => 1,
-                        "NOTIFICATION_TRIGGER_COMMENT" => 2
+                        "NOTIFICATION_TRIGGER_COMMENT" => 2,
+                        "NOTIFICATION_TRIGGER_NEWISSUE" => 3
                         );
 
 ?>

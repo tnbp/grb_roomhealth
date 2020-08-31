@@ -24,6 +24,8 @@ $user = mysqli_fetch_assoc($res);
 if ($user === NULL) {
     redirect("index.php?error=nosuchuser");
 }
+$res = mysqli_query($mysql, "SELECT * FROM notifications WHERE user_id = " . $user['id'] . " AND issue_id = -1");
+$notify_on_new = mysqli_num_rows($res) ? true : false;
 
 $allclasses = array();
 $res = mysqli_query($mysql, "SELECT name,id,teacher_id FROM classes ORDER BY name ASC");
@@ -177,16 +179,31 @@ rh_html_add("span", true, array("style" => "display: inline-block; text-align: r
 rh_html_down();
 rh_html_add("input", false, array("type" => "submit", "value" => "Stammdaten ändern", "disabled" => $resetuser));
 rh_html_up(4);
-rh_html_add("fieldset", true, array("style" => "text-align: center; background-color: white; width: 50%; margin: 2em auto 1em"));
+rh_html_add("fieldset", true, array("style" => "text-align: center; background-color: white; width: 50%; margin: 2em auto 1em", "class" => ($resetuser ? "rh_disabled rh_useredit" : false)));
 rh_html_down();
 rh_html_add("legend", true, array(), false);
-rh_html_add_text("Benachrichtigungen zurücksetzen");
-display_changed_message(array("reset_notifications"));
+rh_html_add_text("Benachrichtigungen");
+display_changed_message(array("reset_notifications", "notify_on_new"));
+rh_html_add("div", true, array("style" => "margin-bottom: 1em; text-align: left"));
+rh_html_down();
+rh_html_add("form", true, array("action" => "useredit.php?notify_on_new=" . $user['id'], "method" => "POST"));
+rh_html_down();
+rh_html_add("input", false, array("name" => "notify_on_new", "id" => "notify_on_new", "type" => "checkbox", "checked" => $notify_on_new, "value" => "ok", "disabled" => $resetuser));
+rh_html_add("label", true, array("for" => "notify_on_new", "style" => "margin-right: 2em"));
+rh_html_add_text("Bei neuen Defektmeldungen benachrichtigen");
+rh_html_add("input", false, array("type" => "submit", "value" => "Ändern", "disabled" => $resetuser));
+rh_html_up(2);
+rh_html_add("div", true, array("style" => "text-align: right"));
+rh_html_down();
+rh_html_add("fieldset", true, array("style" => "float: right"));
+rh_html_down();
+rh_html_add("legend", true, array(), false);
+rh_html_add_text("Alle Benachrichtigungen zurücksetzen");
 rh_html_add("form", true, array("action" => "useredit.php?reset_notifications=" . $user['id'], "method" => "POST", "id" => "reset_form"));
 rh_html_down();
 rh_html_add("input", false, array("disabled" => $resetuser, "type" => "checkbox", "name" => "reset_ok", "id" => "reset_ok"));
 rh_html_add("input", false, array("disabled" => $resetuser, "type" => "submit", "value" => "Benachrichtigungen zurücksetzen"));
-rh_html_up(2);
+rh_html_up(4);
 if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     rh_html_add("fieldset", true, array("style" => "text-align: center; background-color: white; width: 50%; margin: 2em auto 1em", "class" => ($resetuser ? "rh_disabled rh_useredit" : false)));
     rh_html_down();
@@ -306,7 +323,8 @@ function display_changed_message($which) {
         "login" => "Benutzerlogin geändert.",
         "initialpw" => "Passwort auf Initialpasswort zurückgesetzt.",
         "permissions" => "Benutzerrechte geändert.",
-        "reset_notifications" => "Benachrichtigungen zurückgesetzt."
+        "reset_notifications" => "Benachrichtigungen zurückgesetzt.",
+        "notify_on_new" => "Benachrichtigung bei neuer Defektmeldung geändert."
     );
     $changed = http_get_array("changed");
     $n = count($changed);

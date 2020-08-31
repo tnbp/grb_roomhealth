@@ -44,6 +44,23 @@ else if (isset($_GET['reset_notifications'])) {
     if ($userid != get_session("userid")) redirect("userinfo.php?id=" . $userid ."&changed=reset_notifications#msgbox");
     else redirect("userinfo.php?changed=reset_notifications#msgbox");
 }
+else if (isset($_GET['notify_on_new'])) {
+    // set "notfiy on new issue"
+    $userid = (int) $_GET['notify_on_new'];
+    has_permission(PERMISSION_LEVEL_ADMIN) || $userid == get_session("userid") || redirect("userinfo.php?error=perm");
+    if ($userid != $_GET['notify_on_new']) {
+        // $_GET['toggleactive'] was not an integer; this should never happen and we definitely cannot proceed
+        redirect("userinfo.php?error=nosuchuser");
+    }
+    $toggle = ($_POST['notify_on_new'] == "ok");
+    if ($toggle) {
+        $exists = mysqli_query($mysql, "SELECT id FROM notifications WHERE user_id = " . $userid . " AND issue_id = -1");
+        if (mysqli_num_rows($exists)) redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&") : "") . "error=nochange");
+        mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . $userid . ", issue_id = -1, min_level = ''");
+    }
+    else mysqli_query($mysql, "DELETE FROM notifications WHERE user_id = " . $userid . " AND issue_id = -1");
+    redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=notify_on_new") : "changed=notify_on_new") . "#msgbox");
+}
 else {
     if (isset($_GET['user'])) {
         $userid = (int) $_GET['user'];

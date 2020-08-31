@@ -163,11 +163,12 @@ else if (isset($_GET['assignself'])) {
 else {
     // if we're only posting a new issue, there's not much that can go wrong, right?
     if (!isset($error)) {
-        // TODO: add notification for admins -> LEVEL: NOTIFICATION_TRIGGER_NEWISSUE
         mysqli_query($mysql, "INSERT INTO issues SET time_reported = " . time() . ", reporter_id = " . $session['userid'] . ", comment = '" . mysqli_real_escape_string($mysql, $comment) . "', item_id = " . $itemid . ", room_id = " . $roomid . ", severity = '" . $severity . "', assignee_id = -1, status = 'OPEN', resolution = 'REPORTED', last_updated = " . time());
         $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
         $newissue = mysqli_fetch_assoc($res);
         if ($newissue !== false) {
+            $body = get_session("name") . " hat einen neuen Defekt gemeldet:\r\n\r\n" . $comment;
+            rh_trigger_notification(-1, NOTIFICATION_TRIGGER_NEWISSUE, $body, "GRB IT-Defekte: Neue Defektmeldung #" . $newissue['id']);
             include("include/acceptable.php");
             $notification = isset($_POST['notification']) ? (int) $_POST['notification'] : false;
             if (in_array($notification, $notification_triggers)) {

@@ -56,7 +56,7 @@ else if (isset($_GET['notify_on_new'])) {
     if ($toggle) {
         $exists = mysqli_query($mysql, "SELECT id FROM notifications WHERE user_id = " . $userid . " AND issue_id = -1");
         if (mysqli_num_rows($exists)) redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&") : "") . "error=nochange");
-        mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . $userid . ", issue_id = -1, min_level = ''");
+        mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . $userid . ", issue_id = -1, min_level = 'new_issue'");
     }
     else mysqli_query($mysql, "DELETE FROM notifications WHERE user_id = " . $userid . " AND issue_id = -1");
     redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=notify_on_new") : "changed=notify_on_new") . "#msgbox");

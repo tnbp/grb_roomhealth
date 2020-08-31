@@ -24,8 +24,8 @@ $user = mysqli_fetch_assoc($res);
 if ($user === NULL) {
     redirect("index.php?error=nosuchuser");
 }
-$res = mysqli_query($mysql, "SELECT * FROM notifications WHERE user_id = " . $user['id'] . " AND issue_id = -1");
-$notify_on_new = mysqli_num_rows($res) ? true : false;
+$notify_on_new = mysqli_query($mysql, "SELECT * FROM notifications WHERE user_id = " . $user['id'] . " AND issue_id = -1");
+$notify_on_new = (mysqli_num_rows($notify_on_new) > 0) ? true : false;
 
 $allclasses = array();
 $res = mysqli_query($mysql, "SELECT name,id,teacher_id FROM classes ORDER BY name ASC");

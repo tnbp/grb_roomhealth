@@ -17,7 +17,7 @@ function send_notification($to, $subject, $body, $additional = array()) {
     }
 	else {
         $bcc = array();
-        foreach (&$to) $to = mysqli_real_escape_string($mysql, $to);
+        foreach ($to as &$v) $v = mysqli_real_escape_string($mysql, $v);
         $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email IN '" . implode("', '", $to));
         while (($row = mysqli_num_rows($db_check)) !== NULL) $bcc[] = $row['email'];
         if (!count($bcc)) return false;

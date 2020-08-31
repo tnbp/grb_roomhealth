@@ -6,6 +6,7 @@ var rh_onresize = new Array();
 rh_onload.push(del_checkbox_assist_init);
 rh_onload.push(remove_unsupported_tags);
 rh_onload.push(make_tds_clickable);
+rh_onload.push(make_trs_clickable);
 
 window.onload = function() {
         for (var i = 0; i < rh_onload.length; i++) rh_onload[i]();
@@ -71,5 +72,15 @@ function make_tds_clickable() {
                 break;
             }
         }
+    }
+}
+
+function make_trs_clickable() {
+    var trs = document.getElementsByTagName("tr");
+    for (var i = 0; i < trs.length; i++) {
+        if (trs[i].className != "rh_even" && trs[i].className != "rh_odd") continue;
+        trs[i].href = trs[i].querySelector(".showissue").href;
+        trs[i].onclick = function() { window.location.href = this.href; };
+        trs[i].style['cursor'] = "pointer";
     }
 }

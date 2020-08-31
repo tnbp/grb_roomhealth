@@ -187,6 +187,11 @@ tr.rh_even {
     background-color: #ffffff;
 }
 
+tr.rh_even:hover,
+tr.rh_odd:hover {
+    background-color: lightyellow;
+}
+
 tr.rh_head {
     background-color: black;
     color: white;

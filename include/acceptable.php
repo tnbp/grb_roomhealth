@@ -96,5 +96,10 @@ $gender_description = array(
                         "female" => "weiblich",
                         "other" => "Sonstiges"
                         );
+                        
+$notification_triggers = array(
+                        "NOTIFICATION_TRIGGER_STATUS" => 1,
+                        "NOTIFICATION_TRIGGER_COMMENT" => 2
+                        );
 
 ?>

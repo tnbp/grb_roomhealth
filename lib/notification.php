@@ -1,5 +1,8 @@
 <?php
 
+include("include/acceptable.php");
+foreach ($notification_triggers as $trigger => $level) define($trigger, $level);
+
 function send_notification($to, $subject, $body, $additional = array()) {
 	if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return false;
 	
@@ -7,8 +10,19 @@ function send_notification($to, $subject, $body, $additional = array()) {
 	$body = wordwrap(filter_var($body, FILTER_SANITIZE_FULL_SPECIAL_CHARS), 78, "\r\n");
 
 	global $mysql;
-	$db_check = mysqli_query($mysql, "SELECT id FROM users WHERE email = '" . mysqli_real_escape_string($mysql, $to) . "'");
-	if (!mysqli_num_rows($db_check)) return false;	// only send mail to addresses in our database!
+	if (!is_array($to)) {
+        $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email = '" . mysqli_real_escape_string($mysql, $to) . "'");
+        if (($row = mysqli_num_rows($db_check)) === NULL) return false;	// only send mail to addresses in our database!
+        $header['Bcc'] = $row['email'];
+    }
+	else {
+        $bcc = array();
+        foreach (&$to) $to = mysqli_real_escape_string($mysql, $to);
+        $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email IN '" . implode("', '", $to));
+        while (($row = mysqli_num_rows($db_check)) !== NULL) $bcc[] = $row['email'];
+        if (!count($bcc)) return false;
+        $header['Bcc'] = implode(", ", $bcc);
+    }
 
 	if (!isset($additional['From'])) $additional['From'] = RH_MAIL_FROM;
 
@@ -21,5 +35,22 @@ function send_notification($to, $subject, $body, $additional = array()) {
 	}
 	else $header = $additional;
 
-	return mail($to, $subject, $body, $header);
+    $mailto = "";
+	return mail($mailto, $subject, $body, $header);
 }
+
+function rh_trigger_notification($issue, $level, $body, $subject = "GRB IT-Defekte: Update") {
+    global $mysql;
+    
+    if (!in_array($level, $notification_triggers)) return false;
+    
+    $recipients = array();
+    
+    $res = mysqli_query($mysql, "SELECT users.email FROM users,notifications WHERE users.id = notifications.user_id AND notifications.issue_id = " . (int) $issue . " AND min_level >= " . (int) $level);
+    while (($cur_recip = mysqli_fetch_assoc($recipients)) !== NULL) $recipients[] = $cur_recip['email'];
+    
+    if (count($recipients) > 0) return send_notification($recipients, $subject, $body);
+    return false;
+}
+
+?>

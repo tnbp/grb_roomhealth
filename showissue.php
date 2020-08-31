@@ -93,25 +93,27 @@ if ($issue !== NULL) {
     rh_html_add_text(str_replace("\n", "", $issue['comment']), false, false);
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white", "class" => ($show_delete_button || $show_edit_button || $show_selfassign_button) ? "align_a" : false));
-    rh_html_down();
-    rh_html_add("legend", true, array(), false);
-    rh_html_add_text("Benachrichtigungen");
-    rh_html_add("form", true, array("action" => "postissue.php?change_notification&issueid=" . $id, "method" => "POST"));
-    rh_html_down();
-    rh_html_add("label", true, array("for" => "notification", "style" => "margin-right: 1em"), false);
-    rh_html_add_text("Benachrichtigen:");
-    rh_html_add("select", true, array("id" => "notification", "name" => "notification", "disabled" => (!has_valid_email()), "title" => (has_valid_email() ? "Du bekommst eine E-Mail, wenn diese Bedingung eintritt." : "Für Benachrichtigungen musst du eine gültige E-Mailadresse angeben!")));
-    rh_html_down();
-    rh_html_add("option", true, array("value" => "0", "selected" => ($issue['n_level'] == 0)), false);
-    rh_html_add_text("nicht benachrichtigen");
-    rh_html_add("option", true, array("value" => "1", "selected" => ($issue['n_level'] == 1)), false);
-    rh_html_add_text("bei Statusänderung");
-    rh_html_add("option", true, array("value" => "2", "selected" => ($issue['n_level'] == 2)), false);
-    rh_html_add_text("bei Kommentar");
-    rh_html_up();
-    rh_html_add("input", false, array("type" => "submit", "value" => "Ändern"));
-    rh_html_up(2);
+    if (is_loggedin()) {
+        rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white", "class" => ($show_delete_button || $show_edit_button || $show_selfassign_button) ? "align_a" : false));
+        rh_html_down();
+        rh_html_add("legend", true, array(), false);
+        rh_html_add_text("Benachrichtigungen");
+        rh_html_add("form", true, array("action" => "postissue.php?change_notification&issueid=" . $id, "method" => "POST"));
+        rh_html_down();
+        rh_html_add("label", true, array("for" => "notification", "style" => "margin-right: 1em"), false);
+        rh_html_add_text("Benachrichtigen:");
+        rh_html_add("select", true, array("id" => "notification", "name" => "notification", "disabled" => (!has_valid_email()), "title" => (has_valid_email() ? "Du bekommst eine E-Mail, wenn diese Bedingung eintritt." : "Für Benachrichtigungen musst du eine gültige E-Mailadresse angeben!")));
+        rh_html_down();
+        rh_html_add("option", true, array("value" => "0", "selected" => ($issue['n_level'] == 0)), false);
+        rh_html_add_text("nicht benachrichtigen");
+        rh_html_add("option", true, array("value" => "1", "selected" => ($issue['n_level'] == 1)), false);
+        rh_html_add_text("bei Statusänderung");
+        rh_html_add("option", true, array("value" => "2", "selected" => ($issue['n_level'] == 2)), false);
+        rh_html_add_text("bei Kommentar");
+        rh_html_up();
+        rh_html_add("input", false, array("type" => "submit", "value" => "Ändern"));
+        rh_html_up(2);
+    }
     if ($show_delete_button || $show_edit_button || $show_selfassign_button) {
         rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: -3em; right: 0em; z-index: 10; background-color: #f7f7ff", "class" => "align_b"), true);
         rh_html_down();

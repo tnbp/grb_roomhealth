@@ -31,6 +31,19 @@ if (isset($_GET['toggleactive'])) {
     mysqli_query($mysql, "DELETE FROM sessions WHERE user_id = " . $userid);
     redirect("userinfo.php?id=" . $userid ."&changed=active#msgbox");
 }
+else if (isset($_GET['reset_notifications'])) {
+    // reset a user's notifications
+    $userid = (int) $_GET['reset_notifications'];
+    has_permission(PERMISSION_LEVEL_ADMIN) || $userid == get_session("userid") || redirect("userinfo.php?error=perm");
+    if ($userid != $_GET['reset_notifications']) {
+        // $_GET['toggleactive'] was not an integer; this should never happen and we definitely cannot proceed
+        redirect("userinfo.php?error=nosuchuser");
+    }
+    // reset notifications
+    mysqli_query($mysql, "DELETE FROM notifications WHERE user_id = " . $userid);
+    if ($userid != get_session("userid")) redirect("userinfo.php?id=" . $userid ."&changed=reset_notifications#msgbox");
+    else redirect("userinfo.php?changed=reset_notifications#msgbox");
+}
 else {
     if (isset($_GET['user'])) {
         $userid = (int) $_GET['user'];

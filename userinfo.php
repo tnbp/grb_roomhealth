@@ -177,6 +177,16 @@ rh_html_add("span", true, array("style" => "display: inline-block; text-align: r
 rh_html_down();
 rh_html_add("input", false, array("type" => "submit", "value" => "Stammdaten ändern", "disabled" => $resetuser));
 rh_html_up(4);
+rh_html_add("fieldset", true, array("style" => "text-align: center; background-color: white; width: 50%; margin: 2em auto 1em"));
+rh_html_down();
+rh_html_add("legend", true, array(), false);
+rh_html_add_text("Benachrichtigungen zurücksetzen");
+display_changed_message(array("reset_notifications"));
+rh_html_add("form", true, array("action" => "useredit.php?reset_notifications=" . $user['id'], "method" => "POST", "id" => "reset_form"));
+rh_html_down();
+rh_html_add("input", false, array("disabled" => $resetuser, "type" => "checkbox", "name" => "reset_ok", "id" => "reset_ok"));
+rh_html_add("input", false, array("disabled" => $resetuser, "type" => "submit", "value" => "Benachrichtigungen zurücksetzen"));
+rh_html_up(2);
 if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     rh_html_add("fieldset", true, array("style" => "text-align: center; background-color: white; width: 50%; margin: 2em auto 1em", "class" => ($resetuser ? "rh_disabled rh_useredit" : false)));
     rh_html_down();
@@ -245,7 +255,7 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
     rh_html_add("form", true, array("action" => "useredit.php?user=" . $user['id'], "method" => "POST"));
     rh_html_down();
     foreach ($permissions_list as $p => $v) {
-        rh_html_add("span", true, array("style" => "white-space: nowrap; display: inline-block; width: 45%", "title" => $permissions_description[$p]));
+        rh_html_add("span", true, array("style" => "white-space: nowrap; display: inline-block; min-width: 45%", "title" => $permissions_description[$p]));
         rh_html_down();
         rh_html_add("input", false, array("type" => "checkbox", "id" => "perm_" . $p, "name" => "perm_" . $p, "value" => $v, "disabled" => $resetuser || $disable_permissions, "checked" => (($user['permissions'] & $v) == $v)));
         rh_html_add("label", true, array("for" => "perm_" . $p), false);
@@ -271,6 +281,18 @@ if (has_permission(PERMISSION_LEVEL_ADMIN)) {
 */
 
 rh_html_add_js(false, "rh_message_fade.js");
+$form_verify_js = <<<EOD
+document.getElementById("reset_form").onsubmit = rh_verify_reset_form;
+
+function rh_verify_reset_form() {
+    if (!document.getElementById("reset_ok").checked) {
+        alert("Zum Zurücksetzen bitte die Checkbox anklicken!");
+        return false;
+    }
+    return true;
+}
+EOD;
+rh_html_add_js($form_verify_js);
 rh_html_end();
 
 function display_changed_message($which) {
@@ -283,7 +305,8 @@ function display_changed_message($which) {
         "name" => "Name aktualisiert",
         "login" => "Benutzerlogin geändert.",
         "initialpw" => "Passwort auf Initialpasswort zurückgesetzt.",
-        "permissions" => "Benutzerrechte geändert."
+        "permissions" => "Benutzerrechte geändert.",
+        "reset_notifications" => "Benachrichtigungen zurückgesetzt."
     );
     $changed = http_get_array("changed");
     $n = count($changed);

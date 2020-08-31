@@ -3,6 +3,7 @@
 require_once("lib/session.php");
 require_once("lib/permissions.php");
 require_once("lib/comments.php");
+require_once("lib/notification.php");
 require("include/acceptable.php");
 
 rh_session();
@@ -49,7 +50,10 @@ else {
     mysqli_query($mysql, "INSERT INTO comments SET user_id = " . $session['userid'] . ", issue_id = " . $issue['id'] . ", timestamp = " . time() . ", body = '" . mysqli_real_escape_string($mysql, $_POST['body']) . "', visible = '" . mysqli_real_escape_string($mysql, $vis) . "'");
     $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
     $commentid = mysqli_fetch_assoc($res);
-    if ($commentid !== false) redirect("showissue.php?id=" . $issue['id'] . "#commentmod_" . $commentid['id']);
+    if ($commentid !== false) {
+        rh_trigger_notification($issueid, NOTIFICATION_TRIGGER_COMMENT, "Der Defektbeschreibung #" . $issue_id . " wurde ein neuer Kommentar hinzugefügt:\r\n\r\nvon: " . get_session("name") . "\r\n" . $body, "GRB IT-Defekte: Update zu Defekt #" . $issueid);
+        redirect("showissue.php?id=" . $issue['id'] . "#commentmod_" . $commentid['id']);
+    }
     else redirect("showissue.php?id=" . $issue['id']);
 }
 

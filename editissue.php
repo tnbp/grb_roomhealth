@@ -136,7 +136,7 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled" : false), "style" => "width: max-content; display: inline-block; background-color: white", "id" => "align_a"));
+    rh_html_add("fieldset", true, array("class" => ($disableother ? "rh_disabled " : "") . "align_a", "style" => "width: max-content; display: inline-block; background-color: white"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
     rh_html_add_text("Organisation");
@@ -184,7 +184,7 @@ if ($issue !== NULL) {
     }
     rh_html_close();
     rh_html_up(2);
-    rh_html_add("div", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: .7em; right: .7em", "id" => "align_b"));
+    rh_html_add("div", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: .7em; right: .7em", "class" => "align_b"));
     rh_html_down();
     rh_html_add("fieldset", true, array("style" => "display: inline-block", "class" => "rh_delete"));
     rh_html_down();

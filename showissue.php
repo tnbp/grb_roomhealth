@@ -10,7 +10,7 @@ rh_session();
 
 if (!isset($_GET['id'])) redirect("index.php?error=invalid_issue_show");
 $id = (int) $_GET['id'];
-$res = mysqli_query($mysql, "SELECT issues.*,users.name FROM issues LEFT JOIN users ON issues.reporter_id = users.id WHERE issues.id = " . $id);
+$res = mysqli_query($mysql, "SELECT issues.*, users.name, notifications.min_level-1 AS n_level FROM users LEFT JOIN issues ON issues.reporter_id = users.id LEFT JOIN notifications ON users.id = notifications.user_id AND notifications.issue_id = " . $id . " WHERE issues.id = " . $id);
 $issue = mysqli_fetch_assoc($res);
 
 rh_html_init();
@@ -47,6 +47,9 @@ if ($issue !== NULL) {
     rh_html_add("span", true, array("style" => "white-space: nowrap"));
     rh_html_down();
     rh_html_add_text("Problem mit Gerät:", true, true);
+    $show_delete_button = has_permission(PERMISSION_ISSUE_DELETE);
+    $show_edit_button = has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT);
+    $show_selfassign_button = (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $issue['assignee_id'] == -1);
     $style_string = "margin-left: 1em; margin-right: 3em; display: inline-block; font-weight: normal; text-align: center; font-size: 1em";
     rh_html_add("input", false, array("style" => ($style_string . "; min-width: 300px; width: " . (strlen($item['name']) / 1.66) . "em"), "value" => $item['name'], "readonly" => true));
     rh_html_up();
@@ -55,6 +58,8 @@ if ($issue !== NULL) {
     rh_html_add_text("in Raum:");
     rh_html_add("input", false, array("style" => ($style_string . "; min-width: 100px; width: " . (strlen($room['name']) / 1.66) . "em"), "value" => $room['name'], "readonly" => true));
     rh_html_up(2);
+    rh_html_add("div", true, array("style" => "position: relative"));
+    rh_html_down();
     rh_html_add("fieldset", true, array("style" => "background-color: #f7f7ff"));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
@@ -88,11 +93,27 @@ if ($issue !== NULL) {
     rh_html_add_text(str_replace("\n", "", $issue['comment']), false, false);
     rh_html_close();
     rh_html_up(2);
-    $show_delete_button = has_permission(PERMISSION_ISSUE_DELETE);
-    $show_edit_button = has_permission(PERMISSION_ISSUE_SET_STATUS | PERMISSION_ISSUE_SET_SEVERITY | PERMISSION_ISSUE_SET_RESOLUTION | PERMISSION_ISSUE_EDIT);
-    $show_selfassign_button = (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $issue['assignee_id'] == -1);
+    rh_html_add("fieldset", true, array("style" => "width: max-content; background-color: white", "class" => ($show_delete_button || $show_edit_button || $show_selfassign_button) ? "align_a" : false));
+    rh_html_down();
+    rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Benachrichtigungen");
+    rh_html_add("form", true, array("action" => "postissue.php?change_notification&issueid=" . $id, "method" => "POST"));
+    rh_html_down();
+    rh_html_add("label", true, array("for" => "notification", "style" => "margin-right: 1em"), false);
+    rh_html_add_text("Benachrichtigen:");
+    rh_html_add("select", true, array("id" => "notification", "name" => "notification", "disabled" => (!has_valid_email()), "title" => (has_valid_email() ? "Du bekommst eine E-Mail, wenn diese Bedingung eintritt." : "Für Benachrichtigungen musst du eine gültige E-Mailadresse angeben!")));
+    rh_html_down();
+    rh_html_add("option", true, array("value" => "0", "selected" => ($issue['n_level'] == 0)), false);
+    rh_html_add_text("nicht benachrichtigen");
+    rh_html_add("option", true, array("value" => "1", "selected" => ($issue['n_level'] == 1)), false);
+    rh_html_add_text("bei Statusänderung");
+    rh_html_add("option", true, array("value" => "2", "selected" => ($issue['n_level'] == 2)), false);
+    rh_html_add_text("bei Kommentar");
+    rh_html_up();
+    rh_html_add("input", false, array("type" => "submit", "value" => "Ändern"));
+    rh_html_up(2);
     if ($show_delete_button || $show_edit_button || $show_selfassign_button) {
-        rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; background-color: #f7f7ff"), true);
+        rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; bottom: -3em; right: 0em; z-index: 10; background-color: #f7f7ff", "class" => "align_b"), true);
         rh_html_down();
         rh_html_add("legend", true, array(), false);
         rh_html_add_text("Problembehandlung");
@@ -125,6 +146,7 @@ if ($issue !== NULL) {
         }
         rh_html_up(2);
     }
+    rh_html_up();
     rh_comment_section($issue);
     rh_html_end();
 }

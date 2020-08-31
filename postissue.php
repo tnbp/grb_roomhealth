@@ -2,6 +2,7 @@
 
 require_once("lib/session.php");
 require_once("lib/permissions.php");
+require_once("lib/notification.php");
 require("include/acceptable.php");
 
 rh_session();
@@ -23,7 +24,23 @@ if ($itemid != -1) {
     if (!mysqli_num_rows($res)) $error = "item";
 }
 if (!in_array($_POST['severity'], $severity_acceptable)) $error = "severity";
-if (isset($_GET['update'])) {
+if (isset($_GET['change_notification'])) {
+    include("include/acceptable.php");
+    $notification = isset($_POST['notification']) ? (int) $_POST['notification'] : false;
+    $issueid = (int) $_GET['issueid'];
+    if (in_array($notification, $notification_triggers)) {
+        $res = mysqli_query($mysql, "SELECT * FROM notifications WHERE user_id = " . get_session("userid") . " AND issue_id = " . $issueid);
+        if (!mysqli_num_rows($res)) mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . get_session("userid") . ", issue_id = " . $issueid . ", min_level = " . ($notification + 1));
+        else mysqli_query($mysql, "UPDATE notifications SET min_level = " . ($notification + 1) . " WHERE user_id = " . get_session("userid") . " AND issue_id = " . $issueid);
+        redirect("showissue.php?id=" . $issueid);
+    }
+    else if ($notification === 0) {
+        mysqli_query($mysql, "DELETE FROM notifications WHERE user_id = " . get_session("userid") . " AND issue_id = " . $issueid);
+        redirect("showissue.php?id=" . $issueid);
+    }
+    else redirect("showissue.php?id=" . $issueid . "&error=invalid_notification_update");
+}
+else if (isset($_GET['update'])) {
     // if we're *updating* an issue report, we have a lot more options and need to run more checks
     $issueid = (int) $_POST['issueid'];
     $assigneeid = (int) $_POST['assignee_id'];
@@ -113,6 +130,9 @@ if (isset($_GET['update'])) {
             }
             if (isset($update['severity'])) $body .= "SCHWEREGRAD: **" . $severity_description[$update['severity']] . "**\r\n";
             mysqli_query($mysql, "INSERT INTO comments SET user_id = 0, issue_id = " . $issueid . ", timestamp = " . time() . ", body = '" . $body . "', visible = 'all'");
+            
+            // notify users!
+            rh_trigger_notification($issueid, NOTIFICATION_TRIGGER_STATUS, $body, "GRB IT-Defekte: Update zu Defekt #" . $issueid);
         }
         if (isset($_POST['backtolist'])) redirect("listissues.php");
         else redirect("showissue.php?id=" . $issueid);
@@ -128,6 +148,9 @@ else if (isset($_GET['delete'])) {
     mysqli_query($mysql, "DELETE FROM issues WHERE id = " . $issueid);
     // also delete all associated allow_comments!
     mysqli_query($mysql, "DELETE FROM comments WHERE issue_id = " . $issueid);
+    // AND delete all notifications
+    // TODO: add notification!
+    mysqli_query($mysql, "DELETE FROM notifications WHERE issue_id = " . $issueid);
     redirect("listissues.php");
 }
 else if (isset($_GET['assignself'])) {
@@ -143,7 +166,14 @@ else {
         mysqli_query($mysql, "INSERT INTO issues SET time_reported = " . time() . ", reporter_id = " . $session['userid'] . ", comment = '" . mysqli_real_escape_string($mysql, $comment) . "', item_id = " . $itemid . ", room_id = " . $roomid . ", severity = '" . $severity . "', assignee_id = -1, status = 'OPEN', resolution = 'REPORTED', last_updated = " . time());
         $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
         $newissue = mysqli_fetch_assoc($res);
-        if ($newissue !== false) redirect("showissue.php?id= " . $newissue['id']);
+        if ($newissue !== false) {
+            include("include/acceptable.php");
+            $notification = isset($_POST['notification']) ? (int) $_POST['notification'] : false;
+            if (in_array($notification, $notification_triggers)) {
+                mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . get_session("userid") . ", issue_id = " . $newissue['id'] . ", min_level = " . ($notification + 1));
+            }
+            redirect("showissue.php?id= " . $newissue['id']);
+        }
         else redirect("listissues.php");
     }
     else redirect("listissues.php?error=invalid_issue_post&part=" . $error);

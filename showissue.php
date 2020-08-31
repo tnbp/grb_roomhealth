@@ -112,7 +112,7 @@ if ($issue !== NULL) {
         rh_html_add("option", true, array("value" => "2", "selected" => ($issue['n_level'] == 2)), false);
         rh_html_add_text("bei Kommentar");
         rh_html_up();
-        rh_html_add("input", false, array("type" => "submit", "value" => "Ändern"));
+        rh_html_add("input", false, array("type" => "submit", "value" => "Ändern", "disabled" => (!has_valid_email())));
         rh_html_up(2);
     }
     if ($show_delete_button || $show_edit_button || $show_selfassign_button) {

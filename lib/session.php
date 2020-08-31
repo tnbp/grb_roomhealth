@@ -44,6 +44,10 @@ function get_session($info = false) {
     return (isset($session[$info]) ? $session[$info] : false);
 }
 
+function has_valid_email() {
+	return (bool) filter_var(get_session("email"), FILTER_VALIDATE_EMAIL);
+}
+
 function redirect($target) {
     if (preg_match("/[?&]error=/", $target)) $target .= "#errorbox";
     header("Location: " . $target);

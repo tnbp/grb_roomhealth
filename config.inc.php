@@ -12,6 +12,8 @@ define("SESSION_VALIDITY", 3600); // time before session becomes invalid for ina
 
 define("DATE_INPUT_POLYFILL_SCRIPT", "nodep-date-input-polyfill.dist.js");
 
+define("RH_MAIL_FROM", "noreply@localhost");
+
 define("DEBUG", false);
 
 ?>

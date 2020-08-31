@@ -4,7 +4,7 @@ function send_notification($to, $subject, $body, $additional = array()) {
 	if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return false;
 	
 	$subject = filter_var($subject, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-	$body = filter_var($body, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+	$body = wordwrap(filter_var($body, FILTER_SANITIZE_FULL_SPECIAL_CHARS), 78, "\r\n");
 
 	global $mysql;
 	$db_check = mysqli_query($mysql, "SELECT id FROM users WHERE email = '" . mysqli_real_escape_string($mysql, $to) . "'");

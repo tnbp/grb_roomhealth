@@ -85,7 +85,9 @@ rh_html_add("textarea", true, array("name" => "comment", "style" => "width: 100%
 rh_html_add_text(isset($_POST['comment']) ? $_POST['comment'] : "");
 rh_html_close();
 rh_html_up(); // leaving p
-rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false, "style" => "width: max-content; background-color: white", "id" => "align_a"));
+rh_html_add("div", true, array("style" => "width: max-content", "id" => "align_a"));
+rh_html_down();
+rh_html_add("fieldset", true, array("class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false, "style" => "width: max-content; background-color: white"));
 rh_html_down(); // in div
 rh_html_add("legend", true);
 rh_html_add_text("Schweregrad", true, true);
@@ -135,6 +137,22 @@ rh_html_add_text("niedrig");
 rh_html_close(false, false, false, false);
 rh_html_add_text(" - Unterricht wird kaum beeinflusst", false, true);
 rh_html_up(4); // leaving li, ul, div
+rh_html_add("fieldset", true, array("class" => ($rc == 0 || !has_valid_email()) ? "rh_disabled rh_issueedit" : false, "style" => "width: max-content; background-color: white"));
+rh_html_down();
+rh_html_add("legend", true, array(), false);
+rh_html_add_text("Benachrichtigungen");
+rh_html_add("label", true, array("for" => "notification", "style" => "margin-right: 1em"), false);
+rh_html_add_text("Benachrichtigen bei:");
+rh_html_add("select", true, array("id" => "notification", "name" => "notification", "disabled" => ($rc == 0 || !has_valid_email()), "title" => (has_valid_email() ? "Du bekommst eine E-Mail, wenn diese Bedingung eintritt." : "Für Benachrichtigungen musst du eine gültige E-Mailadresse angeben!")));
+rh_html_down();
+rh_html_add("option", true, array("value" => "0"), false);
+rh_html_add_text("nicht benachrichtigen");
+rh_html_add("option", true, array("value" => "1"), false);
+rh_html_add_text("bei Statusänderung");
+rh_html_add("option", true, array("value" => "2"), false);
+rh_html_add_text("bei Kommentar");
+rh_html_up(2);
+rh_html_up();
 rh_html_add("fieldset", true, array("style" => "text-align: right; width: max-content; margin-left: auto; margin-top: .5em; bottom: 0px; right: 0px; background-color: white", "class" => ($rc == 0) ? "rh_disabled" : false, "id" => "align_b"));
 rh_html_down();
 rh_html_add("legend", true, array(), false);

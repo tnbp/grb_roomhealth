@@ -29,13 +29,13 @@ function send_notification($to, $subject, $body, $additional = array()) {
             if (!filter_var($v, FILTER_VALIDATE_EMAIL)) return false;
             $v = mysqli_real_escape_string($mysql, $v);
         }
-        $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email IN '" . implode("', '", $to) . "'");
+        $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email IN ('" . implode("', '", $to) . "')");
         while (($row = mysqli_fetch_assoc($db_check)) !== NULL) $bcc[] = $row['email'];
         if (!count($bcc)) return false;
         $header['Bcc'] = implode(", ", $bcc);
     }
 
-	if (!isset($additional['From'])) $additional['From'] = RH_MAIL_FROM;
+	if (!isset($header['From'])) $header['From'] = RH_MAIL_FROM;
 
     $mailto = "";
 	return mail($mailto, $subject, $body, $header);

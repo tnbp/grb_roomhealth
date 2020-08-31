@@ -4,20 +4,22 @@ include("include/acceptable.php");
 foreach ($notification_triggers as $trigger => $level) define($trigger, $level);
 
 function send_notification($to, $subject, $body, $additional = array()) {
-	if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return false;
-	
 	$subject = filter_var($subject, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 	$body = wordwrap(filter_var($body, FILTER_SANITIZE_FULL_SPECIAL_CHARS), 78, "\r\n");
 
 	global $mysql;
 	if (!is_array($to)) {
+        if (!filter_var($to, FILTER_VALIDATE_EMAIL)) return false;
         $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email = '" . mysqli_real_escape_string($mysql, $to) . "'");
         if (($row = mysqli_num_rows($db_check)) === NULL) return false;	// only send mail to addresses in our database!
         $header['Bcc'] = $row['email'];
     }
 	else {
         $bcc = array();
-        foreach ($to as &$v) $v = mysqli_real_escape_string($mysql, $v);
+        foreach ($to as &$v) {
+            if (!filter_var($v, FILTER_VALIDATE_EMAIL)) return false;
+            $v = mysqli_real_escape_string($mysql, $v);
+        }
         $db_check = mysqli_query($mysql, "SELECT email FROM users WHERE email IN '" . implode("', '", $to));
         while (($row = mysqli_num_rows($db_check)) !== NULL) $bcc[] = $row['email'];
         if (!count($bcc)) return false;

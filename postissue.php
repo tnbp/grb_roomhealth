@@ -168,8 +168,8 @@ else {
         $newissue = mysqli_fetch_assoc($res);
         if ($newissue !== false) {
             $body = get_session("name") . " hat einen neuen Defekt gemeldet:\r\n\r\n" . $comment;
-            rh_trigger_notification(-1, NOTIFICATION_TRIGGER_NEWISSUE, $body, "GRB IT-Defekte: Neue Defektmeldung #" . $newissue['id']);
             include("include/acceptable.php");
+            rh_trigger_notification(-1, NOTIFICATION_TRIGGER_NEWISSUE, $body, "GRB IT-Defekte: Neue Defektmeldung #" . $newissue['id']);
             $notification = isset($_POST['notification']) ? (int) $_POST['notification'] : false;
             if (in_array($notification, $notification_triggers)) {
                 mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . get_session("userid") . ", issue_id = " . $newissue['id'] . ", min_level = " . ($notification + 1));

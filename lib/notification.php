@@ -1,6 +1,5 @@
 <?php
 
-include("include/acceptable.php");
 foreach ($notification_triggers as $trigger => $level) define($trigger, $level);
 
 function send_notification($to, $subject, $body, $additional = array()) {
@@ -43,6 +42,7 @@ function send_notification($to, $subject, $body, $additional = array()) {
 
 function rh_trigger_notification($issue, $level, $body, $subject = "GRB IT-Defekte: Update") {
     global $mysql;
+    include("include/acceptable.php");
     
     if (!in_array($level, $notification_triggers)) return false;
     

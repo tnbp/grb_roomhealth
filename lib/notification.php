@@ -49,8 +49,9 @@ function rh_trigger_notification($issue, $level, $body, $subject = "GRB IT-Defek
     
     $recipients = array();
     
-    $res = mysqli_query($mysql, "SELECT users.email FROM users,notifications WHERE users.id = notifications.user_id AND notifications.issue_id = " . (int) $issue . " AND min_level >= " . (int) $level . (is_loggedin() ? (" AND users.id != " . get_session("userid")) : ""));
-    while (($cur_recip = mysqli_fetch_assoc($recipients)) !== NULL) $recipients[] = $cur_recip['email'];
+    $query = "SELECT users.email FROM users, notifications WHERE users.id = notifications.user_id AND notifications.issue_id = " . (int) $issue ." AND notifications.min_level >= " . (int) $level . (is_loggedin() ? (" AND users.id != " . get_session("userid")) : "");
+    $res = mysqli_query($mysql, $query);
+    while (($cur_recip = mysqli_fetch_assoc($res)) !== NULL) $recipients[] = $cur_recip['email'];
     
     if (count($recipients) > 0) return send_notification($recipients, $subject, $body);
     return false;

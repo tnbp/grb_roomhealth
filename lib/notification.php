@@ -1,5 +1,6 @@
 <?php
 
+include("include/acceptable.php");
 foreach ($notification_triggers as $trigger => $level) define($trigger, $level);
 
 function send_notification($to, $subject, $body, $additional = array()) {

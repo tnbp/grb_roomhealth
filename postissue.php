@@ -158,6 +158,12 @@ else if (isset($_GET['assignself'])) {
     if (!isset($_GET['id'])) redirect("listissues.php?error=invalid_issue_post&part=issueid");
     $issueid = (int) $_GET['id'];
     mysqli_query($mysql, "UPDATE issues SET assignee_id = " . $session['userid'] . " WHERE id = " . $issueid);
+    $body = $session['name'] . " hat die Fehlerbeschreibung geändert:\r\n";
+    $body .= "ZUGEWIESEN: **" . $name . "**\r\n";
+    mysqli_query($mysql, "INSERT INTO comments SET user_id = 0, issue_id = " . $issueid . ", timestamp = " . time() . ", body = '" . $body . "', visible = 'all'");
+            
+    // notify users!
+    rh_trigger_notification($issueid, NOTIFICATION_TRIGGER_STATUS, $body, "GRB IT-Defekte: Update zu Defekt #" . $issueid);
     redirect("showissue.php?id=" . $issueid);
 }
 else {
@@ -167,14 +173,17 @@ else {
         $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
         $newissue = mysqli_fetch_assoc($res);
         if ($newissue !== false) {
-            $body = get_session("name") . " hat einen neuen Defekt gemeldet:\r\n\r\n" . $comment;
+            $newissue_info = mysqli_query($mysql, "SELECT items.name AS iname, rooms.name AS rname FROM issues LEFT JOIN rooms ON issues.room_id = rooms.id LEFT JOIN items ON issues.item_id = items.id WHERE issues.id = " . $newissue['id']);
+            $newissue_info = mysqli_fetch_assoc($newissue_info);
+            if ($newissue_info['iname'] == NULL) $newissue_info['iname'] = "Sonstiges";
+            $body = get_session("name") . " hat einen neuen Defekt gemeldet:\r\nRaum:\t" . $newissue_info['rname'] . "\r\nGerät:\t" . $newissue_info['iname'] . "\r\n\r\n" . html_entity_decode($comment, ENT_QUOTES | ENT_HTML5);
             include("include/acceptable.php");
             rh_trigger_notification(-1, NOTIFICATION_TRIGGER_NEWISSUE, $body, "GRB IT-Defekte: Neue Defektmeldung #" . $newissue['id']);
             $notification = isset($_POST['notification']) ? (int) $_POST['notification'] : false;
             if (in_array($notification, $notification_triggers)) {
                 mysqli_query($mysql, "INSERT INTO notifications SET user_id = " . get_session("userid") . ", issue_id = " . $newissue['id'] . ", min_level = " . ($notification + 1));
             }
-            redirect("showissue.php?id= " . $newissue['id']);
+            redirect("showissue.php?id=" . $newissue['id']);
         }
         else redirect("listissues.php");
     }

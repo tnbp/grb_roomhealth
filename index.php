@@ -38,13 +38,13 @@ rh_header();
 rh_errorhandler();
 
 if ($session['loggedin'] === true) {
+    rh_html_add("div", true, array("class" => "rh_no_print"), true);
+    rh_html_down();
     rh_html_add("h2", true, array(), false);
     rh_html_down();
     rh_html_add("img", false, array("src" => "img/newissue.png", "alt" => "Neuen Defekt melden", "style" => "vertical-align: bottom"));
     rh_html_add_text("Neuen Defekt melden...");
     rh_html_up();
-    rh_html_add("div", true, array(), true);
-    rh_html_down();
     rh_html_room_selector(false, "newissue.php");
     rh_html_up();
 }
@@ -66,7 +66,7 @@ if ($rn == 20) {
 $t_data = array();
 for ($i = 0; $i < $rn; $i++) {
     $row = mysqli_fetch_assoc($res);
-    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['uname'], "<span class=\"sev_" . $row['severity'] . "\"><img src=\"img/sev_" . $row['severity'] . ".png\" alt=\"" . $row['severity'] . "\">" . $severity_description[$row['severity']] . "</span>", "<a href=\"showissue.php?id=" . $row['id'] ."\" class=\"showissue\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>");
+    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['uname'], "<span class=\"sev_" . $row['severity'] . "\"><img src=\"img/sev_" . $row['severity'] . ".png\" alt=\"" . $row['severity'] . "\">" . $severity_description[$row['severity']] . "</span>", "<a href=\"showissue.php?id=" . $row['id'] ."\" class=\"showissue\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>", "linetext" => array($row['title'] == NULL ? "ohne Titel" : $row['title']));
     $t_data[] = $cur;
 }
 $t_header = rh_htmlentities_array(array("id" => "ID", "Raum", "Defektes Gerät", "tr" => "gemeldet", "von", "sev" => "Schweregrad", "Aktionen", "th_attr" => array("style" => "font-weight: bold; border: 2px solid black; padding: 1em 1em")));

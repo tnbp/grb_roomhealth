@@ -13,6 +13,7 @@ require_loggedin_or_redirect();
 $roomid = (int)$_POST['roomid'];
 $itemid = (int)$_POST['itemid'];
 $comment = $_POST['comment'];
+$title = $_POST['title'];
 $severity = $_POST['severity'];
 
 if ($roomid != -1) {
@@ -24,6 +25,8 @@ if ($itemid != -1) {
     if (!mysqli_num_rows($res)) $error = "item";
 }
 if (!in_array($_POST['severity'], $severity_acceptable)) $error = "severity";
+if (!strlen(trim($title))) $error = "empty_title";
+
 if (isset($_GET['change_notification'])) {
     include("include/acceptable.php");
     $notification = isset($_POST['notification']) ? (int) $_POST['notification'] : false;
@@ -46,7 +49,6 @@ else if (isset($_GET['update'])) {
     $assigneeid = (int) $_POST['assignee_id'];
     $resolution = $_POST['resolution'];
     $status = $_POST['status'];
-    //$severity = $_POST['severity'];
     $allow_comments = $_POST['allow_comments'];
     
     $res = mysqli_query($mysql, "SELECT * FROM issues WHERE id = " . $issueid);
@@ -83,7 +85,12 @@ else if (isset($_GET['update'])) {
     if ($comment != $row['comment']) {
         // update comment...
         $update['comment'] = mysqli_real_escape_string($mysql, $comment);
-        if (!strlen(trim($comment))) $error = "empty";
+        if (!strlen(trim($comment))) $error = "empty_comment";
+        if (!has_permission(PERMISSION_ISSUE_EDIT)) $error = "permission";
+    }
+    if ($title != $row['title']) {
+        // update title
+        $update['title'] = mysqli_real_escape_string($mysql, $title);
         if (!has_permission(PERMISSION_ISSUE_EDIT)) $error = "permission";
     }
     if ($roomid != $row['room_id'] && $itemid == -1) {
@@ -116,6 +123,7 @@ else if (isset($_GET['update'])) {
         if (isset($update['status']) || isset($update['resolution']) || isset($update['assignee_id']) || isset($update['severity'])) {
             // post a comment!
             $body = $session['name'] . " hat die Fehlerbeschreibung geändert:\r\n";
+            if (isset($update['title'])) $body .= "TITEL: **" . $update['title'] . "**\r\n";
             if (isset($update['status'])) $body .= "STATUS: **" . $update['status'] . "**\r\n";
             if (isset($update['resolution'])) $body .= "LÖSUNG: **" . $update['resolution'] . "**\r\n";
             if (isset($update['assignee_id'])) {
@@ -157,9 +165,9 @@ else if (isset($_GET['assignself'])) {
     require_permission_or_redirect(PERMISSION_ISSUE_ASSIGN_SELF, "listissues.php?error=invalid_issue_post&part=permissions");
     if (!isset($_GET['id'])) redirect("listissues.php?error=invalid_issue_post&part=issueid");
     $issueid = (int) $_GET['id'];
-    mysqli_query($mysql, "UPDATE issues SET assignee_id = " . $session['userid'] . " WHERE id = " . $issueid);
+    mysqli_query($mysql, "UPDATE issues SET assignee_id = " . get_session("name") . " WHERE id = " . $issueid);
     $body = $session['name'] . " hat die Fehlerbeschreibung geändert:\r\n";
-    $body .= "ZUGEWIESEN: **" . $name . "**\r\n";
+    $body .= "ZUGEWIESEN: **" . get_session("name") . "**\r\n";
     mysqli_query($mysql, "INSERT INTO comments SET user_id = 0, issue_id = " . $issueid . ", timestamp = " . time() . ", body = '" . $body . "', visible = 'all'");
             
     // notify users!
@@ -169,7 +177,7 @@ else if (isset($_GET['assignself'])) {
 else {
     // if we're only posting a new issue, there's not much that can go wrong, right?
     if (!isset($error)) {
-        mysqli_query($mysql, "INSERT INTO issues SET time_reported = " . time() . ", reporter_id = " . $session['userid'] . ", comment = '" . mysqli_real_escape_string($mysql, $comment) . "', item_id = " . $itemid . ", room_id = " . $roomid . ", severity = '" . $severity . "', assignee_id = -1, status = 'OPEN', resolution = 'REPORTED', last_updated = " . time());
+        mysqli_query($mysql, "INSERT INTO issues SET time_reported = " . time() . ", reporter_id = " . $session['userid'] . ", comment = '" . mysqli_real_escape_string($mysql, $comment) . "', item_id = " . $itemid . ", room_id = " . $roomid . ", severity = '" . $severity . "', assignee_id = -1, status = 'OPEN', resolution = 'REPORTED', last_updated = " . time() . ", title = '" . mysqli_real_escape_string($mysql, $title) . "'");
         $res = mysqli_query($mysql, "SELECT LAST_INSERT_ID() AS id");
         $newissue = mysqli_fetch_assoc($res);
         if ($newissue !== false) {

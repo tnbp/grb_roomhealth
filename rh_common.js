@@ -78,8 +78,9 @@ function make_tds_clickable() {
 function make_trs_clickable() {
     var trs = document.getElementsByTagName("tr");
     for (var i = 0; i < trs.length; i++) {
-        if (trs[i].className != "rh_even" && trs[i].className != "rh_odd") continue;
-        trs[i].href = trs[i].querySelector(".showissue").href;
+        if (trs[i].className.indexOf("rh_even") == -1 && trs[i].className.indexOf("rh_odd") == -1) continue;
+        if (trs[i].className.indexOf(" linetext") > -1) trs[i].href = trs[i-1].href;    // re-use the href!
+        else trs[i].href = trs[i].querySelector(".showissue").href;
         trs[i].onclick = function() { window.location.href = this.href; };
         trs[i].style['cursor'] = "pointer";
     }

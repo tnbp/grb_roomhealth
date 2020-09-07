@@ -4,6 +4,8 @@ require_once("lib/rh_html.php");
 require_once("lib/permissions.php");
 
 function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), $trattr = array(), $return = false, $current_filters = array()) { // UNHOLY!
+    $colspan = 0;
+
     if (isset($header['tr_attr'])) {
         $header_tr_attr = $header['tr_attr'];
         unset($header['tr_attr']);
@@ -15,6 +17,8 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
     }
     else $header_th_attr = array();
     
+    if (isset($tableattr['class'])) $tableattr['class'] .= " rh_table";
+    else $tableattr['class'] = "rh_table";
     rh_html_add("table", true, $tableattr);
     rh_html_down();
     if (!isset($header_tr_attr['class'])) $header_tr_attr['class'] = "rh_head";
@@ -28,6 +32,7 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
             $header_th_attr_current['class'] .= "rh_html_table_order";
         }
         rh_html_add("th", true, $header_th_attr_current, $k_is_string);
+        $colspan++;
         if ($k_is_string) {
             if ($k == "th_attr") continue;
             rh_html_down();
@@ -73,7 +78,7 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
         if (!isset($trattr['class'])) $trattr['class'] = "rh_odd";
         rh_html_add("tr", true, $trattr);
         rh_html_down();
-        $tdattr['colspan'] = "10";
+        $tdattr['colspan'] = $colspan;
         $tdattr['style'] = "text-align: center; border: 1px solid black; padding: 2px 2px; font-style: italic";
         rh_html_add("td", true, $tdattr, false);
         rh_html_add_text("Es gibt keine anzuzeigenden Daten.");
@@ -91,11 +96,23 @@ function rh_html_table($header, $data, $tableattr = array(), $tdattr = array(), 
             rh_html_add("tr", true, $trattr_tmp);
             rh_html_down();
             foreach ($d as $f) {
+                if (is_array($f)) continue;
                 rh_html_add("td", true, $tdattr, false);
                 rh_html_add_raw($f, false);
             }
             rh_html_close();
             rh_html_up();
+            if (is_array($d['linetext'])) {
+                foreach ($d['linetext'] as $l) {
+                    $trattr_tmp['class'] .= " linetext";
+                    rh_html_add("tr", true, $trattr_tmp);
+                    rh_html_down();
+                    rh_html_add("td", true, array("class" => "shortdesc", "colspan" => $colspan));
+                    rh_html_add_text($l);
+                    rh_html_up();
+                }
+            }
+            rh_html_add("tr", true, array("class" => "rh_spacer"));
         }
     }
     rh_html_up();

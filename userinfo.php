@@ -184,15 +184,17 @@ rh_html_down();
 rh_html_add("legend", true, array(), false);
 rh_html_add_text("Benachrichtigungen");
 display_changed_message(array("reset_notifications", "notify_on_new"));
-rh_html_add("div", true, array("style" => "margin-bottom: 1em; text-align: left"));
-rh_html_down();
-rh_html_add("form", true, array("action" => "useredit.php?notify_on_new=" . $user['id'], "method" => "POST"));
-rh_html_down();
-rh_html_add("input", false, array("name" => "notify_on_new", "id" => "notify_on_new", "type" => "checkbox", "checked" => $notify_on_new, "value" => "ok", "disabled" => $resetuser));
-rh_html_add("label", true, array("for" => "notify_on_new", "style" => "margin-right: 2em"));
-rh_html_add_text("Bei neuen Defektmeldungen benachrichtigen");
-rh_html_add("input", false, array("type" => "submit", "value" => "Ändern", "disabled" => $resetuser));
-rh_html_up(2);
+if (has_permission(PERMISSION_ISSUE_ASSIGNABLE)) {
+    rh_html_add("div", true, array("style" => "margin-bottom: 1em; text-align: left"));
+    rh_html_down();
+    rh_html_add("form", true, array("action" => "useredit.php?notify_on_new=" . $user['id'], "method" => "POST"));
+    rh_html_down();
+    rh_html_add("input", false, array("name" => "notify_on_new", "id" => "notify_on_new", "type" => "checkbox", "checked" => $notify_on_new, "value" => "ok", "disabled" => $resetuser));
+    rh_html_add("label", true, array("for" => "notify_on_new", "style" => "margin-right: 2em"));
+    rh_html_add_text("Bei neuen Defektmeldungen benachrichtigen");
+    rh_html_add("input", false, array("type" => "submit", "value" => "Ändern", "disabled" => $resetuser));
+    rh_html_up(2);
+}
 rh_html_add("div", true, array("style" => "text-align: right"));
 rh_html_down();
 rh_html_add("fieldset", true, array("style" => "float: right"));

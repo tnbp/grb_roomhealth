@@ -104,6 +104,14 @@ if ($issue !== NULL) {
     rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($disableother ? "rh_disabled" : false)));
     rh_html_down();
     rh_html_add("legend", true, array(), false);
+    rh_html_add_text("Titel");
+    rh_html_add("label", true, array("for" => "title"));
+    rh_html_add_text("Kurze Beschreibung:");
+    rh_html_add("input", false, array("style" => "box-sizing: border-box; width: 100%", "name" => "title", "id" => "title", "value" => $issue['title']));
+    rh_html_up();
+    rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($disableother ? "rh_disabled" : false)));
+    rh_html_down();
+    rh_html_add("legend", true, array(), false);
     rh_html_add_text("Problembeschreibung");
     rh_html_add("textarea", true, array("name" => "comment", "readonly" => !has_permission(PERMISSION_ISSUE_EDIT), "disabled" => $disableother, "style" => "width: 100%; min-height: 400px", "class" => !has_permission(PERMISSION_ISSUE_EDIT) ? "rh_disabled_noperm" : false), false);
     rh_html_add_text($issue['comment'], false, false);

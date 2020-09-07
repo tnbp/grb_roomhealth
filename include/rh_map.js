@@ -160,9 +160,22 @@ function fetch_issues() {
 
 function update_map(d) {
     for (var i = 0; i < d.length; i++) {
-        var cur_issue_room = rh_map_svg.getElementById("r" + d[i].room_name);
+        var cur_issue_room = rh_map_svg.getElementById("g" + d[i].room_name);
+        var cur_rect;
+        var cur_text;
         if (cur_issue_room != null) {
-            cur_issue_room.style['fill'] = "red";
+            for (var j = 0; j < cur_issue_room.children.length; j++) {
+                if (cur_issue_room.children[j].tagName == "rect") {
+                    cur_rect = cur_issue_room.children[j];
+                    continue;
+                }
+                if (cur_issue_room.children[j].tagName == "text") {
+                    cur_text = cur_issue_room.children[j];
+                    continue;
+                }
+            }
+            cur_rect.style['fill'] = "red";
+            cur_text.style['fill'] = "white";
         }
     }
 }

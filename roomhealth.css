@@ -187,8 +187,20 @@ tr.rh_even {
     background-color: #ffffff;
 }
 
-tr.rh_even:hover,
-tr.rh_odd:hover {
+tr.rh_spacer {
+    height: 1em;
+}
+
+td.shortdesc {
+    border-style: none solid solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 1em 1em;
+}
+
+tr.linetext:hover,
+tr.rh_even:hover + tr,
+tr.rh_odd:hover + tr {
     background-color: lightyellow;
 }
 
@@ -401,4 +413,37 @@ span.rh_messagetext {
     font-weight: normal;
     display: inline-block;
     margin-left: 1em;
+}
+
+table.rh_table {
+    font-size: smaller !important;
+}
+
+@media print {
+    ul.rh_navigation {
+        display: none;
+    }
+    * {
+        background-color: white !important;
+    }
+    tr.rh_head th a,
+    tr.rh_head {
+        color: black;
+        font-weight: bold;
+    }
+    #allcontainer {
+        width: 100%;
+        max-width: none;
+        padding: 0px 0px;
+        margin: 0px 0px;
+    }
+    input {
+        border: none;
+    }
+    img {
+        display: none;
+    }
+    .rh_no_print {
+        display: none;
+    }
 }

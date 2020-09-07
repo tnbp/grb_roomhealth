@@ -22,7 +22,7 @@ if (can_post_comment($issue)) rh_html_add_js(false, "rh_buttons_align.js");
 rh_html_add("div", true, array("id" => "allcontainer"));
 rh_html_down();
 rh_html_add("h1", true, array(), false);
-rh_html_add_text("GRB: Zeige Defekt #" . $id . "...");
+rh_html_add_text("GRB: Zeige Defekt");
 rh_html_close();
 rh_header();
 
@@ -43,6 +43,12 @@ if ($issue !== NULL) {
     else {
         $assignee = "niemandem";
     }
+    rh_html_add("h2", true);
+    rh_html_down();
+    rh_html_add_text("Defekt #" . $id . ": ");
+    rh_html_add("span", true, array("style" => "font-style: italic"));
+    rh_html_add_text($issue['title'] == NULL ? "ohne Titel" : $issue['title']);
+    rh_html_up();
     rh_html_add("h2", true, array("style" => "white-space: normal"));
     rh_html_down();
     rh_html_add("span", true, array("style" => "white-space: nowrap"));

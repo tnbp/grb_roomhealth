@@ -78,6 +78,14 @@ for ($i = 0; $i < $rc_i; $i++) {
 rh_html_close();
 rh_html_up(3); // leaving select, p
 rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false));
+rh_html_down();
+rh_html_add("legend", true, array(), false);
+rh_html_add_text("Titel");
+rh_html_add("label", true, array("for" => "title"));
+rh_html_add_text("Kurze Beschreibung:");
+rh_html_add("input", false, array("style" => "box-sizing: border-box; width: 100%", "name" => "title", "id" => "title", "disabled" => ($rc == 0)));
+rh_html_up();
+rh_html_add("fieldset", true, array("style" => "background-color: white", "class" => ($rc == 0) ? "rh_disabled rh_issueedit" : false));
 rh_html_down(); // in p
 rh_html_add("legend", true);
 rh_html_add_text("Problembeschreibung", true, true);
@@ -170,6 +178,11 @@ function rh_verify_newissue_form() {
     
     var submit = true;
     
+    if (document.getElementById("title").value == "") {
+        document.getElementById("title").parentNode.style['background-color'] = "#ff4a1d";
+        document.getElementById("title").oninput = function() { document.getElementById("title").parentNode.style['background-color'] = ""; };
+        submit = false;
+    }
     if (document.getElementById("newissue_textarea").value == "") {
         document.getElementById("newissue_textarea").parentNode.style['background-color'] = "#ff4a1d";
         document.getElementById("newissue_textarea").oninput = function() { document.getElementById("newissue_textarea").parentNode.style['background-color'] = ""; };

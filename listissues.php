@@ -27,12 +27,15 @@ if (isset($_GET['error'])) {
 }
 
 if ($session['loggedin'] === true) {
+    rh_html_add("div", true, array("class" => "rh_no_print"));
+    rh_html_down();
     rh_html_add("h2", true, array(), false);
     rh_html_down();
     rh_html_add("img", false, array("src" => "img/newissue.png", "alt" => "Neuen Defekt melden", "style" => "vertical-align: bottom"));
     rh_html_add_text("Neuen Defekt melden...");
     rh_html_up();
     rh_html_room_selector(false, "newissue.php");
+    rh_html_up();
 }
 
 $order_by_raw = http_get_array("order_by");
@@ -98,7 +101,7 @@ rh_html_add("img", false, array("src" => "img/listissues.png", "alt" => "Momenta
 rh_html_add_text("Momentan bestehende Defekte:");
 rh_html_up();
 
-rh_html_add("fieldset", true, array("id" => "listissues_filter", "style" => "margin-bottom: 2em; width: max-content"));
+rh_html_add("fieldset", true, array("id" => "listissues_filter", "style" => "margin-bottom: 2em; width: max-content", "class" => "rh_no_print"));
 rh_html_down();
 rh_html_add("legend", true, array("style" => "font-weight: bold; font-size: 14px", "id" => "listissues_filter_legend"), false);
 rh_html_add_text("Filter");
@@ -227,7 +230,7 @@ for ($i = 0; $i < $limit; $i++) {
     $cur_actions = "<a href=\"showissue.php?id=" . $row['id'] ."\" class=\"showissue\"><img src=\"img/moreinfo.png\" alt=\"mehr Informationen\" title=\"mehr Informationen\"></a>";
     if (has_permission(PERMISSION_ISSUE_ASSIGN_SELF) && $row['assignee_id'] == -1) $cur_actions .= "&nbsp;<a href=\"postissue.php?id=" . $row['id'] ."&assignself\"><img src=\"img/assignself.png\" alt=\"mir selbst zuweisen\" title=\"mir selbst zuweisen\"></a>";
     if (has_permission(PERMISSION_ISSUE_EDIT)) $cur_actions .= "&nbsp;<a href=\"editissue.php?id=" . $row['id'] ."\"><img src=\"img/edit.png\" alt=\"bearbeiten\" title=\"bearbeiten\"></a>";
-    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['repname'], "<span class=\"sev_" . $row['severity'] . "\"><img src=\"img/sev_" . $row['severity'] . ".png\" alt=\"" . $row['severity'] . "\">" . $severity_description[$row['severity']] . "</span>", $cur_asgname, date("Y-m-d H:i:s", $row['last_updated']), rh_resolution_img($row['status'], $row['resolution']) . "<span style=\"float: left; display: inline-block; text-align: left\">" . $row['status'] . "<br>" . $row['resolution'] . "</span>", $cur_actions);
+    $cur = array($row['id'], ($row['item_id'] == -1) ? $row['rname_alt'] : $row['rname'], ($row['item_id'] == -1) ? "Sonstiges" : $row['iname'], date("Y-m-d H:i:s", $row['time_reported']), $row['repname'], "<span class=\"sev_" . $row['severity'] . "\"><img src=\"img/sev_" . $row['severity'] . ".png\" alt=\"" . $row['severity'] . "\">" . $severity_description[$row['severity']] . "</span>", $cur_asgname, date("Y-m-d H:i:s", $row['last_updated']), rh_resolution_img($row['status'], $row['resolution']) . "<span style=\"float: left; display: inline-block; text-align: left\">" . $row['status'] . "<br>" . $row['resolution'] . "</span>", $cur_actions, "linetext" => array($row['title'] == NULL ? "ohne Titel" : $row['title']));
     $t_data[] = $cur;
 }
 

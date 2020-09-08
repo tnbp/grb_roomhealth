@@ -88,7 +88,8 @@ function rh_display_comment($comment) {
         rh_html_up();
         rh_comment_mod_form($comment);
         $comment['body'] = nl2br(htmlentities($comment['body'], ENT_QUOTES | ENT_HTML5));
-        if ($comment['user_id'] == 0) $comment['body'] = rh_markdown($comment['body']);
+	// markdown for all, but special markdown only for system messages
+        $comment['body'] = rh_markdown($comment['body'], ($comment['user_id'] == 0));
         rh_html_box($comment['body']);
     }
     else {
@@ -216,8 +217,11 @@ function rh_comment_mod_form(&$comment) {
     rh_html_up(3);
 }
 
-function rh_markdown(&$body) {
-    $body = preg_replace('/&ast;&ast;\s?(.*)\s?&ast;&ast;/U', '<span style="font-weight: bold">$1</span>', $body);
+function rh_markdown(&$body, $special = false) {
+    if ($special) {
+        $body = preg_replace('/&ast;&ast;\s?(.*)\s?&ast;&ast;/U', '<span style="font-weight: bold">$1</span>', $body);
+    }
+    $body = preg_replace('/issue&num;(\d+)&num;/U', '<a href="showissue.php?id=$1">Defekt &num;$1</a>', $body);
     return $body;
 }
 

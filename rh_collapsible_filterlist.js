@@ -46,6 +46,12 @@ function init_filterlist() {
         filter_form.style['max-height'] = "0px";
     }
     filterlist_toggle_blocked = false;
+    
+    document.getElementById("min_sev").onchange = filterlist_autocheck;
+    document.getElementById("min_date").onchange = filterlist_autocheck;
+    document.getElementsByName("min_time")[0].onchange = filterlist_autocheck;
+    document.getElementById("assignee").onchange = filterlist_autocheck;
+    document.getElementById("status").onchange = filterlist_autocheck;
 }
 
 function expand_filterlist() {
@@ -71,4 +77,20 @@ function filter_form_fadeout() {
     }
     filter_form.style['height'] = new_height + "px";
     setTimeout(filter_form_fadeout, 16);
+}
+
+function filterlist_autocheck() {
+    var t = this.parentNode;
+    var that = null;
+    for (var i = 0; i < t.children.length; i++) {
+        if (t.children[i].tagName != "LEGEND") continue;
+        for (var j = 0; j < t.children[i].children.length; j++) {
+            if (t.children[i].children[j].tagName == "INPUT" && t.children[i].children[j].type == "checkbox") {
+                that = t.children[i].children[j];
+                break;
+            }
+        }
+        if (that != null) break;
+    }
+    that.checked = true;
 }

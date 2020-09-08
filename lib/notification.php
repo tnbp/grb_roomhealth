@@ -4,8 +4,8 @@ include("include/acceptable.php");
 foreach ($notification_triggers as $trigger => $level) define($trigger, $level);
 
 function send_notification($to, $subject, $body, $additional = array()) {
-	$subject = filter_var($subject, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-	$body = wordwrap(filter_var($body, FILTER_SANITIZE_FULL_SPECIAL_CHARS), 78, "\r\n");
+	$subject = filter_var($subject, FILTER_SANITIZE_EMAIL);
+	$body = wordwrap(filter_var($body, FILTER_SANITIZE_EMAIL), 78, "\r\n");
 
     $php_version = explode(".", phpversion());
 	if (($php_version[0] * 10 + $php_version[1]) < 72) {	// PHP < 7.2

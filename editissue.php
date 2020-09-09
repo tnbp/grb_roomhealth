@@ -162,14 +162,21 @@ if ($issue !== NULL) {
     rh_html_close();
     rh_html_up();
     rh_html_add("br");
-    rh_html_add("label", true, array("for" => "status_open", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"), false);
+    rh_html_add("label", true, array("for" => "status", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"), false);
     rh_html_add_text("Status:");
-    rh_html_add("input", false, array("type" => "radio", "name" => "status", "value" => "OPEN", "checked" => $issue['status'] == "OPEN", "id" => "status_open"));
+    rh_html_add("select", true, array("id" => "status", "name" => "status"));
+    rh_html_down();
+    foreach ($status_acceptable as $status) {
+        rh_html_add("option", true, array("value" => $status, "selected" => ($issue['status'] == $status)), false);
+	rh_html_add_text($status);
+    }
+    rh_html_up();
+    /*rh_html_add("input", false, array("type" => "radio", "name" => "status", "value" => "OPEN", "checked" => $issue['status'] == "OPEN", "id" => "status_open"));
     rh_html_add("label", true, array("for" => "status_open", "style" => "margin-right: 2em"), false);
     rh_html_add_text("offen");
     rh_html_add("input", false, array("type" => "radio", "name" => "status", "value" => "CLOSED", "checked" => $issue['status'] == "CLOSED", "id" => "status_closed"));
     rh_html_add("label", true, array("for" => "status_closed"), false);
-    rh_html_add_text("geschlossen");
+    rh_html_add_text("geschlossen");*/
     rh_html_add("br");
     rh_html_add("label", true, array("for" => "resolution", "style" => "min-width: 150px; display: inline-block; margin-bottom: 1em"));
     rh_html_add_text("Unterstatus:", true, true);

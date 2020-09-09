@@ -26,7 +26,8 @@ $resolution_acceptable = array(
 
 $status_acceptable = array(
                         "OPEN",
-                        "CLOSED"
+                        "CLOSED",
+			"FIXED"
                         );
 
 $allcom_acceptable = array(

@@ -165,7 +165,7 @@ else if (isset($_GET['assignself'])) {
     require_permission_or_redirect(PERMISSION_ISSUE_ASSIGN_SELF, "listissues.php?error=invalid_issue_post&part=permissions");
     if (!isset($_GET['id'])) redirect("listissues.php?error=invalid_issue_post&part=issueid");
     $issueid = (int) $_GET['id'];
-    mysqli_query($mysql, "UPDATE issues SET assignee_id = " . get_session("name") . " WHERE id = " . $issueid);
+    mysqli_query($mysql, "UPDATE issues SET assignee_id = " . get_session("userid") . " WHERE id = " . $issueid);
     $body = $session['name'] . " hat die Fehlerbeschreibung geändert:\r\n";
     $body .= "ZUGEWIESEN: **" . get_session("name") . "**\r\n";
     mysqli_query($mysql, "INSERT INTO comments SET user_id = 0, issue_id = " . $issueid . ", timestamp = " . time() . ", body = '" . $body . "', visible = 'all'");

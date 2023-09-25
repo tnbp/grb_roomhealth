@@ -139,7 +139,7 @@ else {
             else $updates[] = $c . " = '" . $v . "'";
         }
         $all_changes = array_keys($changes);
-        mysqli_query($mysql, "UPDATE users SET " . implode($updates, ", ") . " WHERE id = " . $userid);
+        mysqli_query($mysql, "UPDATE users SET " . implode(", ", $updates) . " WHERE id = " . $userid);
         redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=") : "changed=") . implode("&changed=", $all_changes) . "#msgbox");
     }
     else if (isset($_POST['username'])) {
@@ -166,7 +166,7 @@ else {
         $updates = array();
         foreach ($changes as $c => $v) $updates[] = $c . " = '" . $v . "'";
         $all_changes = array_keys($changes);
-        mysqli_query($mysql, "UPDATE users SET " . implode($updates, ", ") . " WHERE id = " . $userid);
+        mysqli_query($mysql, "UPDATE users SET " . implode(", ", $updates) . " WHERE id = " . $userid);
         redirect("userinfo.php?" . (($userid != get_session("userid")) ? ("id=" . $userid . "&changed=") : "changed=") . implode("&changed=", $all_changes) . "#msgbox");
     }
     else if (isset($_POST['initialpw'])) {

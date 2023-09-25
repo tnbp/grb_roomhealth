@@ -63,11 +63,11 @@ function redirect($target) {
 */
     
 function http_get_array($param) {
-    if (strpos($_SERVER['REQUEST_URI'], "?") === false) return false;
+    if (strpos($_SERVER['REQUEST_URI'], "?") === false) return array();
     $request_params = explode("&", preg_replace("/.*\?[^?]*/U", "", $_SERVER['REQUEST_URI']));
     $c = count($request_params);
     $ret = array();
-    if ($c == 1 && $request_params[0] == "") return false;
+    if ($c == 1 && $request_params[0] == "") return array();
     for ($i = 0; $i < $c; $i++) {
         if (strpos($request_params[$i], "=") === false) {
             if ($cur[0] == $param) $ret[] = true;
@@ -76,7 +76,7 @@ function http_get_array($param) {
         $cur = explode("=", $request_params[$i]);
         if ($cur[0] == $param) $ret[] = $cur[1];
     }
-    if (!count($ret)) return false;
+    if (!count($ret)) return array();
     return $ret;
 }
 
